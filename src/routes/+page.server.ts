@@ -3,7 +3,6 @@ import { GITHUB_TOKEN } from '$env/static/private';
 
 const searchString =
 	'repo:' + db.projects.map((project) => project.source_url.slice(19)).join(' repo:');
-console.log(searchString);
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
@@ -12,7 +11,7 @@ export async function load() {
 	  search(
 		type:REPOSITORY,
 		query: "${searchString}",
-		last: 100
+		last: 10
 	  ) {
 		repos: edges {
 		  repo: node {
@@ -48,6 +47,5 @@ export async function load() {
 	});
 	const { data } = await response.json();
 
-	console.log(query);
 	return data.search;
 }
