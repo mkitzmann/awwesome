@@ -1,4 +1,4 @@
-import db from '../selfhosted-db.json';
+import db from '$lib/selfhosted-db.json';
 
 /** @type {import('./$types').PageServerLoad} */
 export function getQuery() {

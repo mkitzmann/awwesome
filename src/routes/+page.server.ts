@@ -1,8 +1,9 @@
 import { TOKEN_GITHUB } from '$env/static/private';
 import { getQuery } from './query';
+import db from '$lib/selfhosted-db.json';
+import type { Project, ProjectCollection, Repository } from '../lib/types/types';
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load() {
+export async function load(): Promise<ProjectCollection> {
 	const query = getQuery();
 	try {
 		const response = await fetch('https://api.github.com/graphql', {
@@ -13,9 +14,26 @@ export async function load() {
 			},
 			body: JSON.stringify({ query })
 		});
-		const { data } = await response.json();
+		const { data }: { data: Repository } = await response.json();
 
-		return data.search;
+		const projects: ProjectCollection = {};
+
+		db.projects.forEach((project) => {
+			const repo = data.search.repos.find((repo) => repo.repo.url === project.source_url)?.repo;
+
+			if (repo) {
+				projects[project.source_url] = {
+					name: repo?.name ?? project.name,
+					description: repo?.description ?? project.description,
+					source_url: project.source_url,
+					category: project.category,
+					demo_url: project.demo_url,
+					stars: repo?.stargazers.totalCount
+				};
+			}
+		});
+		console.log(projects);
+		return projects;
 	} catch (e) {
 		console.error(e);
 		throw e;
