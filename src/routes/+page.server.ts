@@ -32,7 +32,6 @@ export async function load(): Promise<ProjectCollection> {
 				};
 			}
 		});
-		console.log(projects);
 		return projects;
 	} catch (e) {
 		console.error(e);
