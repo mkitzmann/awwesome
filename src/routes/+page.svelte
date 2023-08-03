@@ -19,13 +19,13 @@
 </script>
 
 <div class="flex flex-col gap-4 max-w-4xl mx-auto my-8 p-4">
-	<div class="flex gap-2">
+	<div class="flex gap-2 flex-wrap">
 		{#each categories as category}
 			<button
 				class="text-sm rounded-full inline px-2 py-1 {selectedCategory === category
 					? 'bg-gray-200'
 					: 'bg-gray-100'}"
-				on:click={() => (selectedCategory = category)}
+				on:click={() => (selectedCategory === category ? selectedCategory = allCategory : selectedCategory = category)}
 				>{category}
 			</button>
 		{/each}
@@ -37,7 +37,11 @@
 			</a>
 			<div>{project.description}</div>
 			<div class="flex">
-				<div class="text-sm bg-gray-100 rounded-full inline px-2 py-1">{project.category}</div>
+				<button
+						class="text-sm rounded-full inline px-2 py-1 bg-gray-100"
+						on:click={() => (selectedCategory === project.category ? selectedCategory = allCategory : selectedCategory = project.category)}
+				>{project.category}
+				</button>
 			</div>
 			<div class="flex items-center gap-2 text-yellow-600">
 				<img src={star} alt="star" class="h-6" />{project.stars}

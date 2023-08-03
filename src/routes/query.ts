@@ -1,9 +1,9 @@
-import db from '$lib/selfhosted-db.json';
+import { getRepositories } from './repositories';
 
 /** @type {import('./$types').PageServerLoad} */
-export function getQuery() {
-	const searchString =
-		'repo:' + db.projects.map((project) => project.source_url.slice(19)).join(' repo:');
+export async function getQuery() {
+	const repos = await getRepositories();
+	const searchString = 'repo:' + repos.map((project) => project.url.slice(19)).join(' repo:');
 
 	return `
 	query {
@@ -21,13 +21,13 @@ export function getQuery() {
 
 
 			  stargazers {
-				totalCount
+					totalCount
 			  }
 			  allIssues: issues {
-				totalCount
+					totalCount
 			  }
 			  openIssues: issues(states:OPEN) {
-				totalCount
+					totalCount
 			  }
 			}
 		  }

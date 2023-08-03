@@ -1,10 +1,10 @@
 import { TOKEN_GITHUB } from '$env/static/private';
 import { getQuery } from './query';
-import db from '$lib/selfhosted-db.json';
 import type { Project, ProjectCollection, Repository } from '../lib/types/types';
+import { getRepositories } from './repositories';
 
 export async function load(): Promise<ProjectCollection> {
-	const query = getQuery();
+	const query = await getQuery();
 	try {
 		const response = await fetch('https://api.github.com/graphql', {
 			method: 'POST',
@@ -14,25 +14,27 @@ export async function load(): Promise<ProjectCollection> {
 			},
 			body: JSON.stringify({ query })
 		});
-		const { data }: { data: Repository } = await response.json();
+		if (response.ok) {
+			const { data }: { data: Repository } = await response.json();
+			const projects: ProjectCollection = {};
+			(await getRepositories()).forEach((project) => {
+				const repo = data.search.repos.find((repo) => repo.repo.url === project.url)?.repo;
 
-		const projects: ProjectCollection = {};
-
-		db.projects.forEach((project) => {
-			const repo = data.search.repos.find((repo) => repo.repo.url === project.source_url)?.repo;
-
-			if (repo) {
-				projects[project.source_url] = {
-					name: repo?.name ?? project.name,
-					description: repo?.description ?? project.description,
-					source_url: project.source_url,
-					category: project.category,
-					demo_url: project.demo_url,
-					stars: repo?.stargazers.totalCount
-				};
-			}
-		});
-		return projects;
+				if (repo) {
+					projects[project.url] = {
+						name: repo?.name ?? project.name,
+						description: repo?.description ?? project.description,
+						source_url: project.url,
+						category: project.category,
+						demo_url: project.demo_url,
+						stars: repo?.stargazers.totalCount
+					};
+				}
+			});
+			return projects;
+		} else {
+			throw new Error();
+		}
 	} catch (e) {
 		console.error(e);
 		throw e;
