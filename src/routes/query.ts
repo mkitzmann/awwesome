@@ -10,7 +10,7 @@ export async function getQuery() {
 	  search(
 		type:REPOSITORY,
 		query: "${searchString}",
-		last: 100
+		last: 400
 	  ) {
 		repos: edges {
 		  repo: node {

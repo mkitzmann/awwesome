@@ -30,6 +30,9 @@
 			</button>
 		{/each}
 	</div>
+	<div class="text-sm mt-4">
+	Selected Projects: {projects.length}
+	</div>
 	{#each projects as project}
 		<article class="bg-white p-4 rounded-xl flex flex-col gap-4">
 			<a href={project.source_url} class="hover:text-blue-600">
