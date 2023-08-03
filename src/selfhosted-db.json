@@ -1,0 +1,1114 @@
+{"projects":
+	[
+	{
+	  "name": "Ackee",
+	  "demo_url": "http://demo.ackee.electerious.com",
+	  "source_url": "https://github.com/electerious/Ackee",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Aptabase",
+	  "demo_url": null,
+	  "source_url": "https://github.com/aptabase/aptabase",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "AWStats",
+	  "demo_url": null,
+	  "source_url": "https://github.com/eldy/awstats",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Countly Community Edition",
+	  "demo_url": null,
+	  "source_url": "https://github.com/countly",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Druid",
+	  "demo_url": null,
+	  "source_url": "https://github.com/apache/druid",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "EDA",
+	  "demo_url": null,
+	  "source_url": "https://github.com/jortilles/EDA",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Fathom Lite",
+	  "demo_url": null,
+	  "source_url": "https://github.com/usefathom/fathom",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "GoAccess",
+	  "demo_url": null,
+	  "source_url": "https://github.com/allinurl/goaccess",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "GoatCounter",
+	  "demo_url": null,
+	  "source_url": "https://github.com/arp242/goatcounter",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Matomo",
+	  "demo_url": null,
+	  "source_url": "https://github.com/matomo-org/matomo",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Metabase",
+	  "demo_url": null,
+	  "source_url": "https://github.com/metabase/metabase",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Mixpost",
+	  "demo_url": null,
+	  "source_url": "https://github.com/inovector/MixpostApp",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Netron",
+	  "demo_url": null,
+	  "source_url": "https://github.com/lutzroeder/netron",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Offen",
+	  "demo_url": "https://www.offen.dev/try-demo/",
+	  "source_url": "https://github.com/offen/offen",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Open Web Analytics",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Open-Web-Analytics/Open-Web-Analytics",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Plausible Analytics",
+	  "demo_url": null,
+	  "source_url": "https://github.com/plausible/analytics/",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "PoeticMetric",
+	  "demo_url": "https://www.poeticmetric.com/s?d=www.poeticmetric.com",
+	  "source_url": "https://github.com/th0th/poeticmetric",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "PostHog",
+	  "demo_url": null,
+	  "source_url": "https://github.com/posthog/posthog",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Redash",
+	  "demo_url": null,
+	  "source_url": "https://github.com/getredash/redash",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "RudderStack",
+	  "demo_url": null,
+	  "source_url": "https://github.com/rudderlabs/rudder-server/",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Shynet",
+	  "demo_url": null,
+	  "source_url": "https://github.com/milesmcc/shynet",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Socioboard",
+	  "demo_url": null,
+	  "source_url": "https://github.com/socioboard/Socioboard-5.0",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Superset",
+	  "demo_url": null,
+	  "source_url": "https://github.com/apache/superset",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Swetrix",
+	  "demo_url": "https://swetrix.com/projects/STEzHcB1rALV",
+	  "source_url": "https://github.com/Swetrix/selfhosting",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Umami",
+	  "demo_url": "https://app.umami.is/share/8rmHaheU/umami.is",
+	  "source_url": "https://github.com/umami-software/umami",
+	  "category": "Analytics"
+	},
+	{
+	  "name": "Access to Memory (AtoM)",
+	  "demo_url": "https://demo.accesstomemory.org/",
+	  "source_url": "https://github.com/artefactual/atom",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "ArchiveBox",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ArchiveBox/ArchiveBox",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "Archivematica",
+	  "demo_url": "https://sandbox.archivematica.org/administration/accounts/login/",
+	  "source_url": "https://github.com/artefactual/archivematica",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "ArchivesSpace",
+	  "demo_url": "https://archivesspace.org/application/demo",
+	  "source_url": "https://github.com/archivesspace/archivesspace",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "CKAN",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ckan/ckan",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "Collective Access - Providence",
+	  "demo_url": null,
+	  "source_url": "https://github.com/collectiveaccess/providence",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "Ganymede",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Zibbp/ganymede",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "LiveStreamDVR",
+	  "demo_url": null,
+	  "source_url": "https://github.com/MrBrax/LiveStreamDVR",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "Omeka S",
+	  "demo_url": null,
+	  "source_url": "https://github.com/omeka/omeka-s",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "Wayback",
+	  "demo_url": null,
+	  "source_url": "https://github.com/wabarc/wayback",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "Webarchive",
+	  "demo_url": null,
+	  "source_url": "https://github.com/derfenix/webarchive",
+	  "category": "Archiving and Digital Preservation (DP)"
+	},
+	{
+	  "name": "Accelerated Text",
+	  "demo_url": null,
+	  "source_url": "https://github.com/accelerated-text/accelerated-text",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Actionsflow",
+	  "demo_url": "https://actionsflow.github.io/docs/",
+	  "source_url": "https://github.com/actionsflow/actionsflow",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Activepieces",
+	  "demo_url": null,
+	  "source_url": "https://github.com/activepieces/activepieces",
+	  "category": "Automation"
+	},
+	{
+	  "name": "ActiveWorkflow",
+	  "demo_url": null,
+	  "source_url": "https://github.com/automaticmode/active_workflow",
+	  "category": "Automation"
+	},
+	{
+	  "name": "AmIUnique",
+	  "demo_url": null,
+	  "source_url": "https://github.com/DIVERSIFY-project/amiunique",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Apache Airflow",
+	  "demo_url": null,
+	  "source_url": "https://github.com/apache/airflow/",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Automatisch",
+	  "demo_url": null,
+	  "source_url": "https://github.com/automatisch/automatisch",
+	  "category": "Automation"
+	},
+	{
+	  "name": "betanin",
+	  "demo_url": null,
+	  "source_url": "https://github.com/sentriz/betanin",
+	  "category": "Automation"
+	},
+	{
+	  "name": "ChiefOnboarding",
+	  "demo_url": null,
+	  "source_url": "https://github.com/chiefonboarding/ChiefOnboarding",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Eonza",
+	  "demo_url": "https://playground.eonza.org/",
+	  "source_url": "https://github.com/gentee/eonza",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Exadel CompreFace",
+	  "demo_url": null,
+	  "source_url": "https://github.com/exadel-inc/CompreFace",
+	  "category": "Automation"
+	},
+	{
+	  "name": "feed2toot",
+	  "demo_url": null,
+	  "source_url": "https://gitlab.com/chaica/feed2toot",
+	  "category": "Automation"
+	},
+	{
+	  "name": "feedmixer",
+	  "demo_url": "https://mretc.net/feedmixer/json?f=https://hnrss.org/newest&f=https://americancynic.net/atom.xml&n=1",
+	  "source_url": "https://github.com/cristoper/feedmixer",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Headphones",
+	  "demo_url": null,
+	  "source_url": "https://github.com/rembo10/headphones",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Healthchecks",
+	  "demo_url": null,
+	  "source_url": "https://github.com/healthchecks/healthchecks",
+	  "category": "Automation"
+	},
+	{
+	  "name": "homebank-converter",
+	  "demo_url": "https://binnette.github.io/homebank-converter/",
+	  "source_url": "https://github.com/Binnette/homebank-converter",
+	  "category": "Automation"
+	},
+	{
+	  "name": "HRConvert2",
+	  "demo_url": null,
+	  "source_url": "https://github.com/zelon88/HRConvert2",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Huginn",
+	  "demo_url": null,
+	  "source_url": "https://github.com/huginn/huginn",
+	  "category": "Automation"
+	},
+	{
+	  "name": "ioBroker",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ioBroker/AdapterRepo",
+	  "category": "Automation"
+	},
+	{
+	  "name": "IOTstack",
+	  "demo_url": "https://www.iotstack.dev/",
+	  "source_url": "https://github.com/SensorsIot/IOTstack",
+	  "category": "Automation"
+	},
+	{
+	  "name": "jimi",
+	  "demo_url": "https://jimiapp.io/app/",
+	  "source_url": "https://github.com/z1pti3/jimi",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Kibitzr",
+	  "demo_url": null,
+	  "source_url": "https://github.com/kibitzr/kibitzr",
+	  "category": "Automation"
+	},
+	{
+	  "name": "LazyLibrarian",
+	  "demo_url": null,
+	  "source_url": "https://github.com/DobyTang/LazyLibrarian",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Lightweight Python Twitter Bot",
+	  "demo_url": null,
+	  "source_url": "https://github.com/matthewgallant/lightweight-python-twitter-bot",
+	  "category": "Automation"
+	},
+	{
+	  "name": "ManageIQ",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ManageIQ/manageiq",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Marvin",
+	  "demo_url": null,
+	  "source_url": "https://github.com/robotframework/MARVIN",
+	  "category": "Automation"
+	},
+	{
+	  "name": "MiFlora",
+	  "demo_url": null,
+	  "source_url": "https://github.com/open-homeautomation/miflora",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Mobilizon",
+	  "demo_url": "https://joinmobilizon.org/",
+	  "source_url": "https://framagit.org/framasoft/mobilizon",
+	  "category": "Automation"
+	},
+	{
+	  "name": "n8n",
+	  "demo_url": null,
+	  "source_url": "https://github.com/n8n-io/n8n",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Node-BLUE",
+	  "demo_url": "https://node-blue.github.io/",
+	  "source_url": "https://github.com/SebastianSchultz/node-blue",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Octoprint",
+	  "demo_url": null,
+	  "source_url": "https://github.com/OctoPrint/OctoPrint",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Pageboard",
+	  "demo_url": "https://pageboard.dev/",
+	  "source_url": "https://github.com/pageboard/pageboard",
+	  "category": "Automation"
+	},
+	{
+	  "name": "PlantGateway",
+	  "demo_url": "https://plantgateway.com/app",
+	  "source_url": "https://github.com/garhul/plantgateway",
+	  "category": "Automation"
+	},
+	{
+	  "name": "pyLoad",
+	  "demo_url": null,
+	  "source_url": "https://github.com/pyload/pyload",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Quokka CMS",
+	  "demo_url": null,
+	  "source_url": "https://github.com/quokkaproject/quokka",
+	  "category": "Automation"
+	},
+	{
+	  "name": "RSS Circus",
+	  "demo_url": "https://rsscircus.com/",
+	  "source_url": "https://github.com/MichaelCurrin/rss-circus",
+	  "category": "Automation"
+	},
+	{
+	  "name": "RSSHub",
+	  "demo_url": null,
+	  "source_url": "https://github.com/DIYgod/RSSHub",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Ruuvi Station",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ruuvi/com.ruuvi.station",
+	  "category": "Automation"
+	},
+	{
+	  "name": "SABnzbd",
+	  "demo_url": null,
+	  "source_url": "https://github.com/sabnzbd/sabnzbd",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Searx",
+	  "demo_url": null,
+	  "source_url": "https://github.com/searx/searx",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Selfoss",
+	  "demo_url": null,
+	  "source_url": "https://github.com/SSilence/selfoss",
+	  "category": "Automation"
+	},
+	{
+	  "name": "SeoTools for Excel",
+	  "demo_url": "https://seotoolsforexcel.com/",
+	  "source_url": "https://github.com/nielsbosma/seotools",
+	  "category": "Automation"
+	},
+	{
+	  "name": "ShellHub",
+	  "demo_url": null,
+	  "source_url": "https://github.com/shellhub-io/shellhub",
+	  "category": "Automation"
+	},
+	{
+	  "name": "smart-sleep-manager",
+	  "demo_url": null,
+	  "source_url": "https://github.com/brunodles/smart-sleep-manager",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Snips",
+	  "demo_url": null,
+	  "source_url": "https://github.com/snipsco/snips-platform-documentation",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Taskord",
+	  "demo_url": "https://app.taskord.com/demo",
+	  "source_url": "https://github.com/Taskord/taskord",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Tellico",
+	  "demo_url": null,
+	  "source_url": "https://github.com/tellico/tellico",
+	  "category": "Automation"
+	},
+	{
+	  "name": "tiktoken",
+	  "demo_url": null,
+	  "source_url": "https://github.com/nschloe/tiktoken",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Trackma",
+	  "demo_url": null,
+	  "source_url": "https://github.com/z411/trackma",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Turnstile",
+	  "demo_url": null,
+	  "source_url": "https://github.com/pushstack-io/turnstile",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Wammu",
+	  "demo_url": null,
+	  "source_url": "https://github.com/gammu/wammu",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Watchy",
+	  "demo_url": null,
+	  "source_url": "https://github.com/MikeTeachman/Watchy",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Wekan",
+	  "demo_url": null,
+	  "source_url": "https://github.com/wekan/wekan",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Windshaft",
+	  "demo_url": null,
+	  "source_url": "https://github.com/CartoDB/Windshaft",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Workspace Jammer",
+	  "demo_url": null,
+	  "source_url": "https://github.com/zillding/WorkspaceJammer",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Xibo",
+	  "demo_url": null,
+	  "source_url": "https://github.com/xibosignage/xibo",
+	  "category": "Automation"
+	},
+	{
+	  "name": "Xoyondo",
+	  "demo_url": "https://xoyondo.com/demo/",
+	  "source_url": "https://github.com/xoyondo/xoyondo",
+	  "category": "Automation"
+	},
+	{
+	  "name": "123Movies",
+	  "demo_url": null,
+	  "source_url": "https://github.com/akasrai/123Movies",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "AllTube",
+	  "demo_url": "https://home.mikedeboer.nl/apps/alltube/",
+	  "source_url": "https://github.com/Rudloff/alltube",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Anghami",
+	  "demo_url": null,
+	  "source_url": "https://github.com/M1raj/Anghami",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "AthenaX",
+	  "demo_url": null,
+	  "source_url": "https://github.com/athena-x/athenaX",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "AudioMass",
+	  "demo_url": null,
+	  "source_url": "https://github.com/pkalogiros/AudioMass",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "AudiTube",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ston1x/AudiTube",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Awebooking",
+	  "demo_url": null,
+	  "source_url": "https://github.com/awebooking/awebooking",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "BeeTV",
+	  "demo_url": null,
+	  "source_url": "https://github.com/beetvapk/BeeTV",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Blinkenrocket",
+	  "demo_url": null,
+	  "source_url": "https://github.com/oskarslaw/blinkenrocket-server",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Comics Crawler",
+	  "demo_url": null,
+	  "source_url": "https://github.com/MancusNemo/comics-crawler",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "DCDenon",
+	  "demo_url": null,
+	  "source_url": "https://github.com/torvalds/Denon",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Demoscene.tv",
+	  "demo_url": "https://demoscene.tv/",
+	  "source_url": "https://github.com/mildsunrise/demoscene.tv",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Ethflix",
+	  "demo_url": null,
+	  "source_url": "https://github.com/mihaigalos/ethflix",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "FimfictionDownloader",
+	  "demo_url": null,
+	  "source_url": "https://github.com/daniel-de-vries/FimfictionDownloader",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "flickruploader",
+	  "demo_url": null,
+	  "source_url": "https://github.com/marienfressinaud/flickruploader",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Flumotion",
+	  "demo_url": null,
+	  "source_url": "https://github.com/flumotion/flumotion",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Funkwhale",
+	  "demo_url": "https://demo.funkwhale.audio/",
+	  "source_url": "https://code.eliotberriot.com/funkwhale/funkwhale",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Gearmusicplayer",
+	  "demo_url": null,
+	  "source_url": "https://github.com/colinkiama/gearmusicplayer",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "GoMusic",
+	  "demo_url": null,
+	  "source_url": "https://github.com/codecat/go-music",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Helium Music Manager",
+	  "demo_url": null,
+	  "source_url": "https://github.com/imploded/helium",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Home Theater Control",
+	  "demo_url": null,
+	  "source_url": "https://github.com/arendst/Tasmota",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Homesec",
+	  "demo_url": null,
+	  "source_url": "https://github.com/tomeko74/homesec",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "HTPC-Manager",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Hellowlol/HTPC-Manager",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "HTTP Streaming Server",
+	  "demo_url": null,
+	  "source_url": "https://github.com/arut/nginx-rtmp-module",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Igloo",
+	  "demo_url": null,
+	  "source_url": "https://github.com/javan-gerami/igloo",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Jamstash",
+	  "demo_url": null,
+	  "source_url": "https://github.com/mescon/MusicPlayer",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Jukito",
+	  "demo_url": null,
+	  "source_url": "https://github.com/psharkey/jukito",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Jukeboks",
+	  "demo_url": "https://jukeboks.github.io",
+	  "source_url": "https://github.com/jukeboks/jukeboks",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Karaokemugen",
+	  "demo_url": null,
+	  "source_url": "https://github.com/leodido/karaokemugen",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Kodi",
+	  "demo_url": null,
+	  "source_url": "https://github.com/xbmc/xbmc",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Koel",
+	  "demo_url": "https://demo.koel.dev/",
+	  "source_url": "https://github.com/koel/koel",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "KodiServer",
+	  "demo_url": null,
+	  "source_url": "https://github.com/TylerJaacks/KodiServer",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "LazyLibrarian",
+	  "demo_url": null,
+	  "source_url": "https://github.com/DobyTang/LazyLibrarian",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Librefox",
+	  "demo_url": null,
+	  "source_url": "https://github.com/intika/Librefox",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Libresonic",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Libresonic/libresonic",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "LibreSpeed",
+	  "demo_url": "https://librespeed.org/",
+	  "source_url": "https://github.com/librespeed/speedtest",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Livestreamer",
+	  "demo_url": null,
+	  "source_url": "https://github.com/livestreamer/livestreamer",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Lounge",
+	  "demo_url": null,
+	  "source_url": "https://github.com/rainbowdash/Lounge",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "LPMS",
+	  "demo_url": null,
+	  "source_url": "https://github.com/devmtna/lpms",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "LuckyTV",
+	  "demo_url": null,
+	  "source_url": "https://github.com/naamancurtis/luckytv",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Matterhorn",
+	  "demo_url": null,
+	  "source_url": "https://github.com/opencast/matterhorn",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Mediagoblin",
+	  "demo_url": null,
+	  "source_url": "https://github.com/mediagoblin/mediagoblin",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Metronome",
+	  "demo_url": null,
+	  "source_url": "https://github.com/metronome/metronome",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Miniflux",
+	  "demo_url": "https://miniflux.app/",
+	  "source_url": "https://github.com/miniflux/v2",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Modoboa",
+	  "demo_url": "https://modoboa-demo.ovh/",
+	  "source_url": "https://github.com/modoboa/modoboa",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Moonraker",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Arksine/moonraker",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "MotionEye",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ccrisan/motioneye",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "MoviePrint",
+	  "demo_url": null,
+	  "source_url": "https://github.com/filipw01/MoviePrint_v2",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Movistartv",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Baronk3d/movistartv",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Music Server",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Helmanmusic/Music",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Mycroft",
+	  "demo_url": null,
+	  "source_url": "https://github.com/MycroftAI/mycroft-core",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Nageru",
+	  "demo_url": null,
+	  "source_url": "https://github.com/kjetilho/nageru",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "NageruControl",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Compy/nagerucontrol",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Nanoleaf",
+	  "demo_url": null,
+	  "source_url": "https://github.com/software-2/nanoleaf",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Navidrome",
+	  "demo_url": null,
+	  "source_url": "https://github.com/deluan/navidrome",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Nextcloud",
+	  "demo_url": null,
+	  "source_url": "https://github.com/nextcloud/server",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "NextPVR",
+	  "demo_url": null,
+	  "source_url": "https://github.com/nextpvr/nextpvr",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Noddity",
+	  "demo_url": null,
+	  "source_url": "https://github.com/TehShrike/noddity",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Node-Media-Server",
+	  "demo_url": null,
+	  "source_url": "https://github.com/illuspas/Node-Media-Server",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "On-Premises Ushahidi Platform",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ushahidi/platform",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "OpenTube",
+	  "demo_url": null,
+	  "source_url": "https://github.com/OpenTube/OpenTube",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "OpenTwitch",
+	  "demo_url": null,
+	  "source_url": "https://github.com/johanliu/OpenTwitch",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "OpenTube",
+	  "demo_url": null,
+	  "source_url": "https://github.com/OpenTube/OpenTube",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "OpenTwitch",
+	  "demo_url": null,
+	  "source_url": "https://github.com/johanliu/OpenTwitch",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "OpenTube",
+	  "demo_url": null,
+	  "source_url": "https://github.com/OpenTube/OpenTube",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "OpenTwitch",
+	  "demo_url": null,
+	  "source_url": "https://github.com/johanliu/OpenTwitch",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Phlex",
+	  "demo_url": null,
+	  "source_url": "https://github.com/d8ahazard/Phlex",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "PiCAST",
+	  "demo_url": null,
+	  "source_url": "https://github.com/lanceseidman/PiCAST",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "PiServer",
+	  "demo_url": null,
+	  "source_url": "https://github.com/bensanmorris/PiServer",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Plex",
+	  "demo_url": null,
+	  "source_url": "https://github.com/plexinc/plex-media-server",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Plumecast",
+	  "demo_url": null,
+	  "source_url": "https://github.com/chadsmith/plumecast",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Podcasts",
+	  "demo_url": null,
+	  "source_url": "https://github.com/edward-p/Quantum.git",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Podgrab",
+	  "demo_url": null,
+	  "source_url": "https://github.com/akhilrex/podgrab",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "ProjectM",
+	  "demo_url": null,
+	  "source_url": "https://github.com/projectM-visualizer/projectm",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Psychopy",
+	  "demo_url": null,
+	  "source_url": "https://github.com/psychopy/psychopy",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Python-plexapi",
+	  "demo_url": null,
+	  "source_url": "https://github.com/pkkid/python-plexapi",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "QuickBox",
+	  "demo_url": null,
+	  "source_url": "https://github.com/QuickBox/QB",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "RecordScreen.io",
+	  "demo_url": "https://www.recordscreen.io/",
+	  "source_url": "https://github.com/recordscreen-io/recordscreen.io",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Red5",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Red5/red5-server",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Rente",
+	  "demo_url": null,
+	  "source_url": "https://github.com/danhab99/Rente",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "RetroShare",
+	  "demo_url": null,
+	  "source_url": "https://github.com/RetroShare/RetroShare",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "RMVision",
+	  "demo_url": null,
+	  "source_url": "https://github.com/polyanskiy/RMVision",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Ruvim",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Den4ix/Ruvim",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Ruvim-OLD",
+	  "demo_url": null,
+	  "source_url": "https://github.com/Den4ix/Ruvim-OLD",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Shoko Server",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ShokoAnime/ShokoServer",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "ShowRSS",
+	  "demo_url": "https://showrss.info/",
+	  "source_url": "https://github.com/pbrink231/showrss",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "SickChill",
+	  "demo_url": null,
+	  "source_url": "https://github.com/SickChill/SickChill",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "SickGear",
+	  "demo_url": null,
+	  "source_url": "https://github.com/SickGear/SickGear",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Simple-TV",
+	  "demo_url": null,
+	  "source_url": "https://github.com/PrimianoToso/simple-tv",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Simularium",
+	  "demo_url": null,
+	  "source_url": "https://github.com/simularium/Simularium",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "SmartTV-Remote",
+	  "demo_url": null,
+	  "source_url": "https://github.com/ia-cas/SmartTV-Remote",
+	  "category": "Entertainment"
+	},
+	{
+	  "name": "Smitur",
+	  "demo_url": null,
+	  "source_url": "https://github.com/druellan/smitur",
+	  "category": "Entertainment"
+	}
+  ]
+}
