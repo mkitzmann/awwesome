@@ -19,6 +19,7 @@
 </script>
 
 <div class="flex flex-col gap-4 max-w-screen-2xl mx-auto my-8 p-4">
+	<h1 class="text-3xl font-bold mb-4">Selfhosted DB</h1>
 	<div class="flex gap-2 flex-wrap">
 		{#each categories as category}
 			<button

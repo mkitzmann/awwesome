@@ -1,6 +1,6 @@
 import { TOKEN_GITHUB } from '$env/static/private';
 import { getQuery } from './query';
-import type { Project, ProjectCollection, Repository } from '../lib/types/types';
+import type { ProjectCollection, Repository } from '../lib/types/types';
 import { getRepositories } from './repositories';
 
 export async function load(): Promise<ProjectCollection> {
@@ -14,9 +14,9 @@ export async function load(): Promise<ProjectCollection> {
 			},
 			body: JSON.stringify({ query })
 		});
+
 		if (response.ok) {
 			const { data }: { data: Repository } = await response.json();
-			console.log(response, query);
 			const projects: ProjectCollection = {};
 			(await getRepositories()).forEach((project) => {
 				const repo = data.search.repos.find((repo) => repo.repo.url === project.url)?.repo;
@@ -32,6 +32,7 @@ export async function load(): Promise<ProjectCollection> {
 					};
 				}
 			});
+
 			return projects;
 		} else {
 			throw new Error();
