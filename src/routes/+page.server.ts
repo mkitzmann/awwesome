@@ -1,5 +1,5 @@
 import db from '../selfhosted-db.json';
-import { GITHUB_TOKEN } from '$env/static/private';
+import { TOKEN_GITHUB } from '$env/static/private';
 
 const searchString =
 	'repo:' + db.projects.map((project) => project.source_url.slice(19)).join(' repo:');
@@ -41,7 +41,7 @@ export async function load() {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'bearer ' + GITHUB_TOKEN
+			Authorization: 'bearer ' + TOKEN_GITHUB
 		},
 		body: JSON.stringify({ query })
 	});
