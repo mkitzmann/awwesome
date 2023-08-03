@@ -16,6 +16,7 @@ export async function load(): Promise<ProjectCollection> {
 		});
 		if (response.ok) {
 			const { data }: { data: Repository } = await response.json();
+			console.log(response, query);
 			const projects: ProjectCollection = {};
 			(await getRepositories()).forEach((project) => {
 				const repo = data.search.repos.find((repo) => repo.repo.url === project.url)?.repo;
