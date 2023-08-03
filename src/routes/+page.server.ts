@@ -36,16 +36,20 @@ export async function load() {
 	  }
 	}
 	`;
+	try {
+		const response = await fetch('https://api.github.com/graphql', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'bearer ' + TOKEN_GITHUB
+			},
+			body: JSON.stringify({ query })
+		});
+		const { data } = await response.json();
 
-	const response = await fetch('https://api.github.com/graphql', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: 'bearer ' + TOKEN_GITHUB
-		},
-		body: JSON.stringify({ query })
-	});
-	const { data } = await response.json();
-
-	return data.search;
+		return data.search;
+	} catch (e) {
+		console.error(e);
+		throw e;
+	}
 }
