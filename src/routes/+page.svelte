@@ -18,7 +18,7 @@
 		.sort((a, b) => (a.stars < b.stars ? 1 : 0));
 </script>
 
-<div class="flex flex-col gap-4 max-w-4xl mx-auto my-8 p-4">
+<div class="flex flex-col gap-4 max-w-screen-2xl mx-auto my-8 p-4">
 	<div class="flex gap-2 flex-wrap">
 		{#each categories as category}
 			<button
@@ -33,6 +33,8 @@
 	<div class="text-sm mt-4">
 	Selected Projects: {projects.length}
 	</div>
+	<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+
 	{#each projects as project}
 		<article class="bg-white p-4 rounded-xl flex flex-col gap-4">
 			<a href={project.source_url} class="hover:text-blue-600">
@@ -51,4 +53,5 @@
 			</div>
 		</article>
 	{/each}
+	</div>
 </div>
