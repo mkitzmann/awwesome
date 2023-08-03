@@ -11,7 +11,7 @@ export async function load() {
 	  search(
 		type:REPOSITORY,
 		query: "${searchString}",
-		last: 10
+		last: 100
 	  ) {
 		repos: edges {
 		  repo: node {
