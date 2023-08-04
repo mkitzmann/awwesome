@@ -1,5 +1,6 @@
 <script lang="ts">
 	import star from '$lib/assets/star.svg';
+	import githubMark from '$lib/assets/github-mark.svg';
 	import type { ProjectCollection } from '../lib/types/types';
 	export let data: ProjectCollection;
 
@@ -19,7 +20,12 @@
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4 max-w-screen-2xl">
-	<h1 class="text-3xl font-bold mb-4">Selfhosted DB</h1>
+	<div class="flex justify-between">
+		<h1 class="text-3xl font-bold mb-4">Selfhosted DB</h1>
+		<a href="https://github.com/mkitzmann/selfhosted-db"
+			><img src={githubMark} alt="Github repo" class="h-8" /></a
+		>
+	</div>
 	<div class="flex flex-col lg:flex-row gap-8">
 		<div class="min-w-fit">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
