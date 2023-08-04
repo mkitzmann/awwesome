@@ -1,27 +1,29 @@
 import { TOKEN_GITHUB } from '$env/static/private';
 import { createQuery } from './query';
-import type { Project, ProjectCollection, GithubQueryResult } from '../lib/types/types';
+import type { GithubRepo, Project, ProjectCollection } from '../lib/types/types';
 import { getRepositories } from './repositories';
 import { fetchRepoInfoFromGithub } from '../lib/fetch-github';
 
 export async function load(): Promise<ProjectCollection> {
 	const repos = await getRepositories();
 
-	// const chunkSize = 10;
-	// for (let i = 0; i < array.length; i += chunkSize) {
-	// 	const chunk = array.slice(i, i + chunkSize);
-	// 	// do whatever
-	const query = await createQuery(repos);
-	const data = await fetchRepoInfoFromGithub(query);
-	// }
+	const chunkSize = 100;
+	let data: GithubRepo[] = [];
+	for (let i = 0; i < repos.length; i += chunkSize) {
+		const chunk = repos.slice(i, i + chunkSize);
+		const query = await createQuery(chunk);
+		const result = await fetchRepoInfoFromGithub(query);
+		data = data.concat(result);
+	}
+
 	let projects: Project[] = [];
-	(await getRepositories()).forEach((item) => {
-		const repo = data.search.repos.find((repo) => repo.repo.url === item.url)?.repo;
+	repos.forEach((item) => {
+		const repo = data.find((repo) => repo.url === item.url);
 
 		const project: Project = {
 			name: repo?.name ?? item.name,
 			description: repo?.description ?? item.description ?? '',
-			source_url: item.url,
+			source_url: item.url ?? '',
 			category: item.category,
 			demo_url: item.demo_url,
 			stars: repo?.stargazers.totalCount

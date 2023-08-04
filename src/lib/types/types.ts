@@ -16,21 +16,23 @@ export interface GithubQueryResult {
 	search: {
 		repos: [
 			{
-				repo: {
-					url: string;
-					description: string | null;
-					name: string;
-					stargazers: {
-						totalCount: number;
-					};
-					allIssues: {
-						totalCount: number;
-					};
-					openIssues: {
-						totalCount: number;
-					};
-				};
+				repo: GithubRepo;
 			}
 		];
+	};
+}
+
+export interface GithubRepo {
+	url: string;
+	description: string | null;
+	name: string;
+	stargazers: {
+		totalCount: number;
+	};
+	allIssues: {
+		totalCount: number;
+	};
+	openIssues: {
+		totalCount: number;
 	};
 }
