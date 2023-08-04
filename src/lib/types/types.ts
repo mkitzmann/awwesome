@@ -12,7 +12,7 @@ export interface ProjectCollection {
 	projects: Project[];
 }
 
-export interface Repository {
+export interface GithubQueryResult {
 	search: {
 		repos: [
 			{

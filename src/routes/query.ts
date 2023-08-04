@@ -1,8 +1,4 @@
-import { getRepositories } from './repositories';
-
-/** @type {import('./$types').PageServerLoad} */
-export async function getQuery() {
-	const repos = await getRepositories();
+export async function createQuery(repos) {
 	const searchString = 'repo:' + repos.map((project) => project.url.slice(19)).join(' repo:');
 
 	return `
