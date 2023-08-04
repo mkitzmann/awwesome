@@ -1,6 +1,6 @@
 import { TOKEN_GITHUB } from '$env/static/private';
 import { getQuery } from './query';
-import type { ProjectCollection, Repository } from '../lib/types/types';
+import type { Project, ProjectCollection, Repository } from '../lib/types/types';
 import { getRepositories } from './repositories';
 
 export async function load(): Promise<ProjectCollection> {
@@ -17,23 +17,29 @@ export async function load(): Promise<ProjectCollection> {
 
 		if (response.ok) {
 			const { data }: { data: Repository } = await response.json();
-			const projects: ProjectCollection = {};
-			(await getRepositories()).forEach((project) => {
-				const repo = data.search.repos.find((repo) => repo.repo.url === project.url)?.repo;
+			let projects: Project[] = [];
+			(await getRepositories()).forEach((item) => {
+				const repo = data.search.repos.find((repo) => repo.repo.url === item.url)?.repo;
 
-				if (repo) {
-					projects[project.url] = {
-						name: repo?.name ?? project.name,
-						description: repo?.description ?? project.description,
-						source_url: project.url,
-						category: project.category,
-						demo_url: project.demo_url,
-						stars: repo?.stargazers.totalCount
-					};
-				}
+				const project: Project = {
+					name: repo?.name ?? item.name,
+					description: repo?.description ?? item.description ?? '',
+					source_url: item.url,
+					category: item.category,
+					demo_url: item.demo_url,
+					stars: repo?.stargazers.totalCount
+				};
+				projects.push(project);
 			});
 
-			return projects;
+			projects = projects.sort((a, b) => {
+				const starsA = a.stars || 0;
+				const starsB = b.stars || 0;
+				return starsB - starsA;
+			});
+			console.log(projects);
+
+			return { projects };
 		} else {
 			throw new Error();
 		}

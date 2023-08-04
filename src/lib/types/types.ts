@@ -1,15 +1,15 @@
-export interface Project {
+export type Project = {
 	name: string;
 	source_url: string;
 	category: string;
 	demo_url: string | null;
-	description?: string;
+	description: string;
 	license?: string;
-	stars: number;
-}
+	stars?: number;
+};
 
 export interface ProjectCollection {
-	[id: string]: Project;
+	projects: Project[];
 }
 
 export interface Repository {
