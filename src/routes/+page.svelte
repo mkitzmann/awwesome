@@ -24,8 +24,8 @@
 			><img src={githubMark} alt="Github repo" class="h-8" /></a
 		>
 	</div>
-	<div class="flex flex-col lg:flex-row gap-8 max-h-screen">
-		<div class="lg:min-w-fit lg:overflow-scroll">
+	<div class="flex flex-col lg:flex-row gap-8">
+		<div class="lg:min-w-fit lg:overflow-y-scroll sticky  h-[calc(100vh-7rem)]">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each categories as category}
 					<button
@@ -52,7 +52,7 @@
 						<a href={project.source_url} class="hover:text-blue-600">
 							<h2 class="text-3xl font-bold">{project.name}</h2>
 						</a>
-						<div>{project.description}</div>
+						<div>{@html project.description}</div>
 						<div class="flex mt-auto">
 							<button
 								class="text-sm rounded-full inline px-2 py-1 bg-gray-100 truncate"

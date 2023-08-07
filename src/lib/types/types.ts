@@ -26,14 +26,40 @@ export interface GithubQueryResult {
 
 export interface GithubRepo {
 	url: string;
-	description: string | null;
 	name: string;
-	stargazers: {
+	owner: {
+		avatarUrl: string;
+	};
+	repositoryTopics: {
+		edges: {
+			node: {
+				topic: {
+					name: string;
+				};
+			};
+		}[];
+	};
+	languages: {
+		edges: {
+			node: {
+				name: string;
+			};
+		}[];
+	};
+	archivedAt: string;
+	collaborators: {
 		totalCount: number;
 	};
-	allIssues: {
-		totalCount: number;
+	descriptionHTML: string;
+	latestRelease: {
+		createdAt: string;
 	};
+	licenseInfo: {
+		name: string;
+	};
+	openGraphImageUrl: string;
+	stargazerCount: number;
+	updatedAt: string;
 	openIssues: {
 		totalCount: number;
 	};

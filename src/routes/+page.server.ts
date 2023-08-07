@@ -2,17 +2,22 @@ import { createQuery } from '../lib/query';
 import type { GithubRepo, ProjectCollection } from '../lib/types/types';
 import { getProjectsFromAwesomeList } from '../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../lib/fetch-github';
+import { dev } from '$app/environment';
 
 export async function load(): Promise<ProjectCollection> {
 	const projects = await getProjectsFromAwesomeList();
 
-	const chunkSize = 10000;
+	const chunkSize = 100;
 	let data: GithubRepo[] = [];
 	for (let i = 0; i < projects.length; i += chunkSize) {
 		const chunk = projects.slice(i, i + chunkSize);
 		const query = await createQuery(chunk);
 		const result = await fetchRepoInfoFromGithub(query);
 		data = data.concat(result);
+
+		if (dev) {
+			break; // in development its faster to only do one fetch
+		}
 	}
 
 	projects.map((project) => {
@@ -23,8 +28,8 @@ export async function load(): Promise<ProjectCollection> {
 			return project;
 		}
 
-		project.stars = repo?.stargazers.totalCount;
-		project.description = repo?.description ?? project.description;
+		project.stars = repo?.stargazerCount;
+		project.description = repo?.descriptionHTML ?? project.description;
 		return project;
 	});
 
