@@ -32,7 +32,20 @@ export async function createQuery(projects: Project[]) {
           }
           descriptionHTML
           stargazerCount
-          updatedAt
+          defaultBranchRef {
+            target {
+              ... on Commit {
+                history(first: 1) {
+                  edges {
+                    node {
+                      authoredDate
+                      message
+                    }
+                  }
+                }
+              }
+            }
+					}
         }
 		  }
 		}

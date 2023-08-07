@@ -9,6 +9,7 @@ export type Project = {
 	category?: string | null;
 	stars?: number | null;
 	avatar_url?: string | null;
+	last_commit?: Date | null;
 };
 
 export interface ProjectCollection {
@@ -28,10 +29,10 @@ export interface GithubQueryResult {
 export interface GithubRepo {
 	url: string;
 	name: string;
-	owner: {
+	owner?: {
 		avatarUrl: string;
 	};
-	repositoryTopics: {
+	repositoryTopics?: {
 		edges: {
 			node: {
 				topic: {
@@ -40,28 +41,41 @@ export interface GithubRepo {
 			};
 		}[];
 	};
-	languages: {
+	languages?: {
 		edges: {
 			node: {
 				name: string;
 			};
 		}[];
 	};
-	archivedAt: string;
-	collaborators: {
+	archivedAt?: string;
+	collaborators?: {
 		totalCount: number;
 	};
-	descriptionHTML: string;
-	latestRelease: {
+	descriptionHTML?: string;
+	latestRelease?: {
 		createdAt: string;
 	};
-	licenseInfo: {
+	licenseInfo?: {
 		name: string;
 	};
-	openGraphImageUrl: string;
-	stargazerCount: number;
-	updatedAt: string;
-	openIssues: {
+	openGraphImageUrl?: string;
+	stargazerCount?: number;
+	defaultBranchRef: {
+		target: {
+			history: {
+				edges: [
+					{
+						node: {
+							authoredDate;
+							message;
+						};
+					}
+				];
+			};
+		};
+	};
+	openIssues?: {
 		totalCount: number;
 	};
 }

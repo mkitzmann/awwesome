@@ -3,7 +3,10 @@
 	import githubMark from '$lib/assets/github-mark.svg';
 	import type { ProjectCollection } from '../lib/types/types';
 	export let data: ProjectCollection;
+	import dayjs from 'dayjs';
 	// import slugify from '@sindresorhus/slugify';
+
+	import relativeTime from 'dayjs/plugin/relativeTime';
 
 	let allCategory = 'All';
 	let selectedCategory;
@@ -22,6 +25,9 @@
 			? (selectedCategory = allCategory)
 			: (selectedCategory = category);
 	};
+
+	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
+
 	// const slugCategory = (input) => {
 	// 	if (!input) {
 	// 		return '';
@@ -38,7 +44,7 @@
 		>
 	</div>
 	<div class="flex flex-col lg:flex-row gap-8">
-		<div class="lg:min-w-fit lg:overflow-y-scroll max-h-screen">
+		<div class="lg:min-w-fit lg:overflow-y-scroll">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each categories as category}
 					<button
@@ -77,6 +83,11 @@
 								<h2 class="text-3xl font-bold">{project.name}</h2>
 							</a>
 						</div>
+						{#if project.last_commit}
+							<div class="text-sm text-gray-600">
+								last commit {getRelativeTime(project.last_commit)}
+							</div>
+						{/if}
 						<div>{@html project.description}</div>
 						<div class="flex mt-auto">
 							<button
@@ -88,6 +99,7 @@
 								>{project.category}
 							</button>
 						</div>
+
 						{#if project.stars}
 							<div class="flex items-center gap-2 text-yellow-600">
 								<img src={star} alt="star" class="h-6" />{project.stars}

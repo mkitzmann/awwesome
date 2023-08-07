@@ -28,9 +28,11 @@ export async function load(): Promise<ProjectCollection> {
 			return project;
 		}
 
-		project.stars = repo?.stargazerCount;
-		project.description = repo?.descriptionHTML ?? project.description;
-		project.avatar_url = repo?.owner.avatarUrl;
+		project.stars = repo.stargazerCount;
+		project.description = repo.descriptionHTML ?? project.description;
+		project.avatar_url = repo.owner?.avatarUrl;
+		const lastCommit = repo.defaultBranchRef?.target?.history?.edges?.[0].node?.authoredDate;
+		lastCommit ? (project.last_commit = new Date(lastCommit)) : null;
 		return project;
 	});
 
