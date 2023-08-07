@@ -1,14 +1,14 @@
 <script lang="ts">
 	import star from '$lib/assets/star.svg';
 	import githubMark from '$lib/assets/github-mark.svg';
-	import type { ProjectCollection } from '$lib/types/types';
+	import type { ProjectCollection } from '../lib/types/types';
 	export let data: ProjectCollection;
 
 	let allCategory = 'All';
 	let selectedCategory;
 	$: categories = [allCategory].concat([
 		...new Set(data.projects.map((project) => project.category))
-	]);
+	]).sort();
 	$: projects = data.projects.filter((project) => {
 		if (selectedCategory === allCategory) {
 			return true;
