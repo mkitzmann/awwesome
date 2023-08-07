@@ -8,6 +8,7 @@ export type Project = {
 	stack: string | null;
 	category?: string | null;
 	stars?: number | null;
+	avatar_url?: string | null;
 };
 
 export interface ProjectCollection {

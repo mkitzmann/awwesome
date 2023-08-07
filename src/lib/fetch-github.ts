@@ -14,8 +14,6 @@ export const fetchRepoInfoFromGithub = async (query: string): Promise<GithubRepo
 
 		if (response.ok) {
 			const { data }: { data: GithubQueryResult } = await response.json();
-			console.log(data.search.repos.map((data) => data.repo));
-
 			return data.search.repos.map((data) => data.repo);
 		} else {
 			throw new Error();

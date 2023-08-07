@@ -30,6 +30,7 @@ export async function load(): Promise<ProjectCollection> {
 
 		project.stars = repo?.stargazerCount;
 		project.description = repo?.descriptionHTML ?? project.description;
+		project.avatar_url = repo?.owner.avatarUrl;
 		return project;
 	});
 

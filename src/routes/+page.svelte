@@ -6,9 +6,9 @@
 
 	let allCategory = 'All';
 	let selectedCategory;
-	$: categories = [allCategory].concat([
-		...new Set(data.projects.map((project) => project.category))
-	]).sort();
+	$: categories = [allCategory]
+		.concat([...new Set(data.projects.map((project) => project.category))])
+		.sort();
 	$: projects = data.projects.filter((project) => {
 		if (selectedCategory === allCategory) {
 			return true;
@@ -17,7 +17,7 @@
 	});
 </script>
 
-<div class="flex flex-col gap-4 mx-auto my-8 p-4 max-w-screen-2xl">
+<div class="flex flex-col gap-4 mx-auto my-8 p-4">
 	<div class="flex justify-between">
 		<h1 class="text-3xl font-bold mb-4">Selfhosted DB</h1>
 		<a href="https://github.com/mkitzmann/selfhosted-db"
@@ -25,11 +25,11 @@
 		>
 	</div>
 	<div class="flex flex-col lg:flex-row gap-8">
-		<div class="lg:min-w-fit lg:overflow-y-scroll sticky  h-[calc(100vh-7rem)]">
+		<div class="lg:min-w-fit lg:overflow-y-scroll max-h-screen">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each categories as category}
 					<button
-						class="text-left text-sm px-2 py-1 rounded-full bg-gray-100 lg:bg-transparent {selectedCategory ===
+						class="truncate max-w-80 xl:max-w-full text-left text-sm px-2 py-1 rounded-full bg-gray-100 lg:bg-transparent {selectedCategory ===
 						category
 							? 'bg-gray-200'
 							: ''}"
@@ -46,12 +46,21 @@
 			<div class="text-sm mb-4 text-right">
 				Count: {projects.length}
 			</div>
-			<div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-4">
+			<div class="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4">
 				{#each projects as project}
 					<article class="bg-white p-4 rounded-xl flex flex-col gap-4">
-						<a href={project.source_url} class="hover:text-blue-600">
-							<h2 class="text-3xl font-bold">{project.name}</h2>
-						</a>
+						<div class="flex gap-4 items-center">
+							{#if project.avatar_url}
+								<img
+									src={project.avatar_url}
+									alt="{project.name} Avatar"
+									class="h-8 w-8 rounded-full"
+								/>
+							{/if}
+							<a href={project.source_url} class="hover:text-blue-600">
+								<h2 class="text-3xl font-bold">{project.name}</h2>
+							</a>
+						</div>
 						<div>{@html project.description}</div>
 						<div class="flex mt-auto">
 							<button
