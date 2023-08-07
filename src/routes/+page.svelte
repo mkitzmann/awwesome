@@ -1,12 +1,10 @@
 <script lang="ts">
-	import star from '$lib/assets/star.svg';
 	import githubMark from '$lib/assets/github-mark.svg';
 	import type { ProjectCollection } from '../lib/types/types';
+		import ProjectItem from "../components/ProjectItem.svelte";
 	export let data: ProjectCollection;
-	import dayjs from 'dayjs';
 	// import slugify from '@sindresorhus/slugify';
 
-	import relativeTime from 'dayjs/plugin/relativeTime';
 
 	let allCategory = 'All';
 	let selectedCategory;
@@ -26,7 +24,6 @@
 			: (selectedCategory = category);
 	};
 
-	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
 	// const slugCategory = (input) => {
 	// 	if (!input) {
@@ -70,42 +67,7 @@
 			</div>
 			<div class="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4">
 				{#each projects as project}
-					<article class="bg-white p-4 rounded-xl flex flex-col gap-4">
-						<div class="flex gap-4 items-center">
-							{#if project.avatar_url}
-								<img
-									src={project.avatar_url}
-									alt="{project.name} Avatar"
-									class="h-8 w-8 rounded-full"
-								/>
-							{/if}
-							<a href={project.source_url} class="hover:text-blue-600">
-								<h2 class="text-3xl font-bold">{project.name}</h2>
-							</a>
-						</div>
-						{#if project.last_commit}
-							<div class="text-sm text-gray-600">
-								last commit {getRelativeTime(project.last_commit)}
-							</div>
-						{/if}
-						<div>{@html project.description}</div>
-						<div class="flex mt-auto">
-							<button
-								class="text-sm rounded-full inline px-2 py-1 bg-gray-100 truncate"
-								on:click={() =>
-									selectedCategory === project.category
-										? (selectedCategory = allCategory)
-										: (selectedCategory = project.category)}
-								>{project.category}
-							</button>
-						</div>
-
-						{#if project.stars}
-							<div class="flex items-center gap-2 text-yellow-600">
-								<img src={star} alt="star" class="h-6" />{project.stars}
-							</div>
-						{/if}
-					</article>
+					<ProjectItem project="{project}" on:message={setCategory(project.category)} />
 				{/each}
 			</div>
 		</div>
