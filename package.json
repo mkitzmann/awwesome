@@ -42,6 +42,8 @@
 	"type": "module",
 	"dependencies": {
 		"@sindresorhus/slugify": "^2.2.1",
-		"dayjs": "^1.11.9"
+		"@types/numeral": "^2.0.2",
+		"dayjs": "^1.11.9",
+		"numeral": "^2.0.6"
 	}
 }

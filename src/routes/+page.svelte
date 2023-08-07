@@ -67,7 +67,7 @@
 			</div>
 			<div class="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4">
 				{#each projects as project}
-					<ProjectItem project="{project}" on:message={setCategory(project.category)} />
+					<ProjectItem project="{project}" on:set-category={setCategory(project.category)} />
 				{/each}
 			</div>
 		</div>
