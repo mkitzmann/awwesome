@@ -1,11 +1,13 @@
 export type Project = {
-	name: string;
-	source_url: string;
-	category: string;
+	name: string | null;
+	primary_url: string | null;
+	source_url: string | null;
 	demo_url: string | null;
-	description: string;
-	license?: string;
-	stars?: number;
+	description: string | null;
+	license: string | null;
+	stack: string | null;
+	category?: string | null;
+	stars?: number | null;
 };
 
 export interface ProjectCollection {

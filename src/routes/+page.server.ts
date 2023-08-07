@@ -1,41 +1,38 @@
-import { TOKEN_GITHUB } from '$env/static/private';
-import { createQuery } from './query';
-import type { GithubRepo, Project, ProjectCollection } from '../lib/types/types';
-import { getRepositories } from './repositories';
+import { createQuery } from '../lib/query';
+import type { GithubRepo, ProjectCollection } from '../lib/types/types';
+import { getProjectsFromAwesomeList } from '../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../lib/fetch-github';
 
 export async function load(): Promise<ProjectCollection> {
-	const repos = await getRepositories();
+	const projects = await getProjectsFromAwesomeList();
 
-	const chunkSize = 100;
+	const chunkSize = 10000;
 	let data: GithubRepo[] = [];
-	for (let i = 0; i < repos.length; i += chunkSize) {
-		const chunk = repos.slice(i, i + chunkSize);
+	for (let i = 0; i < projects.length; i += chunkSize) {
+		const chunk = projects.slice(i, i + chunkSize);
 		const query = await createQuery(chunk);
 		const result = await fetchRepoInfoFromGithub(query);
 		data = data.concat(result);
 	}
 
-	let projects: Project[] = [];
-	repos.forEach((item) => {
-		const repo = data.find((repo) => repo.url === item.url);
+	projects.map((project) => {
+		const repo = data.find(
+			(repo) => repo.url === project.primary_url || repo.url === project.source_url
+		);
+		if (!repo) {
+			return project;
+		}
 
-		const project: Project = {
-			name: repo?.name ?? item.name,
-			description: repo?.description ?? item.description ?? '',
-			source_url: item.url ?? '',
-			category: item.category,
-			demo_url: item.demo_url,
-			stars: repo?.stargazers.totalCount
-		};
-		projects.push(project);
+		project.stars = repo?.stargazers.totalCount;
+		project.description = repo?.description ?? project.description;
+		return project;
 	});
 
-	projects = projects.sort((a, b) => {
+	const sortedProjects = projects.sort((a, b) => {
 		const starsA = a.stars || 0;
 		const starsB = b.stars || 0;
 		return starsB - starsA;
 	});
 
-	return { projects };
+	return { projects: sortedProjects };
 }
