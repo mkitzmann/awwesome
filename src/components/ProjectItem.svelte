@@ -18,7 +18,7 @@
 		dispatch('set-category', project.category);
 	}
 </script>
-<a href={project.source_url ?? project.primary_url} class="bg-white p-4 rounded-xl flex flex-col gap-4 hover:shadow-lg">
+<a href={project.source_url ?? project.primary_url} class="max-w-full bg-white p-4 rounded-xl flex flex-col gap-4 hover:shadow-lg">
 	<div class="flex gap-4 items-center">
 		{#if project.avatar_url}
 			<img src={project.avatar_url} alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
@@ -33,7 +33,7 @@
 	<div>{@html project.description}</div>
 	<div class="flex mt-auto">
 		<button
-			class="text-sm rounded-full inline px-2 py-1 bg-gray-100 truncate"
+			class="text-sm rounded-full px-2 py-1 bg-gray-100 max-w-full"
 			on:click={setCategory}
 			>{project.category}
 		</button>
