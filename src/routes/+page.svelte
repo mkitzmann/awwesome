@@ -1,13 +1,13 @@
 <script lang="ts">
 	import githubMark from '$lib/assets/github-mark.svg';
 	import type { ProjectCollection } from '../lib/types/types';
-		import ProjectItem from "../components/ProjectItem.svelte";
+	import ProjectItem from '../components/ProjectItem.svelte';
+	import type { ChangeEventHandler } from 'svelte/elements';
 	export let data: ProjectCollection;
 	// import slugify from '@sindresorhus/slugify';
 
-
 	let allCategory = 'All';
-	let selectedCategory;
+	let selectedCategory = allCategory;
 	$: categories = [allCategory]
 		.concat([...new Set(data.projects.map((project) => project.category))])
 		.sort();
@@ -19,11 +19,11 @@
 	});
 
 	const setCategory = (category) => {
+		console.log(category);
 		selectedCategory === category
 			? (selectedCategory = allCategory)
 			: (selectedCategory = category);
 	};
-
 
 	// const slugCategory = (input) => {
 	// 	if (!input) {
@@ -40,15 +40,20 @@
 			><img src={githubMark} alt="Github repo" class="h-8" /></a
 		>
 	</div>
-	<div class="flex flex-col lg:flex-row gap-8">
-		<div class="lg:min-w-fit lg:overflow-y-scroll">
+	<div class="flex flex-col xl:flex-row gap-8">
+		<select bind:value={selectedCategory} class="rounded-full px-4 py-2 xl:hidden">
+			{#each categories as category}
+				<option value={category}>
+					{category}
+				</option>
+			{/each}
+		</select>
+		<div class="max-w-[20%] hidden xl:block">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each categories as category}
 					<button
-						class="truncate max-w-80 xl:max-w-full text-left text-sm px-2 py-1 rounded-full bg-gray-100 lg:bg-transparent {selectedCategory ===
-						category
-							? 'bg-gray-200'
-							: ''}"
+						class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full
+						{selectedCategory === category ? 'bg-gray-200' : ''}"
 						on:click={setCategory(category)}
 					>
 						{category}
@@ -57,17 +62,15 @@
 			</div>
 		</div>
 		<div>
-			<div>
-				{#if selectedCategory}
-					<h2 class="font-bold text-xl">{selectedCategory}</h2>
-				{/if}
+			<div class="flex justify-between flex-wrap gap-4">
+				<h2 class="font-bold text-xl">{selectedCategory}</h2>
 				<div class="text-sm mb-4 text-right">
-					Count: {projects.length}
+					{projects.length} Projects
 				</div>
 			</div>
-			<div class="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
 				{#each projects as project}
-					<ProjectItem project="{project}" on:set-category={setCategory(project.category)} />
+					<ProjectItem {project} on:set-category={setCategory(project.category)} />
 				{/each}
 			</div>
 		</div>
