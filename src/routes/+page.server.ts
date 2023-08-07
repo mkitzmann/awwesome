@@ -10,10 +10,14 @@ export async function load(): Promise<ProjectCollection> {
 	const chunkSize = 100;
 	let data: GithubRepo[] = [];
 	for (let i = 0; i < projects.length; i += chunkSize) {
+		const start = performance.now();
+
 		const chunk = projects.slice(i, i + chunkSize);
 		const query = await createQuery(chunk);
 		const result = await fetchRepoInfoFromGithub(query);
 		data = data.concat(result);
+		const end = performance.now();
+		console.log(`fetched ${result.length} repository information from Github in ${end - start}ms`);
 
 		if (dev) {
 			break; // in development its faster to only do one fetch

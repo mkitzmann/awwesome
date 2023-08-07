@@ -75,9 +75,13 @@ function extractRepositories(markdownText: string): Project[] {
 }
 
 export async function getProjectsFromAwesomeList() {
+	const start = performance.now();
 	const awesomeSelfhostedResponse = await fetch(
 		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md'
 	);
 	const awesomeSelfhosted = await awesomeSelfhostedResponse.text();
-	return extractRepositories(awesomeSelfhosted);
+	const repos = extractRepositories(awesomeSelfhosted);
+	const end = performance.now();
+	console.log(`loaded ${repos.length} projects from Awesome Selfhosted in ${end - start}ms`);
+	return repos;
 }
