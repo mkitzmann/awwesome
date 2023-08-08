@@ -2,7 +2,7 @@
 	import type { Project } from '../lib/types/types';
 	import { createEventDispatcher } from 'svelte';
 	import numeral from 'numeral';
-	import Star from "./Star.svelte";
+	import Star from './Star.svelte';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 

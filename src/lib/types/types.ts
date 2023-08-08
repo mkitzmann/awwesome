@@ -15,7 +15,7 @@ export type Project = {
 export type Category = {
 	slug: string;
 	name: string;
-}
+};
 
 export interface ProjectCollection {
 	projects: Project[];
@@ -29,6 +29,12 @@ export interface GithubQueryResult {
 				repo: GithubRepo;
 			}
 		];
+	};
+	rateLimit: {
+		limit: number;
+		cost: number;
+		remaining: number;
+		resetAt: string;
 	};
 }
 

@@ -1,5 +1,5 @@
 import type { Project } from './types/types';
-import slugify from "@sindresorhus/slugify";
+import slugify from '@sindresorhus/slugify';
 function extractName(input) {
 	const regex = /\[([^\]]+)\]\(/;
 	const match = input.match(regex);
@@ -59,7 +59,7 @@ function extractRepositories(markdownText: string): Project[] {
 		if (!line.startsWith('- [')) {
 			continue;
 		}
-		if (!extractPrimaryUrl(line)){
+		if (!extractPrimaryUrl(line)) {
 			continue;
 		}
 
@@ -71,15 +71,17 @@ function extractRepositories(markdownText: string): Project[] {
 			license: extractLicense(line),
 			source_url: extractSourceUrl(line),
 			demo_url: extractDemoUrl(line),
-			category: currentCategory ? {
-				slug: slugify(currentCategory),
-				name: currentCategory
-			} : undefined
+			category: currentCategory
+				? {
+						slug: slugify(currentCategory),
+						name: currentCategory
+				  }
+				: undefined
 		};
 		projects.push(project);
 	}
 
-	projects = projects.slice(0, 100)
+	// projects = projects.slice(0, 100)
 
 	return projects;
 }

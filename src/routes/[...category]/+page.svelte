@@ -2,27 +2,36 @@
 	import githubMark from '$lib/assets/github-mark.svg';
 	import type { ProjectCollection } from '../../lib/types/types';
 	import ProjectItem from '../../components/ProjectItem.svelte';
-	import {allCategory} from "../../lib";
-	import {page} from "$app/stores";
-		import {goto} from "$app/navigation";
+	import { allCategory } from '../../lib';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let data: ProjectCollection;
 
+	let displayLimit = 20;
 	let selectedCategory = $page.params.category ?? allCategory.slug;
-	$: projects = data.projects.filter((project) => {
-		if (selectedCategory === allCategory.slug) {
-			return true;
-		}
-		return selectedCategory ? project.category?.slug === selectedCategory : true;
-	});
+	$: projects = data.projects
+		.filter((project) => {
+			if (selectedCategory === allCategory.slug) {
+				return true;
+			}
+			return selectedCategory ? project.category?.slug === selectedCategory : true;
+		})
+		.slice(0, displayLimit);
 
 	const setSelectCategory = () => {
-		goto(`${selectedCategory}`)
-	}
+		if (selectedCategory === '') {
+			console.log(selectedCategory)
+			goto('/');
+			return;
+		}
+		goto(`${selectedCategory}`);
+	};
 	const setCategory = (categorySlug) => {
-		selectedCategory = categorySlug
+		selectedCategory = categorySlug;
 	};
 </script>
+
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
 	<div class="flex justify-between">
 		<h1 class="text-3xl font-bold mb-4">Awwesome Selfhosted</h1>
@@ -31,7 +40,11 @@
 		>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
-		<select bind:value={selectedCategory} on:change={setSelectCategory} class="rounded-full px-4 py-2 xl:hidden">
+		<select
+			bind:value={selectedCategory}
+			on:change={setSelectCategory}
+			class="rounded-full px-4 py-2 xl:hidden"
+		>
 			{#each data.categories as category}
 				{#if category}
 					<option value={category.slug}>
@@ -44,7 +57,8 @@
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each data.categories as category}
 					{#if category}
-						<a href="/{category?.slug}"
+						<a
+							href="/{category?.slug}"
 							class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full
 							{selectedCategory === category.slug ? 'bg-gray-200' : ''}"
 							on:click={setCategory(category.slug)}
@@ -55,9 +69,11 @@
 				{/each}
 			</div>
 		</div>
-		<div>
+		<div class="w-full">
 			<div class="flex justify-between flex-wrap gap-4">
-				<h2 class="font-bold text-xl">{data.categories.find(category => category.slug === selectedCategory).name}</h2>
+				<h2 class="font-bold text-xl">
+					{data.categories.find((category) => category.slug === selectedCategory).name}
+				</h2>
 				<div class="text-sm mb-4 text-right">
 					{projects.length} Projects
 				</div>
@@ -66,6 +82,14 @@
 				{#each projects as project}
 					<ProjectItem {project} on:set-category={setCategory(project.category)} />
 				{/each}
+			</div>
+			<div class="flex mt-8">
+				{#if data.projects.length > displayLimit}
+					<button
+						on:click={() => (displayLimit += displayLimit)}
+						class="mx-auto bg-blue-100 hover:bg-blue-200 rounded-full px-4 py-2">Show more</button
+					>
+				{/if}
 			</div>
 		</div>
 	</div>

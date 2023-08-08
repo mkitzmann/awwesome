@@ -50,6 +50,12 @@ export async function createQuery(projects: Project[]) {
 		  }
 		}
 	  }
+		rateLimit {
+			limit
+			cost
+			remaining
+			resetAt
+		}
 	}
 	`;
 }

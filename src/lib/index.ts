@@ -1,2 +1,1 @@
-
-export const allCategory = {name: 'All', slug: ''};
+export const allCategory = { name: 'All', slug: '' };
