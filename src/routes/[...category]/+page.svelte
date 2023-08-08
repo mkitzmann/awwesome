@@ -5,19 +5,22 @@
 	import { allCategory } from '../../lib';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-
+	import {removeTrailingSlashes} from "../../lib";
 	export let data: ProjectCollection;
 
-	let displayLimit = 20;
-	let selectedCategory = $page.params.category ?? allCategory.slug;
-	$: projects = data.projects
+	let category = removeTrailingSlashes($page.params?.category)
+
+	let selectedCategory = category ?? allCategory.slug;
+	$: projects = [...data.projects]
 		.filter((project) => {
 			if (selectedCategory === allCategory.slug) {
 				return true;
 			}
 			return selectedCategory ? project.category?.slug === selectedCategory : true;
 		})
-		.slice(0, displayLimit);
+
+	let displayLimit = 20;
+	$: limitedProjects = projects.slice(0, displayLimit);
 
 	const setSelectCategory = () => {
 		if (selectedCategory === '') {
@@ -25,7 +28,7 @@
 			goto('/');
 			return;
 		}
-		goto(`${selectedCategory}`);
+		goto(`/${selectedCategory}`);
 	};
 	const setCategory = (categorySlug) => {
 		selectedCategory = categorySlug;
@@ -75,16 +78,16 @@
 					{data.categories.find((category) => category.slug === selectedCategory).name}
 				</h2>
 				<div class="text-sm mb-4 text-right">
-					{data.projects.length} Projects
+					{projects.length} Projects
 				</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
-				{#each projects as project}
+				{#each limitedProjects as project}
 					<ProjectItem {project} on:set-category={setCategory(project.category)} />
 				{/each}
 			</div>
 			<div class="flex mt-8">
-				{#if data.projects.length > displayLimit}
+				{#if projects.length > displayLimit}
 					<button
 						on:click={() => (displayLimit += displayLimit)}
 						class="mx-auto bg-blue-100 hover:bg-blue-200 rounded-full px-4 py-2">Show more</button

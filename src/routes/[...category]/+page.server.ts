@@ -3,14 +3,22 @@ import type { Category, GithubRepo, Project, ProjectCollection } from '../../lib
 import { getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
-import { allCategory } from '../../lib';
-import slugify from '@sindresorhus/slugify';
+import { allCategory, removeTrailingSlashes } from '../../lib';
+
+export async function entries() {
+	console.log('creating entries function');
+	const result = await getProjectsFromAwesomeList();
+
+	return result.map((project) => ({ category: project.category?.slug }));
+}
 
 let allProjects: Project[] = [];
 let categories: Category[] = [];
 let loaded = false;
 
-async function getProjectsAndCategories(params?) {
+export async function load({ params }): Promise<ProjectCollection> {
+	const category = removeTrailingSlashes(params);
+	console.log('creating load function, category: ', category);
 	if (allProjects.length === 0) {
 		allProjects = await getProjectsFromAwesomeList();
 
@@ -57,10 +65,8 @@ async function getProjectsAndCategories(params?) {
 	}
 
 	let filteredProjects: Project[] = allProjects;
-	if (params?.category) {
-		filteredProjects = filteredProjects.filter(
-			(project) => project.category?.slug === params.category
-		);
+	if (category) {
+		filteredProjects = filteredProjects.filter((project) => project.category?.slug === category);
 	}
 
 	const sortedProjects = filteredProjects.sort((a, b) => {
@@ -70,18 +76,6 @@ async function getProjectsAndCategories(params?) {
 	});
 
 	return { projects: sortedProjects, categories };
-}
-
-export async function entries() {
-	console.log('creating entries function');
-	const result = await getProjectsFromAwesomeList();
-
-	return result.map((project) => ({ category: project.category?.slug }));
-}
-
-export async function load({ params }): Promise<ProjectCollection> {
-	console.log('creating load function');
-	return await getProjectsAndCategories(params);
 }
 
 export const prerender = true;
