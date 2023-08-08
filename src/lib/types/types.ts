@@ -6,14 +6,20 @@ export type Project = {
 	description: string | null;
 	license: string | null;
 	stack: string | null;
-	category?: string | null;
+	category?: Category;
 	stars?: number | null;
 	avatar_url?: string | null;
 	last_commit?: Date | null;
 };
 
+export type Category = {
+	slug: string;
+	name: string;
+}
+
 export interface ProjectCollection {
 	projects: Project[];
+	categories: Category[];
 }
 
 export interface GithubQueryResult {

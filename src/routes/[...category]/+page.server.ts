@@ -1,11 +1,21 @@
-import { createQuery } from '../lib/query';
-import type { GithubRepo, ProjectCollection } from '../lib/types/types';
-import { getProjectsFromAwesomeList } from '../lib/repositories';
-import { fetchRepoInfoFromGithub } from '../lib/fetch-github';
+import { createQuery } from '../../lib/query';
+import type {GithubRepo, ProjectCollection} from '../../lib/types/types';
+import { getProjectsFromAwesomeList } from '../../lib/repositories';
+import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
+import {allCategory} from "../../lib";
 
-export async function load(): Promise<ProjectCollection> {
-	const projects = await getProjectsFromAwesomeList();
+async function getProjectsAndCategories(params?) {
+	let projects = await getProjectsFromAwesomeList();
+
+	const map = new Map(projects.map((project) => [project.category?.slug, project.category]))
+	const categories = [allCategory]
+		.concat([...map.values()])
+	;
+
+	if (params?.category) {
+		projects = projects.filter(project => project.category?.slug === params.category)
+	}
 
 	const chunkSize = 100;
 	let data: GithubRepo[] = [];
@@ -20,7 +30,7 @@ export async function load(): Promise<ProjectCollection> {
 		console.log(`fetched ${result.length} repository information from Github in ${end - start}ms`);
 
 		if (dev) {
-			break; // in development its faster to only do one fetch
+		break; // in development its faster to only do one fetch
 		}
 	}
 
@@ -46,5 +56,17 @@ export async function load(): Promise<ProjectCollection> {
 		return starsB - starsA;
 	});
 
-	return { projects: sortedProjects };
+	return { projects: sortedProjects, categories };
 }
+
+export async function entries() {
+	const result = await getProjectsAndCategories()
+
+	return result.categories.map(category => ({category: category.slug}));
+}
+
+export async function load({params}): Promise<ProjectCollection> {
+	return await getProjectsAndCategories(params);
+}
+
+export const prerender = true;

@@ -1,22 +1,21 @@
 <script lang="ts">
-	import dayjs from 'dayjs';
-	dayjs.extend(relativeTime);
-	import relativeTime from 'dayjs/plugin/relativeTime';
 	import type { Project } from '../lib/types/types';
 	import { createEventDispatcher } from 'svelte';
 	import numeral from 'numeral';
-		import Star from "./Star.svelte";
+	import Star from "./Star.svelte";
+	import dayjs from 'dayjs';
+	import relativeTime from 'dayjs/plugin/relativeTime';
+
+	dayjs.extend(relativeTime);
+	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
 	export let project: Project;
 
 	const dispatch = createEventDispatcher();
 
-	dayjs.extend(relativeTime);
-	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
-
-	function setCategory() {
-		dispatch('set-category', project.category);
-	}
+	const setCategory = () => {
+		dispatch('set-category', project.category?.slug);
+	};
 </script>
 
 <article class="max-w-full bg-white p-4 rounded-xl flex flex-col gap-4 hover:shadow-lg">
@@ -34,7 +33,7 @@
 	<div>{@html project.description}</div>
 	<div class="flex mt-auto">
 		<button class="text-sm rounded-full px-2 py-1 bg-gray-100 max-w-full" on:click={setCategory}>
-			{project.category}
+			{project.category.name}
 		</button>
 	</div>
 
