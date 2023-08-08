@@ -75,7 +75,7 @@
 					{data.categories.find((category) => category.slug === selectedCategory).name}
 				</h2>
 				<div class="text-sm mb-4 text-right">
-					{projects.length} Projects
+					{data.projects.length} Projects
 				</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
