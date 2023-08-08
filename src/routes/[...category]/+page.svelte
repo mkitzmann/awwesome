@@ -83,7 +83,7 @@
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
 				{#each limitedProjects as project}
-					<ProjectItem {project} on:set-category={setCategory(project.category)} />
+					<ProjectItem {project} on:change={setCategory(project.category.slug)} />
 				{/each}
 			</div>
 			<div class="flex mt-8">

@@ -14,7 +14,8 @@
 	const dispatch = createEventDispatcher();
 
 	const setCategory = () => {
-		dispatch('set-category', project.category?.slug);
+		console.log(project.category?.slug)
+		dispatch('change', project.category?.slug);
 	};
 </script>
 
@@ -39,7 +40,7 @@
 
 	{#if project.stars}
 		<div class="flex items-center gap-2 text-yellow-600">
-			<Star class="h-4" />{numeral(project.stars).format('0,0a')}
+			<Star />{numeral(project.stars).format('0,0a')}
 		</div>
 	{/if}
 </article>
