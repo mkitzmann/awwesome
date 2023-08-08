@@ -14,7 +14,7 @@
 	const dispatch = createEventDispatcher();
 
 	const setCategory = () => {
-		console.log(project.category?.slug)
+		console.log(project.category?.slug);
 		dispatch('change', project.category?.slug);
 	};
 </script>

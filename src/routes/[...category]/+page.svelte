@@ -5,33 +5,33 @@
 	import { allCategory } from '../../lib';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import {removeTrailingSlashes} from "../../lib";
+	import { removeTrailingSlashes } from '../../lib';
 	export let data: ProjectCollection;
 
-	let category = removeTrailingSlashes($page.params?.category)
+	let category = removeTrailingSlashes($page.params?.category);
 
 	let selectedCategory = category ?? allCategory.slug;
-	$: projects = [...data.projects]
-		.filter((project) => {
-			if (selectedCategory === allCategory.slug) {
-				return true;
-			}
-			return selectedCategory ? project.category?.slug === selectedCategory : true;
-		})
+	$: projects = [...data.projects].filter((project) => {
+		if (selectedCategory === allCategory.slug) {
+			return true;
+		}
+		return selectedCategory ? project.category?.slug === selectedCategory : true;
+	});
 
 	let displayLimit = 20;
 	$: limitedProjects = projects.slice(0, displayLimit);
 
 	const setSelectCategory = () => {
 		if (selectedCategory === '') {
-			console.log(selectedCategory)
+			console.log(selectedCategory);
 			goto('/');
 			return;
 		}
 		goto(`/${selectedCategory}`);
 	};
 	const setCategory = (categorySlug) => {
-		selectedCategory = categorySlug;
+		selectedCategory = categorySlug
+		goto(`/${categorySlug}`);
 	};
 </script>
 

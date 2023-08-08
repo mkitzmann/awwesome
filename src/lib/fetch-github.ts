@@ -17,7 +17,7 @@ export const fetchRepoInfoFromGithub = async (query: string): Promise<GithubRepo
 		let response = await request(query);
 
 		if (response.status === 502) {
-			const limit = 4;
+			const limit = 4; // Github returns random 502 errors, so we try 4 times which usually fixes the problem
 			for (let i = 0; i < limit; i++) {
 				console.log(
 					`received 502 error, request again ${i} of ${limit}`,
