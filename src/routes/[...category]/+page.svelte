@@ -9,15 +9,23 @@
 	import CategoryLink from '../../components/CategoryLink.svelte';
 	export let data: ProjectCollection;
 
-	let category = removeTrailingSlashes($page.params?.category);
+	let category = removeTrailingSlashes($page.params?.category)?.split('/');
+	console.log(category)
 
 	let selectedCategory: Category[] = category ?? [allCategory.slug];
-	$: projects = [...data.projects];
+	$: projects = [...data.projects]
 	//   .filter((project) => {
 	// 	if (selectedCategory === allCategory.slug) {
 	// 		return true;
 	// 	}
+	// 	// console.log(project.category?.map(item => item.slug), category, project.category?.map(item => item.slug) === category)
 	// 	// return selectedCategory ? project.category?.slug === selectedCategory : true;
+	//   // const array1 = project.category?.map(item => item.slug)
+	//   // const array2 = category
+	//   // if (array1.length === array2.length && array1.every((value, index) => value === array2[index]))
+	// 	for (const categoryItem of category) {
+	//
+	// 	}
 	// 	return true;
 	// });
 

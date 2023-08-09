@@ -17,7 +17,7 @@ let categories: Category[] = [];
 let loaded = false;
 
 export async function load({ params }): Promise<ProjectCollection> {
-	const category = removeTrailingSlashes(params);
+	const category: string[] = removeTrailingSlashes(params.category)?.split('/');
 	console.log('creating load function, category: ', category);
 	if (allProjects.length === 0) {
 		allProjects = await getProjectsFromAwesomeList();
@@ -61,12 +61,19 @@ export async function load({ params }): Promise<ProjectCollection> {
 		loaded = true;
 	}
 
-	// let filteredProjects: Project[] = allProjects;
-	// if (category) {
-	// 	filteredProjects = filteredProjects.filter((project) => project.category?.slug === category);
-	// }
+	let filteredProjects: Project[] = allProjects;
+	if (category) {
+		filteredProjects = filteredProjects.filter((project) => {
+			if (typeof category === 'undefined' || !project.category) {
+				return false;
+			}
+			return category.every((categoryPart, index) => {
+				return project.category?.[index]?.slug === categoryPart;
+			});
+		});
+	}
 
-	const sortedProjects = allProjects.sort((a, b) => {
+	const sortedProjects = filteredProjects.sort((a, b) => {
 		const starsA = a.stars || 0;
 		const starsB = b.stars || 0;
 		return starsB - starsA;
