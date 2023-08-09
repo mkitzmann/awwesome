@@ -1,4 +1,4 @@
-import type { Project } from './types/types';
+import type { Category, Project } from './types/types';
 import slugify from '@sindresorhus/slugify';
 function extractName(input) {
 	const regex = /\[([^\]]+)\]\(/;
@@ -42,18 +42,46 @@ function extractDemoUrl(input) {
 	return match ? match[1].trim() : null;
 }
 
-function extractRepositories(markdownText: string): Project[] {
-	const lines = markdownText.split('\n');
-	let projects: Project[] = [];
+function transformObjectToArray(obj) {
+	const array = [];
 
-	let currentCategory = null;
+	for (const key in obj) {
+		const entry = { name: key, slug: slugify(key), children: [] };
+		if (Object.keys(obj[key]).length > 0) {
+			entry.children = transformObjectToArray(obj[key]);
+		}
+		array.push(entry);
+	}
+
+	return array;
+}
+
+export interface ProjectsAndCategories {
+	projects: Project[];
+	categories: [];
+}
+
+function extractRepositories(markdownText: string): ProjectsAndCategories {
+	const lines = markdownText.split('\n');
+	const projects: Project[] = [];
+
+	let currentCategory = [];
+	const allCategoriesObject = {};
+	let categories = [];
 	for (const line of lines) {
 		if (line.includes('## List of Licenses')) {
 			break;
 		}
 		if (line.startsWith('### ')) {
 			// Extract the category from the markdown heading
-			currentCategory = line.slice(4).trim();
+			currentCategory = line.slice(4).trim().split(' - ');
+
+			[...currentCategory].reduce(
+				(prev, current) => (prev[current] = prev[current] ?? {}),
+				allCategoriesObject
+			);
+			categories = transformObjectToArray(allCategoriesObject);
+
 			continue;
 		}
 		if (!line.startsWith('- [')) {
@@ -71,19 +99,15 @@ function extractRepositories(markdownText: string): Project[] {
 			license: extractLicense(line),
 			source_url: extractSourceUrl(line),
 			demo_url: extractDemoUrl(line),
-			category: currentCategory
-				? {
-						slug: slugify(currentCategory),
-						name: currentCategory
-				  }
-				: undefined
+			category: currentCategory.map((category) => ({
+				slug: slugify(category),
+				name: category
+			}))
 		};
 		projects.push(project);
 	}
 
-	// projects = projects.slice(0, 100)
-
-	return projects;
+	return { projects, categories };
 }
 
 export async function getProjectsFromAwesomeList() {
@@ -92,8 +116,17 @@ export async function getProjectsFromAwesomeList() {
 		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md'
 	);
 	const awesomeSelfhosted = await awesomeSelfhostedResponse.text();
-	const repos = extractRepositories(awesomeSelfhosted);
+	const { projects } = extractRepositories(awesomeSelfhosted);
 	const end = performance.now();
-	console.log(`loaded ${repos.length} projects from Awesome Selfhosted in ${end - start}ms`);
-	return repos;
+	console.log(`loaded ${projects.length} projects from Awesome Selfhosted in ${end - start}ms`);
+	return projects;
+}
+
+export async function getAllCategories() {
+	const awesomeSelfhostedResponse = await fetch(
+		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md'
+	);
+	const awesomeSelfhosted = await awesomeSelfhostedResponse.text();
+	const { categories } = extractRepositories(awesomeSelfhosted);
+	return categories;
 }

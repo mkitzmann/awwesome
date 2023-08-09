@@ -14,8 +14,8 @@
 	const dispatch = createEventDispatcher();
 
 	const setCategory = () => {
-		console.log(project.category?.slug);
-		dispatch('change', project.category?.slug);
+		console.log(project.category);
+		dispatch('change', project.category);
 	};
 </script>
 
@@ -32,10 +32,12 @@
 		</div>
 	{/if}
 	<div>{@html project.description}</div>
-	<div class="flex mt-auto">
-		<button class="text-sm rounded-full px-2 py-1 bg-gray-100 max-w-full" on:click={setCategory}>
-			{project.category.name}
-		</button>
+	<div class="flex mt-auto gap-2 flex-wrap">
+		{#each project.category as category}
+			<button class="text-sm rounded-full px-2 py-1 bg-gray-100 max-w-full" on:click={setCategory}>
+				{category.name}
+			</button>
+		{/each}
 	</div>
 
 	{#if project.stars}

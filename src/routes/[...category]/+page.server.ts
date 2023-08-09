@@ -1,6 +1,6 @@
 import { createQuery } from '../../lib/query';
 import type { Category, GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
-import { getProjectsFromAwesomeList } from '../../lib/repositories';
+import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
 import { allCategory, removeTrailingSlashes } from '../../lib';
@@ -21,9 +21,6 @@ export async function load({ params }): Promise<ProjectCollection> {
 	console.log('creating load function, category: ', category);
 	if (allProjects.length === 0) {
 		allProjects = await getProjectsFromAwesomeList();
-
-		const map = new Map(allProjects.map((project) => [project.category?.slug, project.category]));
-		categories = [allCategory].concat([...map.values()]);
 	}
 
 	let data: GithubRepo[] = [];
@@ -64,18 +61,18 @@ export async function load({ params }): Promise<ProjectCollection> {
 		loaded = true;
 	}
 
-	let filteredProjects: Project[] = allProjects;
-	if (category) {
-		filteredProjects = filteredProjects.filter((project) => project.category?.slug === category);
-	}
+	// let filteredProjects: Project[] = allProjects;
+	// if (category) {
+	// 	filteredProjects = filteredProjects.filter((project) => project.category?.slug === category);
+	// }
 
-	const sortedProjects = filteredProjects.sort((a, b) => {
+	const sortedProjects = allProjects.sort((a, b) => {
 		const starsA = a.stars || 0;
 		const starsB = b.stars || 0;
 		return starsB - starsA;
 	});
 
-	return { projects: sortedProjects, categories };
+	return { projects: sortedProjects, categories: await getAllCategories() };
 }
 
 export const prerender = true;

@@ -6,7 +6,7 @@ export type Project = {
 	description: string | null;
 	license: string | null;
 	stack: string | null;
-	category?: Category;
+	category?: Category[];
 	stars?: number | null;
 	avatar_url?: string | null;
 	last_commit?: Date | null;
