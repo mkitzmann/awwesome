@@ -6,25 +6,16 @@
 	import { page } from '$app/stores';
 	import { removeTrailingSlashes } from '../../lib';
 	import CategoryGroup from '../../components/CategoryGroup.svelte';
-		import CategorySelect from "../../components/CategorySelect.svelte";
+	import CategorySelect from "../../components/CategorySelect.svelte";
 	export let data: ProjectCollection;
 
-	let category = removeTrailingSlashes($page.params?.category)?.split('/');
+	let category = removeTrailingSlashes($page.params?.category)?.split('/') ?? [];
 
 	$: selectedCategory = [...category] ?? [allCategory.slug];
 	$: projects = data.projects;
 
 	let displayLimit = 20;
 	$: limitedProjects = projects.slice(0, displayLimit);
-
-	// const setSelectCategory = (event) => {
-	// 	const selected = event.target.value
-	// 	if (!selected) {
-	// 		goto('/');
-	// 		return;
-	// 	}
-	// 	goto(`/${selected}`);
-	// };
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
@@ -41,38 +32,6 @@
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
 		<CategorySelect categories={data.categories}/>
-		<!--{#if category.length > 0}-->
-		<!--	<select-->
-		<!--		bind:value={selectedCategory[1]}-->
-		<!--		on:change={setSelectCategory}-->
-		<!--		class="rounded-full px-4 py-2 xl:hidden"-->
-		<!--	>-->
-		<!--		{#each data.categories.find((item) => item.slug === selectedCategory[0]).children as category}-->
-		<!--			{#if category}-->
-		<!--				<option value={category.slug}>-->
-		<!--					{category.name}-->
-		<!--				</option>-->
-		<!--			{/if}-->
-		<!--		{/each}-->
-		<!--	</select>-->
-		<!--{/if}-->
-		<!--{#if category.length > 1}-->
-		<!--	<select-->
-		<!--		bind:value={selectedCategory[2]}-->
-		<!--		on:change={setSelectCategory}-->
-		<!--		class="rounded-full px-4 py-2 xl:hidden"-->
-		<!--	>-->
-		<!--		{#each data.categories-->
-		<!--			.find((item) => item.slug === selectedCategory[0])-->
-		<!--			.children.find((item) => item.slug === selectedCategory[1]).children as category}-->
-		<!--			{#if category}-->
-		<!--				<option value={category.slug}>-->
-		<!--					{category.name}-->
-		<!--				</option>-->
-		<!--			{/if}-->
-		<!--		{/each}-->
-		<!--	</select>-->
-		<!--{/if}-->
 		<div class="max-w-[20%] hidden xl:block">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each data.categories as category}
