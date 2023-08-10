@@ -1,4 +1,36 @@
 import type { Project } from './types/types';
+import { chunkSize } from './index';
+
+interface MonthInfo {
+	name: string;
+	since: string;
+	until: string;
+}
+
+function getLast12Months(): MonthInfo[] {
+	const currentDate = new Date(new Date().setHours(0, 0, 0, 0));
+	const months = [];
+
+	for (let i = 0; i < 12; i++) {
+		const year = currentDate.getFullYear();
+		const month = currentDate.getMonth() - i;
+
+		const firstDay = new Date(year, month, 2);
+		firstDay.setUTCHours(0, 0, 0, 0);
+		const nextMonth = new Date(year, month + 1, 1);
+		nextMonth.setUTCHours(0, 0, 0, 0);
+
+		const monthInfo: MonthInfo = {
+			name: firstDay.toISOString().slice(0, 7).replace('-', ''),
+			since: firstDay.toISOString(),
+			until: nextMonth.toISOString()
+		};
+
+		months.unshift(monthInfo);
+	}
+
+	return months;
+}
 
 export async function createQuery(projects: Project[]) {
 	const urls = projects
@@ -14,7 +46,7 @@ export async function createQuery(projects: Project[]) {
 		.filter((a) => a);
 
 	const searchString = 'repo:' + urls.map((url) => url?.slice(19)).join(' repo:');
-	const chunkSize = 100;
+	const months = getLast12Months();
 	return `
 	query {
 	  search(
@@ -35,14 +67,12 @@ export async function createQuery(projects: Project[]) {
           defaultBranchRef {
             target {
               ... on Commit {
-                history(first: 1) {
-                  edges {
-                    node {
-                      authoredDate
-                      message
-                    }
-                  }
-                }
+              	${months
+									.map(
+										(month) =>
+											`m${month.name}: history(since: "${month.since}", until: "${month.until}") {\n\ttotalCount\n}`
+									)
+									.join('\n')}
               }
             }
 					}
@@ -106,6 +136,18 @@ export async function createQuery(projects: Project[]) {
 // 					updatedAt
 // 					openIssues: issues(states:OPEN) {
 // 						totalCount
+// 					}
+// 					defaultBranchRef {
+// 						target {
+// 						... on Commit {
+// 								july: history(since: "2023-07-01T00:00:00", until: "2023-08-01T00:00:00") {
+// 									totalCount
+// 								}
+// 								august: history(since: "2023-08-01T00:00:00", until: "2023-09-01T00:00:00") {
+// 									totalCount
+// 								}
+// 							}
+// 						}
 // 					}
 // 				}
 // 			}

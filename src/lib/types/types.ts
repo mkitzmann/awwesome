@@ -9,12 +9,17 @@ export type Project = {
 	category?: Category[];
 	stars?: number | null;
 	avatar_url?: string | null;
-	last_commit?: Date | null;
+	commit_history?: {
+		[key: string]: {
+			totalCount: number;
+		};
+	};
 };
 
 export type Category = {
 	slug: string;
 	name: string;
+	children?: Category[];
 };
 
 export interface ProjectCollection {
@@ -75,15 +80,8 @@ export interface GithubRepo {
 	stargazerCount?: number;
 	defaultBranchRef: {
 		target: {
-			history: {
-				edges: [
-					{
-						node: {
-							authoredDate;
-							message;
-						};
-					}
-				];
+			[key: string]: {
+				totalCount: number;
 			};
 		};
 	};

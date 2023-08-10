@@ -58,7 +58,7 @@ function transformObjectToArray(obj) {
 
 export interface ProjectsAndCategories {
 	projects: Project[];
-	categories: [];
+	categories: Category[];
 }
 
 function extractRepositories(markdownText: string): ProjectsAndCategories {

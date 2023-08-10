@@ -3,17 +3,32 @@ import type { Category, GithubRepo, Project, ProjectCollection } from '../../lib
 import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
-import { allCategory, removeTrailingSlashes } from '../../lib';
+import { chunkSize, removeTrailingSlashes } from '../../lib';
+
+function transformObjectToArray(categories: Category[]): { category: string }[] {
+	const array = [];
+
+	categories.forEach((category) => {
+		let entry = [{ category: category.slug }];
+		if (category.children && category.children?.length > 0) {
+			entry = entry.concat(transformObjectToArray(category.children));
+		}
+		array.concat(entry);
+	});
+
+	return array;
+}
 
 export async function entries() {
 	console.log('creating entries function');
-	const result = await getProjectsFromAwesomeList();
+	const result = await getAllCategories();
 
-	return result.map((project) => ({ category: project.category?.slug }));
+	const items = transformObjectToArray(result);
+	console.log(items);
+	return [{ category: '' }].concat(items);
 }
 
 let allProjects: Project[] = [];
-let categories: Category[] = [];
 let loaded = false;
 
 export async function load({ params }): Promise<ProjectCollection> {
@@ -25,7 +40,6 @@ export async function load({ params }): Promise<ProjectCollection> {
 
 	let data: GithubRepo[] = [];
 	if (!loaded) {
-		const chunkSize = 100;
 		for (let i = 0; i < allProjects.length; i += chunkSize) {
 			const start = performance.now();
 
@@ -54,8 +68,9 @@ export async function load({ params }): Promise<ProjectCollection> {
 			project.stars = repo.stargazerCount;
 			project.description = repo.descriptionHTML ?? project.description;
 			project.avatar_url = repo.owner?.avatarUrl;
-			const lastCommit = repo.defaultBranchRef?.target?.history?.edges?.[0].node?.authoredDate;
-			lastCommit ? (project.last_commit = new Date(lastCommit)) : null;
+			project.commit_history = repo.defaultBranchRef.target;
+			// const lastCommit = repo.defaultBranchRef?.target?.history?.edges?.[0].node?.authoredDate;
+			// lastCommit ? (project.last_commit = new Date(lastCommit)) : null;
 			return project;
 		});
 		loaded = true;

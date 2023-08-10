@@ -6,8 +6,6 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { removeTrailingSlashes } from '../../lib';
-	import CategoryLink from '../../components/CategoryLink.svelte';
-	import ChevronRight from '../../components/ChevronRight.svelte';
 	import CategoryGroup from '../../components/CategoryGroup.svelte';
 	export let data: ProjectCollection;
 
@@ -28,8 +26,6 @@
 		}
 		goto(`/${selectedCategory}`);
 	};
-
-	let openCategories = new Set();
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
@@ -59,7 +55,6 @@
 		<!--			{/each}-->
 		<!--		</select>-->
 		<div class="max-w-[20%] hidden xl:block">
-			{openCategories.size}
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each data.categories as category}
 					{#if category}
