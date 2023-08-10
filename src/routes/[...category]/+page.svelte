@@ -1,31 +1,30 @@
 <script lang="ts">
 	import githubMark from '$lib/assets/github-mark.svg';
-	import type { Category, ProjectCollection } from '../../lib/types/types';
+	import type { ProjectCollection } from '../../lib/types/types';
 	import ProjectItem from '../../components/ProjectItem.svelte';
 	import { allCategory } from '../../lib';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import { removeTrailingSlashes } from '../../lib';
 	import CategoryGroup from '../../components/CategoryGroup.svelte';
+		import CategorySelect from "../../components/CategorySelect.svelte";
 	export let data: ProjectCollection;
 
 	let category = removeTrailingSlashes($page.params?.category)?.split('/');
-	console.log(category);
 
-	let selectedCategory: Category[] = category ?? [allCategory.slug];
+	$: selectedCategory = [...category] ?? [allCategory.slug];
 	$: projects = data.projects;
 
 	let displayLimit = 20;
 	$: limitedProjects = projects.slice(0, displayLimit);
 
-	const setSelectCategory = () => {
-		if (selectedCategory === '') {
-			console.log(selectedCategory);
-			goto('/');
-			return;
-		}
-		goto(`/${selectedCategory}`);
-	};
+	// const setSelectCategory = (event) => {
+	// 	const selected = event.target.value
+	// 	if (!selected) {
+	// 		goto('/');
+	// 		return;
+	// 	}
+	// 	goto(`/${selected}`);
+	// };
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
@@ -36,24 +35,44 @@
 				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}
 			</div>
 		</div>
-		<a href="https://github.com/mkitzmann/awwesome"
-			><img src={githubMark} alt="Github repo" class="h-8" /></a
-		>
+		<a href="https://github.com/mkitzmann/awwesome">
+			<img src={githubMark} alt="Github repo" class="h-8" />
+		</a>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
-		<!--		<select-->
-		<!--			bind:value={selectedCategory}-->
-		<!--			on:change={setSelectCategory}-->
-		<!--			class="rounded-full px-4 py-2 xl:hidden"-->
-		<!--		>-->
-		<!--			{#each data.categories as category}-->
-		<!--				{#if category}-->
-		<!--					<option value={category.slug}>-->
-		<!--						{category.name}-->
-		<!--					</option>-->
-		<!--				{/if}-->
-		<!--			{/each}-->
-		<!--		</select>-->
+		<CategorySelect categories={data.categories}/>
+		<!--{#if category.length > 0}-->
+		<!--	<select-->
+		<!--		bind:value={selectedCategory[1]}-->
+		<!--		on:change={setSelectCategory}-->
+		<!--		class="rounded-full px-4 py-2 xl:hidden"-->
+		<!--	>-->
+		<!--		{#each data.categories.find((item) => item.slug === selectedCategory[0]).children as category}-->
+		<!--			{#if category}-->
+		<!--				<option value={category.slug}>-->
+		<!--					{category.name}-->
+		<!--				</option>-->
+		<!--			{/if}-->
+		<!--		{/each}-->
+		<!--	</select>-->
+		<!--{/if}-->
+		<!--{#if category.length > 1}-->
+		<!--	<select-->
+		<!--		bind:value={selectedCategory[2]}-->
+		<!--		on:change={setSelectCategory}-->
+		<!--		class="rounded-full px-4 py-2 xl:hidden"-->
+		<!--	>-->
+		<!--		{#each data.categories-->
+		<!--			.find((item) => item.slug === selectedCategory[0])-->
+		<!--			.children.find((item) => item.slug === selectedCategory[1]).children as category}-->
+		<!--			{#if category}-->
+		<!--				<option value={category.slug}>-->
+		<!--					{category.name}-->
+		<!--				</option>-->
+		<!--			{/if}-->
+		<!--		{/each}-->
+		<!--	</select>-->
+		<!--{/if}-->
 		<div class="max-w-[20%] hidden xl:block">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each data.categories as category}
@@ -66,7 +85,7 @@
 		<div class="w-full">
 			<div class="flex justify-between flex-wrap gap-4">
 				<h2 class="font-bold text-xl">
-					{category}
+					{selectedCategory}
 					<!--{data.categories.find((category) => category.slug === selectedCategory).name}-->
 				</h2>
 				<div class="text-sm mb-4 text-right">
