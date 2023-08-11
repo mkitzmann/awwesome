@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { Category } from '../lib/types/types';
-		import {allCategory} from "$lib";
+	import {allCategory} from "$lib";
 
 	export let categories: Category[] = [];
+	export let parent: Category;
 	export let level = 0;
 	let selectedCategory;
 
 	const setSelectCategory = (event) => {
 		const selected = event.target.value;
-		console.log(selected);
+		console.log(selected, parent);
 		if (!selected) {
 			goto('/');
 			return;
@@ -41,5 +42,5 @@
 	{/each}
 </select>
 {#if hasChildren}
-		<svelte:self categories={currentCategory.children} />
+		<svelte:self categories={currentCategory.children} parent={currentCategory}/>
 {/if}

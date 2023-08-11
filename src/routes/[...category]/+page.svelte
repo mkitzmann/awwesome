@@ -6,7 +6,7 @@
 	import { page } from '$app/stores';
 	import { removeTrailingSlashes } from '../../lib';
 	import CategoryGroup from '../../components/CategoryGroup.svelte';
-	import CategorySelect from "../../components/CategorySelect.svelte";
+	import CategorySelect from '../../components/CategorySelect.svelte';
 	export let data: ProjectCollection;
 
 	let category = removeTrailingSlashes($page.params?.category)?.split('/') ?? [];
@@ -31,7 +31,9 @@
 		</a>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
-		<CategorySelect categories={data.categories}/>
+		<div class="xl:hidden">
+			<CategorySelect categories={data.categories} />
+		</div>
 		<div class="max-w-[20%] hidden xl:block">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
 				{#each data.categories as category}
