@@ -52,6 +52,7 @@ export async function load({ params }): Promise<ProjectCollection> {
 			project.description = repo.descriptionHTML ?? project.description;
 			project.avatar_url = repo.owner?.avatarUrl;
 			project.commit_history = repo.defaultBranchRef.target;
+			project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic) ?? [];
 			return project;
 		});
 		loaded = true;

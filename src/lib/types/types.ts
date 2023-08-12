@@ -9,6 +9,7 @@ export type Project = {
 	category?: string;
 	stars?: number | null;
 	avatar_url?: string | null;
+	topics?: Topic[];
 	commit_history?: {
 		[key: string]: {
 			totalCount: number;
@@ -55,15 +56,6 @@ export interface GithubRepo {
 	owner?: {
 		avatarUrl: string;
 	};
-	repositoryTopics?: {
-		edges: {
-			node: {
-				topic: {
-					name: string;
-				};
-			};
-		}[];
-	};
 	languages?: {
 		edges: {
 			node: {
@@ -84,6 +76,7 @@ export interface GithubRepo {
 	};
 	openGraphImageUrl?: string;
 	stargazerCount?: number;
+	repositoryTopics: { edges: [{ node: { topic: Topic } }] };
 	defaultBranchRef: {
 		target: {
 			[key: string]: {
@@ -95,3 +88,8 @@ export interface GithubRepo {
 		totalCount: number;
 	};
 }
+
+export type Topic = {
+	name: string;
+	id: string;
+};

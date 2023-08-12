@@ -64,6 +64,16 @@ export async function createQuery(projects: Project[]) {
           }
           descriptionHTML
           stargazerCount
+					repositoryTopics(first: 10) {
+					  edges {
+					    node {
+					      topic {
+					        name
+					        id
+					      }
+					    }
+					  }
+					}
           defaultBranchRef {
             target {
               ... on Commit {
