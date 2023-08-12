@@ -7,9 +7,9 @@
 	import { categoryStore } from '../../stores/stores';
 	import CategoryGroup from '../../components/CategoryGroup.svelte';
 	import CategorySelect from '../../components/CategorySelect.svelte';
-	import {allCategory} from "$lib";
-		import {beforeUpdate} from "svelte";
-		import {goto} from "$app/navigation";
+	import { allCategory } from '$lib';
+	import { beforeUpdate } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	export let data: ProjectCollection;
 	categoryStore.set(data.categories);
@@ -18,8 +18,8 @@
 
 	let selectedCategory = '';
 	beforeUpdate(() => {
-		selectedCategory = category
-	})
+		selectedCategory = category;
+	});
 	$: projects = data.projects;
 
 	let displayLimit = 20;
@@ -32,9 +32,9 @@
 	});
 
 	const setSelectedCategory = (event) => {
-		selectedCategory = event.detail
-		goto(`/${event.detail}`)
-	}
+		selectedCategory = event.detail;
+		goto(`/${event.detail}`);
+	};
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
@@ -67,7 +67,7 @@
 				</a>
 				{#each data.categories.tree as category}
 					{#if category}
-						<CategoryGroup {category} />
+						<CategoryGroup {category} {selectedCategory} />
 					{/if}
 				{/each}
 			</div>
