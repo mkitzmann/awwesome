@@ -1,5 +1,5 @@
 import { createQuery } from '../../lib/query';
-import type { GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
+import type { GithubRepo, Project, ProjectCollection, Topic } from '../../lib/types/types';
 import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
@@ -52,6 +52,7 @@ export async function load({ params }): Promise<ProjectCollection> {
 			project.description = repo.descriptionHTML ?? project.description;
 			project.avatar_url = repo.owner?.avatarUrl;
 			project.commit_history = repo.defaultBranchRef.target;
+			project.pushedAt = new Date(repo.pushedAt);
 			project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic) ?? [];
 			return project;
 		});
@@ -74,7 +75,10 @@ export async function load({ params }): Promise<ProjectCollection> {
 		return starsB - starsA;
 	});
 
-	return { projects: sortedProjects, categories: await getAllCategories() };
+	return {
+		projects: sortedProjects,
+		categories: await getAllCategories()
+	};
 }
 
 export const prerender = true;

@@ -15,6 +15,7 @@ export type Project = {
 			totalCount: number;
 		};
 	};
+	pushedAt: Date;
 };
 
 export interface AllCategories {
@@ -84,6 +85,7 @@ export interface GithubRepo {
 			};
 		};
 	};
+	pushedAt: string;
 	openIssues?: {
 		totalCount: number;
 	};

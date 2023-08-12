@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { Category } from '../lib/types/types';
-	import {allCategory} from "$lib";
+	import { allCategory } from '$lib';
 	import { createEventDispatcher } from 'svelte';
-
 
 	export let categories: Category[] = [];
 	export let selectedCategory = '';
@@ -10,25 +9,26 @@
 	const dispatch = createEventDispatcher();
 
 	const setSelectCategory = (event) => {
-		dispatch('change', event)
+		dispatch('change', event);
 	};
 
 	const setChildCategory = (event) => {
-		dispatch('change', currentCategoryString + '/' + event.detail)
+		dispatch('change', currentCategoryString + '/' + event.detail);
 	};
 
-	$: currentCategoryString = selectedCategory.split('/')[0]
+	$: currentCategoryString = selectedCategory.split('/')[0];
 
-	$: currentCategory =
-		categories.find((category) => category.slug === selectedCategory.split('/')[0]);
+	$: currentCategory = categories.find(
+		(category) => category.slug === selectedCategory.split('/')[0]
+	);
 
-	$: hasChildren =
-		currentCategory?.children.length > 0;
+	$: hasChildren = currentCategory?.children.length > 0;
 </script>
+
 <select
 	bind:value={currentCategoryString}
 	on:change={setSelectCategory(currentCategoryString)}
-	class="rounded-full px-4 py-2  xl:hidden w-full md:max-w-full md:w-auto"
+	class="rounded-full px-4 py-2 xl:hidden w-full md:max-w-full md:w-auto"
 >
 	<option value={allCategory.slug}>
 		{allCategory.name}
@@ -42,5 +42,9 @@
 	{/each}
 </select>
 {#if hasChildren}
-		<svelte:self categories={currentCategory.children} selectedCategory={selectedCategory.split('/').splice(1).join('/')} on:change={setChildCategory}/>
+	<svelte:self
+		categories={currentCategory.children}
+		selectedCategory={selectedCategory.split('/').splice(1).join('/')}
+		on:change={setChildCategory}
+	/>
 {/if}

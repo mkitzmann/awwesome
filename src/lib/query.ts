@@ -64,6 +64,7 @@ export async function createQuery(projects: Project[]) {
           }
           descriptionHTML
           stargazerCount
+          pushedAt
 					repositoryTopics(first: 10) {
 					  edges {
 					    node {
