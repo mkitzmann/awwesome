@@ -6,7 +6,7 @@
 	}, '');
 </script>
 
-<svg viewBox="0 0 110 20" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 110 20" xmlns="http://www.w3.org/2000/svg" class="w-full">
 	<defs>
 		<linearGradient id="grad1" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="20">
 			<stop offset="0%" stop-color="#9be9a8"></stop>
