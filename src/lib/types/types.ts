@@ -6,7 +6,7 @@ export type Project = {
 	description: string | null;
 	license: string | null;
 	stack: string | null;
-	category?: Category[];
+	category?: string;
 	stars?: number | null;
 	avatar_url?: string | null;
 	commit_history?: {
@@ -16,6 +16,12 @@ export type Project = {
 	};
 };
 
+export interface AllCategories {
+	tree: Category[];
+	urls: Set<string>;
+	names: { [key: string]: string };
+}
+
 export type Category = {
 	slug: string;
 	name: string;
@@ -24,7 +30,7 @@ export type Category = {
 
 export interface ProjectCollection {
 	projects: Project[];
-	categories: Category[];
+	categories: AllCategories;
 }
 
 export interface GithubQueryResult {

@@ -1,16 +1,23 @@
 <script lang="ts">
 	import type { Project } from '../lib/types/types';
-	import { createEventDispatcher } from 'svelte';
+	// import { createEventDispatcher } from 'svelte';
 	import numeral from 'numeral';
 	import Star from './Star.svelte';
-	import dayjs from 'dayjs';
-	import relativeTime from 'dayjs/plugin/relativeTime';
+	// import dayjs from 'dayjs';
+	// import relativeTime from 'dayjs/plugin/relativeTime';
 	import CommitGraph from './CommitGraph.svelte';
+	import { categoryStore } from '../stores/stores';
 
-	dayjs.extend(relativeTime);
-	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
+	// dayjs.extend(relativeTime);
+	// const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
 	export let project: Project;
+
+	let categoryNames;
+
+	categoryStore.subscribe((value) => {
+		categoryNames = value.names;
+	});
 </script>
 
 <article class="max-w-full bg-white p-4 rounded-xl flex flex-col gap-4 hover:shadow-lg">
@@ -20,16 +27,22 @@
 		{/if}
 		<h2 class="text-3xl font-bold break-all">{project.name}</h2>
 	</a>
-	{#if project.last_commit}
-		<div class="text-sm text-gray-500">
-			last commit {getRelativeTime(project.last_commit)}
-		</div>
-	{/if}
+	<!--{#if project.last_commit}-->
+	<!--	<div class="text-sm text-gray-500">-->
+	<!--		last commit {getRelativeTime(project.last_commit)}-->
+	<!--	</div>-->
+	<!--{/if}-->
 	<div>{@html project.description}</div>
 	<div class="flex mt-auto gap-2 flex-wrap">
-		{#each project.category as category, index}
-			<a href="/{project.category.slice(0, index+1).map(item => item.slug).join('/')}" class="text-sm rounded-full px-2 py-1 bg-gray-100 max-w-full" >
-				{category.name}
+		{#each project.category.split('/').slice(1) as category, index}
+			<a
+				href={project.category
+					.split('/')
+					.slice(0, index + 2)
+					.join('/')}
+				class="text-sm rounded-full px-2 py-1 bg-gray-100 max-w-full"
+			>
+				{categoryNames[category]}
 			</a>
 		{/each}
 	</div>

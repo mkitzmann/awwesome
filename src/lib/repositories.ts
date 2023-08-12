@@ -1,4 +1,4 @@
-import type { Category, Project } from './types/types';
+import type { AllCategories, Category, Project } from './types/types';
 import slugify from '@sindresorhus/slugify';
 function extractName(input) {
 	const regex = /\[([^\]]+)\]\(/;
@@ -42,7 +42,7 @@ function extractDemoUrl(input) {
 	return match ? match[1].trim() : null;
 }
 
-function transformObjectToArray(obj) {
+function transformObjectToArray(obj): Category[] {
 	const array = [];
 
 	for (const key in obj) {
@@ -58,30 +58,36 @@ function transformObjectToArray(obj) {
 
 export interface ProjectsAndCategories {
 	projects: Project[];
-	categories: Category[];
+	categories: AllCategories;
 }
 
 function extractRepositories(markdownText: string): ProjectsAndCategories {
 	const lines = markdownText.split('\n');
 	const projects: Project[] = [];
 
-	let currentCategory = [];
-	const allCategoriesObject = {};
-	let categories = [];
+	let currentCategoryURL: string;
+	const allCategories: AllCategories = { tree: [], names: {}, urls: new Set() };
+
+	const allCategoriesObject = { all: {} };
 	for (const line of lines) {
 		if (line.includes('## List of Licenses')) {
 			break;
 		}
 		if (line.startsWith('### ')) {
 			// Extract the category from the markdown heading
-			currentCategory = line.slice(4).trim().split(' - ');
+			currentCategoryURL = '';
+			const currentCategoryNames = line.slice(4).trim().split(' - ');
+			currentCategoryNames.forEach((categoryName) => {
+				allCategories.names[slugify(categoryName)] = categoryName;
+				currentCategoryURL = `${currentCategoryURL}/${slugify(categoryName)}`;
+			});
 
-			[...currentCategory].reduce(
+			[...currentCategoryNames].reduce(
 				(prev, current) => (prev[current] = prev[current] ?? {}),
 				allCategoriesObject
 			);
-			categories = transformObjectToArray(allCategoriesObject);
-
+			allCategories.tree = transformObjectToArray(allCategoriesObject);
+			allCategories.urls.add(currentCategoryURL);
 			continue;
 		}
 		if (!line.startsWith('- [')) {
@@ -99,18 +105,14 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 			license: extractLicense(line),
 			source_url: extractSourceUrl(line),
 			demo_url: extractDemoUrl(line),
-			category: currentCategory.map((category) => ({
-				slug: slugify(category),
-				name: category
-			}))
+			category: currentCategoryURL
 		};
 		projects.push(project);
 	}
-
-	return { projects, categories };
+	return { projects, categories: allCategories };
 }
 
-export async function getProjectsFromAwesomeList() {
+export async function getProjectsFromAwesomeList(): Promise<Project[]> {
 	const start = performance.now();
 	const awesomeSelfhostedResponse = await fetch(
 		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md'
@@ -122,7 +124,7 @@ export async function getProjectsFromAwesomeList() {
 	return projects;
 }
 
-export async function getAllCategories() {
+export async function getAllCategories(): Promise<AllCategories> {
 	const awesomeSelfhostedResponse = await fetch(
 		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md'
 	);

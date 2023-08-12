@@ -4,6 +4,7 @@ import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/reposito
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
 import { chunkSize, removeTrailingSlashes } from '../../lib';
+import { categoryStore } from '../../stores/stores';
 
 function transformObjectToArray(categories: Category[]): { category: string }[] {
 	const array = [];
@@ -21,19 +22,17 @@ function transformObjectToArray(categories: Category[]): { category: string }[] 
 
 export async function entries() {
 	console.log('creating entries function');
-	const result = await getAllCategories();
+	const allCategories = await getAllCategories();
 
-	const items = transformObjectToArray(result);
-	console.log(items);
-	return [{ category: '' }].concat(items);
+	return [{ category: '' }].concat([...allCategories.tree].map((category) => ({ category })));
 }
 
 let allProjects: Project[] = [];
 let loaded = false;
 
 export async function load({ params }): Promise<ProjectCollection> {
-	const category: string[] = removeTrailingSlashes(params.category)?.split('/');
-	console.log('creating load function, category: ', category);
+	const requestedCategory: string = removeTrailingSlashes(params.category) ?? '';
+	console.log('creating load function, category: ', requestedCategory);
 	if (allProjects.length === 0) {
 		allProjects = await getProjectsFromAwesomeList();
 	}
@@ -69,22 +68,18 @@ export async function load({ params }): Promise<ProjectCollection> {
 			project.description = repo.descriptionHTML ?? project.description;
 			project.avatar_url = repo.owner?.avatarUrl;
 			project.commit_history = repo.defaultBranchRef.target;
-			// const lastCommit = repo.defaultBranchRef?.target?.history?.edges?.[0].node?.authoredDate;
-			// lastCommit ? (project.last_commit = new Date(lastCommit)) : null;
 			return project;
 		});
 		loaded = true;
 	}
 
 	let filteredProjects: Project[] = allProjects;
-	if (category) {
+	if (requestedCategory !== '') {
 		filteredProjects = filteredProjects.filter((project) => {
-			if (typeof category === 'undefined' || !project.category) {
+			if (!project.category) {
 				return false;
 			}
-			return category.every((categoryPart, index) => {
-				return project.category?.[index]?.slug === categoryPart;
-			});
+			return project.category.includes(requestedCategory);
 		});
 	}
 

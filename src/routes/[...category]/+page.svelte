@@ -1,21 +1,28 @@
 <script lang="ts">
 	import githubMark from '$lib/assets/github-mark.svg';
-	import type { ProjectCollection } from '../../lib/types/types';
+	import type {ProjectCollection} from '../../lib/types/types';
 	import ProjectItem from '../../components/ProjectItem.svelte';
-	import { allCategory } from '../../lib';
-	import { page } from '$app/stores';
-	import { removeTrailingSlashes } from '../../lib';
-	import CategoryGroup from '../../components/CategoryGroup.svelte';
-	import CategorySelect from '../../components/CategorySelect.svelte';
+	import {page} from '$app/stores';
+	import {removeTrailingSlashes} from '../../lib';
+	import {categoryStore} from "../../stores/stores";
+	import CategoryGroup from "../../components/CategoryGroup.svelte";
+
 	export let data: ProjectCollection;
+	categoryStore.set(data.categories);
 
-	let category = removeTrailingSlashes($page.params?.category)?.split('/') ?? [];
+	let category = removeTrailingSlashes($page.params?.category) ?? '';
 
-	$: selectedCategory = [...category] ?? [allCategory.slug];
+	$: selectedCategory = category;
 	$: projects = data.projects;
 
 	let displayLimit = 20;
 	$: limitedProjects = projects.slice(0, displayLimit);
+
+	let categoryNames;
+
+	categoryStore.subscribe((value) => {
+		categoryNames = value.names;
+	});
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
@@ -31,12 +38,12 @@
 		</a>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
-		<div class="xl:hidden">
-			<CategorySelect categories={data.categories} />
-		</div>
+<!--		<div class="xl:hidden">-->
+<!--			<CategorySelect categories={data.categories} />-->
+<!--		</div>-->
 		<div class="max-w-[20%] hidden xl:block">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
-				{#each data.categories as category}
+				{#each data.categories.tree as category}
 					{#if category}
 						<CategoryGroup {category} />
 					{/if}
@@ -46,8 +53,7 @@
 		<div class="w-full">
 			<div class="flex justify-between flex-wrap gap-4">
 				<h2 class="font-bold text-xl">
-					{selectedCategory}
-					<!--{data.categories.find((category) => category.slug === selectedCategory).name}-->
+					{selectedCategory.split('/').map(category => categoryNames[category]).join(' - ')}
 				</h2>
 				<div class="text-sm mb-4 text-right">
 					{projects.length} Projects

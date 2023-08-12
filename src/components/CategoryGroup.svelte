@@ -12,8 +12,8 @@
 	};
 </script>
 
-<div class="flex items-center justify-between w-full" style="margin-left: {indent}px">
-	<a {href} class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full"
+<div class="flex items-center justify-between w-full" >
+	<a {href} class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full" style="padding-left: {indent}px"
 		>{category.name}</a
 	>
 	{#if category.children.length > 0}
