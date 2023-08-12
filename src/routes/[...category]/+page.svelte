@@ -10,6 +10,7 @@
 	import { allCategory } from '$lib';
 	import { beforeUpdate } from 'svelte';
 	import { goto } from '$app/navigation';
+		import Logo from "../../components/Logo.svelte";
 
 	export let data: ProjectCollection;
 	categoryStore.set(data.categories);
@@ -40,12 +41,16 @@
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
 	<div class="flex justify-between">
 		<div>
-			<h1 class="text-3xl font-bold mb-4">Awwesome Selfhosted</h1>
-			<div class="text-sm -mt-4 text-gray-400">
-				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}
+			<div class="flex gap-4 items-center mb-4">
+
+				<Logo />
+			<h1 class="text-3xl font-bold">Awwesome Selfhosted</h1>
 			</div>
+<!--			<div class="text-sm -mt-4 text-gray-400">-->
+<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
+<!--			</div>-->
 		</div>
-		<a href="https://github.com/mkitzmann/awwesome">
+		<a href="https://github.com/mkitzmann/awwesome" class="flex-shrink-0">
 			<img src={githubMark} alt="Github repo" class="h-8" />
 		</a>
 	</div>
