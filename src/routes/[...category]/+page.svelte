@@ -32,8 +32,8 @@
 	});
 
 	const setSelectedCategory = (event) => {
-		console.log(event.detail)
-			goto(`/${event.detail}`)
+		selectedCategory = event.detail
+		goto(`/${event.detail}`)
 	}
 </script>
 

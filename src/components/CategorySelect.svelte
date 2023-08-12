@@ -28,7 +28,7 @@
 <select
 	bind:value={currentCategoryString}
 	on:change={setSelectCategory(currentCategoryString)}
-	class="rounded-full px-4 py-2 xl:hidden"
+	class="rounded-full px-4 py-2  xl:hidden w-full md:max-w-full md:w-auto"
 >
 	<option value={allCategory.slug}>
 		{allCategory.name}
