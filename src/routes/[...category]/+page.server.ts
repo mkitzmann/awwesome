@@ -1,30 +1,14 @@
 import { createQuery } from '../../lib/query';
-import type { Category, GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
+import type { GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
 import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
 import { chunkSize, removeTrailingSlashes } from '../../lib';
-import { categoryStore } from '../../stores/stores';
 
-function transformObjectToArray(categories: Category[]): { category: string }[] {
-	const array = [];
-
-	categories.forEach((category) => {
-		let entry = [{ category: category.slug }];
-		if (category.children && category.children?.length > 0) {
-			entry = entry.concat(transformObjectToArray(category.children));
-		}
-		array.concat(entry);
-	});
-
-	return array;
-}
-
-export async function entries() {
+export async function entries(): Promise<Array<{ category: string }>> {
 	console.log('creating entries function');
-	const allCategories = await getAllCategories();
-
-	return [{ category: '' }].concat([...allCategories.tree].map((category) => ({ category })));
+	const { urls } = await getAllCategories();
+	return [{ category: '' }].concat([...urls].map((url) => ({ category: url.slice(1) })));
 }
 
 let allProjects: Project[] = [];

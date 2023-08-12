@@ -80,6 +80,7 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 			currentCategoryNames.forEach((categoryName) => {
 				allCategories.names[slugify(categoryName)] = categoryName;
 				currentCategoryURL = `${currentCategoryURL}/${slugify(categoryName)}`;
+				allCategories.urls.add(currentCategoryURL);
 			});
 
 			[...currentCategoryNames].reduce(
@@ -87,7 +88,6 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 				allCategoriesObject
 			);
 			allCategories.tree = transformObjectToArray(allCategoriesObject);
-			allCategories.urls.add(currentCategoryURL);
 			continue;
 		}
 		if (!line.startsWith('- [')) {
@@ -109,6 +109,7 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 		};
 		projects.push(project);
 	}
+
 	return { projects, categories: allCategories };
 }
 
