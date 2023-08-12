@@ -1,18 +1,25 @@
 <script lang="ts">
 	import githubMark from '$lib/assets/github-mark.svg';
-	import type {ProjectCollection} from '../../lib/types/types';
+	import type { ProjectCollection } from '../../lib/types/types';
 	import ProjectItem from '../../components/ProjectItem.svelte';
-	import {page} from '$app/stores';
-	import {removeTrailingSlashes} from '../../lib';
-	import {categoryStore} from "../../stores/stores";
-	import CategoryGroup from "../../components/CategoryGroup.svelte";
+	import { page } from '$app/stores';
+	import { removeTrailingSlashes } from '../../lib';
+	import { categoryStore } from '../../stores/stores';
+	import CategoryGroup from '../../components/CategoryGroup.svelte';
+	import CategorySelect from '../../components/CategorySelect.svelte';
+	import {allCategory} from "$lib";
+		import {beforeUpdate} from "svelte";
+		import {goto} from "$app/navigation";
 
 	export let data: ProjectCollection;
 	categoryStore.set(data.categories);
 
-	let category = removeTrailingSlashes($page.params?.category) ?? '';
+	$: category = removeTrailingSlashes($page.params?.category) ?? '';
 
-	$: selectedCategory = category;
+	let selectedCategory = '';
+	beforeUpdate(() => {
+		selectedCategory = category
+	})
 	$: projects = data.projects;
 
 	let displayLimit = 20;
@@ -23,6 +30,11 @@
 	categoryStore.subscribe((value) => {
 		categoryNames = value.names;
 	});
+
+	const setSelectedCategory = (event) => {
+		console.log(event.detail)
+			goto(`/${event.detail}`)
+	}
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
@@ -38,11 +50,21 @@
 		</a>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
-<!--		<div class="xl:hidden">-->
-<!--			<CategorySelect categories={data.categories} />-->
-<!--		</div>-->
+		<div class="xl:hidden flex flex-wrap gap-4">
+			<CategorySelect
+				categories={data.categories.tree}
+				{selectedCategory}
+				on:change={setSelectedCategory}
+			/>
+		</div>
 		<div class="max-w-[20%] hidden xl:block">
 			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
+				<a
+					href="/"
+					class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full"
+				>
+					{allCategory.name}
+				</a>
 				{#each data.categories.tree as category}
 					{#if category}
 						<CategoryGroup {category} />
@@ -53,7 +75,10 @@
 		<div class="w-full">
 			<div class="flex justify-between flex-wrap gap-4">
 				<h2 class="font-bold text-xl">
-					{selectedCategory.split('/').map(category => categoryNames[category]).join(' - ')}
+					{selectedCategory
+						.split('/')
+						.map((category) => categoryNames[category])
+						.join(' - ')}
 				</h2>
 				<div class="text-sm mb-4 text-right">
 					{projects.length} Projects

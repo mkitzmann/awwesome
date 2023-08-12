@@ -68,7 +68,7 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 	let currentCategoryURL: string;
 	const allCategories: AllCategories = { tree: [], names: {}, urls: new Set() };
 
-	const allCategoriesObject = { all: {} };
+	const allCategoriesObject = {};
 	for (const line of lines) {
 		if (line.includes('## List of Licenses')) {
 			break;

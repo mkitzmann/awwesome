@@ -13,9 +13,9 @@
 </script>
 
 <div class="flex items-center justify-between w-full" >
-	<a {href} class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full" style="padding-left: {indent}px"
-		>{category.name}</a
-	>
+	<a {href} class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full">
+		{category.name}
+	</a>
 	{#if category.children.length > 0}
 		<button on:click={toggle}>
 			<ChevronRight />

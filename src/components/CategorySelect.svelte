@@ -1,33 +1,33 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import type { Category } from '../lib/types/types';
 	import {allCategory} from "$lib";
+	import { createEventDispatcher } from 'svelte';
+
 
 	export let categories: Category[] = [];
-	export let parent: Category;
-	export let level = 0;
-	let selectedCategory;
+	export let selectedCategory = '';
+
+	const dispatch = createEventDispatcher();
 
 	const setSelectCategory = (event) => {
-		const selected = event.target.value;
-		console.log(selected, parent);
-		if (!selected) {
-			goto('/');
-			return;
-		}
-		goto(`/${selected}`);
+		dispatch('change', event)
 	};
 
+	const setChildCategory = (event) => {
+		dispatch('change', currentCategoryString + '/' + event.detail)
+	};
+
+	$: currentCategoryString = selectedCategory.split('/')[0]
+
 	$: currentCategory =
-		categories.find((category) => category.slug === selectedCategory);
+		categories.find((category) => category.slug === selectedCategory.split('/')[0]);
 
 	$: hasChildren =
 		currentCategory?.children.length > 0;
 </script>
-
 <select
-	bind:value={selectedCategory}
-	on:change={setSelectCategory}
+	bind:value={currentCategoryString}
+	on:change={setSelectCategory(currentCategoryString)}
 	class="rounded-full px-4 py-2 xl:hidden"
 >
 	<option value={allCategory.slug}>
@@ -42,5 +42,5 @@
 	{/each}
 </select>
 {#if hasChildren}
-		<svelte:self categories={currentCategory.children} parent={currentCategory}/>
+		<svelte:self categories={currentCategory.children} selectedCategory={selectedCategory.split('/').splice(1).join('/')} on:change={setChildCategory}/>
 {/if}
