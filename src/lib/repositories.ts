@@ -1,6 +1,12 @@
 import type { AllCategories, Category, Project } from './types/types';
 import slugify from '@sindresorhus/slugify';
 import { removeTrailingSlashes } from './index';
+
+export interface ProjectsAndCategories {
+	projects: Project[];
+	categories: AllCategories;
+}
+
 function extractName(input) {
 	const regex = /\[([^\]]+)\]\(/;
 	const match = input.match(regex);
@@ -57,38 +63,40 @@ function transformObjectToArray(obj): Category[] {
 	return array;
 }
 
-export interface ProjectsAndCategories {
-	projects: Project[];
-	categories: AllCategories;
+/*
+ Extract the category from the markdown heading
+ */
+function extractCategory(line: string, allCategories: AllCategories) {
+	const allCategoriesObject = {};
+	let currentCategoryURL = '';
+	const currentCategoryNames = line.slice(4).trim().split(' - ');
+	currentCategoryNames.forEach((categoryName) => {
+		allCategories.names[slugify(categoryName)] = categoryName;
+		currentCategoryURL = `${currentCategoryURL}/${slugify(categoryName)}`;
+		allCategories.urls.add(currentCategoryURL);
+	});
+
+	[...currentCategoryNames].reduce(
+		(prev, current) => (prev[current] = prev[current] ?? {}),
+		allCategoriesObject
+	);
+	allCategories.tree = transformObjectToArray(allCategoriesObject);
+	return currentCategoryURL;
 }
 
 function extractRepositories(markdownText: string): ProjectsAndCategories {
 	const lines = markdownText.split('\n');
 	const projects: Project[] = [];
 
-	let currentCategoryURL: string;
+	let currentCategoryURL = '';
 	const allCategories: AllCategories = { tree: [], names: {}, urls: new Set() };
 
-	const allCategoriesObject = {};
 	for (const line of lines) {
 		if (line.includes('## List of Licenses')) {
 			break;
 		}
 		if (line.startsWith('### ')) {
-			// Extract the category from the markdown heading
-			currentCategoryURL = '';
-			const currentCategoryNames = line.slice(4).trim().split(' - ');
-			currentCategoryNames.forEach((categoryName) => {
-				allCategories.names[slugify(categoryName)] = categoryName;
-				currentCategoryURL = `${currentCategoryURL}/${slugify(categoryName)}`;
-				allCategories.urls.add(currentCategoryURL);
-			});
-
-			[...currentCategoryNames].reduce(
-				(prev, current) => (prev[current] = prev[current] ?? {}),
-				allCategoriesObject
-			);
-			allCategories.tree = transformObjectToArray(allCategoriesObject);
+			currentCategoryURL = extractCategory(line, allCategories);
 			continue;
 		}
 		if (!line.startsWith('- [')) {
