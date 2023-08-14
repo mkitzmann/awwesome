@@ -37,9 +37,7 @@ export async function load({ params }): Promise<ProjectCollection> {
 			const result = await fetchRepoInfoFromGithub(query);
 			data = data.concat(result);
 			const end = performance.now();
-			console.log(
-				`fetched ${result.length} repository information from Github in ${end - start}ms`
-			);
+			console.log(`fetched ${result.length} repositories from Github in ${end - start}ms`);
 
 			if (dev) {
 				break; // in development its faster to only do one fetch
@@ -72,5 +70,3 @@ export async function load({ params }): Promise<ProjectCollection> {
 		categories: await getAllCategories()
 	};
 }
-
-export const prerender = true;

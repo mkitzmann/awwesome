@@ -1,5 +1,4 @@
-import type { Project } from './types/types';
-import { chunkSize, removeTrailingSlashes } from './index';
+import { chunkSize } from './index';
 
 interface MonthInfo {
 	name: string;

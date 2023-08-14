@@ -66,22 +66,8 @@ function transformObjectToArray(obj): Category[] {
 /*
  Extract the category from the markdown heading
  */
-function extractCategory(line: string, allCategories: AllCategories) {
-	const allCategoriesObject = {};
-	let currentCategoryURL = '';
-	const currentCategoryNames = line.slice(4).trim().split(' - ');
-	currentCategoryNames.forEach((categoryName) => {
-		allCategories.names[slugify(categoryName)] = categoryName;
-		currentCategoryURL = `${currentCategoryURL}/${slugify(categoryName)}`;
-		allCategories.urls.add(currentCategoryURL);
-	});
-
-	[...currentCategoryNames].reduce(
-		(prev, current) => (prev[current] = prev[current] ?? {}),
-		allCategoriesObject
-	);
-	allCategories.tree = transformObjectToArray(allCategoriesObject);
-	return currentCategoryURL;
+function extractCategory(line: string) {
+	return line.slice(4).trim().split(' - ');
 }
 
 function extractRepositories(markdownText: string): ProjectsAndCategories {
@@ -89,6 +75,8 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 	const projects: Project[] = [];
 
 	let currentCategoryURL = '';
+	const allCategoriesObject = {};
+
 	const allCategories: AllCategories = { tree: [], names: {}, urls: new Set() };
 
 	for (const line of lines) {
@@ -96,7 +84,20 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 			break;
 		}
 		if (line.startsWith('### ')) {
-			currentCategoryURL = extractCategory(line, allCategories);
+			const currentCategoryNames = extractCategory(line);
+			currentCategoryURL = '';
+
+			currentCategoryNames.forEach((categoryName) => {
+				allCategories.names[slugify(categoryName)] = categoryName;
+				currentCategoryURL = `${currentCategoryURL}/${slugify(categoryName)}`;
+				allCategories.urls.add(currentCategoryURL);
+			});
+
+			[...currentCategoryNames].reduce(
+				(prev, current) => (prev[current] = prev[current] ?? {}),
+				allCategoriesObject
+			);
+			allCategories.tree = transformObjectToArray(allCategoriesObject);
 			continue;
 		}
 		if (!line.startsWith('- [')) {

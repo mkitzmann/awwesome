@@ -1,4 +1,6 @@
-import { GithubRepo, Project } from './types/types';
+// import { GithubRepo, Project } from '$lib/types/types';
+import { dev } from '$app/environment';
+import type { GithubRepo, Project } from './types/types';
 
 export const allCategory = { name: 'All', slug: '' };
 export const chunkSize = 40;
@@ -30,9 +32,12 @@ export function mapProjectToRepo(data: GithubRepo[], project: Project) {
 			repo.url.toLowerCase() === project.source_url?.toLowerCase()
 	);
 	if (!repo) {
-		console.error(
-			`Project not found: primary_url: ${project.primary_url} source_url: ${project.source_url} `
-		);
+		// We are not fetching all repos in dev so this would just flood the console
+		if (!dev) {
+			console.error(
+				`Project not found: primary_url: ${project.primary_url} source_url: ${project.source_url} `
+			);
+		}
 		return project;
 	}
 

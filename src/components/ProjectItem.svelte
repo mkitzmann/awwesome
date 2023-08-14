@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Project } from '../lib/types/types';
 	import numeral from 'numeral';
 	import Star from './Star.svelte';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import CommitGraph from './CommitGraph.svelte';
 	import { categoryStore } from '../stores/stores';
+	import type {Project} from "../lib/types/types";
 
 	dayjs.extend(relativeTime);
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
