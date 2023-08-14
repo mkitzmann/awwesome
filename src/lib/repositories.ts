@@ -1,5 +1,6 @@
 import type { AllCategories, Category, Project } from './types/types';
 import slugify from '@sindresorhus/slugify';
+import { removeTrailingSlashes } from './index';
 function extractName(input) {
 	const regex = /\[([^\]]+)\]\(/;
 	const match = input.match(regex);
@@ -33,11 +34,7 @@ function extractLicense(input) {
 function extractSourceUrl(input) {
 	const regex = /\[Source Code\]\(([^\)]+)/;
 	const match = input.match(regex);
-	if (!match) {
-		return;
-	}
-	const result = match[1].trim();
-	return result?.endsWith('/') ? result.slice(0, -1) : result;
+	return match ? match[1].trim() : null;
 }
 
 function extractDemoUrl(input) {

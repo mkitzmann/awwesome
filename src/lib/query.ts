@@ -1,5 +1,5 @@
 import type { Project } from './types/types';
-import { chunkSize } from './index';
+import { chunkSize, removeTrailingSlashes } from './index';
 
 interface MonthInfo {
 	name: string;
@@ -45,7 +45,11 @@ export async function createQuery(projects: Project[]) {
 		})
 		.filter((a) => a);
 
-	const searchString = 'repo:' + urls.map((url) => url?.slice(19)).join(' repo:');
+	const searchString = `repo:${urls
+		.map((url) => {
+			return removeTrailingSlashes(url?.slice(19));
+		})
+		.join(' repo:')}`;
 	const months = getLast12Months();
 	return `
 	query {
