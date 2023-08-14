@@ -32,19 +32,7 @@ function getLast12Months(): MonthInfo[] {
 	return months;
 }
 
-export async function createQuery(projects: Project[]) {
-	const urls = projects
-		.map((project) => {
-			if (project.primary_url?.includes('github.com')) {
-				return project.primary_url;
-			}
-			if (project.source_url?.includes('github.com')) {
-				return project.source_url;
-			}
-			return;
-		})
-		.filter((a) => a);
-
+export async function createQuery(urls: string[]) {
 	const searchString = `repo:${urls
 		.map((url) => {
 			return removeTrailingSlashes(url?.slice(19));

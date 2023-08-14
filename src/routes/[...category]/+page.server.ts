@@ -1,5 +1,5 @@
 import { createQuery } from '../../lib/query';
-import type { GithubRepo, Project, ProjectCollection, Topic } from '../../lib/types/types';
+import type { GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
 import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
@@ -21,14 +21,26 @@ export async function load({ params }): Promise<ProjectCollection> {
 		allProjects = await getProjectsFromAwesomeList();
 	}
 
+	const githubRepoUrls: Set<string> = new Set();
+	allProjects.reduce((prev, project) => {
+		let url;
+		project.source_url?.includes('github.com') ? (url = project.source_url) : '';
+		project.primary_url?.includes('github.com') ? (url = project.primary_url) : '';
+		prev.add(removeTrailingSlashes(url));
+		return prev;
+	}, githubRepoUrls);
+	console.log(`Github Repos total: ${githubRepoUrls.size}`);
+
 	let data: GithubRepo[] = [];
 	if (!loaded) {
-		for (let i = 0; i < allProjects.length; i += chunkSize) {
+		for (let i = 0; i < githubRepoUrls.size; i += chunkSize) {
 			const start = performance.now();
 
-			const chunk = allProjects.slice(i, i + chunkSize);
+			const chunk = [...githubRepoUrls].slice(i, i + chunkSize);
 			const query = await createQuery(chunk);
 			const result = await fetchRepoInfoFromGithub(query);
+			const difference = chunk.find((url) => !result.some((project) => project.url === url));
+			console.log('Projects not found: ', difference);
 			data = data.concat(result);
 			const end = performance.now();
 			console.log(
