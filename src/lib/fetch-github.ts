@@ -35,11 +35,10 @@ export const fetchRepoInfoFromGithub = async (query: string): Promise<GithubRepo
 			console.log(
 				`Github API cost: ${data.rateLimit.cost}, remaining: ${data.rateLimit.remaining}`
 			);
-			console.log(data.search.repos);
 			return data.search.repos.map((data) => data.repo);
-		} else {
-			throw new Error(JSON.stringify(response.statusText));
 		}
+
+		throw new Error(JSON.stringify(response.statusText));
 	} catch (e) {
 		console.error(e);
 		throw e;

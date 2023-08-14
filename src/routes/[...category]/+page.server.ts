@@ -3,7 +3,12 @@ import type { GithubRepo, Project, ProjectCollection } from '../../lib/types/typ
 import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import { dev } from '$app/environment';
-import { chunkSize, removeTrailingSlashes } from '../../lib';
+import {
+	chunkSize,
+	extractGithubRepoUrls,
+	mapProjectToRepo,
+	removeTrailingSlashes
+} from '../../lib';
 
 export async function entries(): Promise<Array<{ category: string }>> {
 	console.log('creating entries function');
@@ -20,16 +25,7 @@ export async function load({ params }): Promise<ProjectCollection> {
 	if (allProjects.length === 0) {
 		allProjects = await getProjectsFromAwesomeList();
 	}
-
-	const githubRepoUrls: Set<string> = new Set();
-	allProjects.reduce((prev, project) => {
-		let url;
-		project.source_url?.includes('github.com') ? (url = project.source_url) : '';
-		project.primary_url?.includes('github.com') ? (url = project.primary_url) : '';
-		prev.add(removeTrailingSlashes(url));
-		return prev;
-	}, githubRepoUrls);
-	console.log(`Github Repos total: ${githubRepoUrls.size}`);
+	const githubRepoUrls = extractGithubRepoUrls(allProjects);
 
 	let data: GithubRepo[] = [];
 	if (!loaded) {
@@ -39,8 +35,6 @@ export async function load({ params }): Promise<ProjectCollection> {
 			const chunk = [...githubRepoUrls].slice(i, i + chunkSize);
 			const query = await createQuery(chunk);
 			const result = await fetchRepoInfoFromGithub(query);
-			const difference = chunk.find((url) => !result.some((project) => project.url === url));
-			console.log('Projects not found: ', difference);
 			data = data.concat(result);
 			const end = performance.now();
 			console.log(
@@ -52,22 +46,8 @@ export async function load({ params }): Promise<ProjectCollection> {
 			}
 		}
 
-		allProjects.map((project) => {
-			const repo = data.find(
-				(repo) => repo.url === project.primary_url || repo.url === project.source_url
-			);
-			if (!repo) {
-				return project;
-			}
+		allProjects.map((project) => mapProjectToRepo(data, project));
 
-			project.stars = repo.stargazerCount;
-			project.description = repo.descriptionHTML ?? project.description;
-			project.avatar_url = repo.owner?.avatarUrl;
-			project.commit_history = repo.defaultBranchRef.target;
-			project.pushedAt = new Date(repo.pushedAt);
-			project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic) ?? [];
-			return project;
-		});
 		loaded = true;
 	}
 

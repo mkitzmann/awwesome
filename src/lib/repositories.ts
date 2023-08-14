@@ -10,7 +10,7 @@ function extractName(input) {
 function extractPrimaryUrl(input) {
 	const regex = /\((https?:\/\/[^\)]+)\)/;
 	const match = input.match(regex);
-	return match ? match[1].trim() : null;
+	return match ? removeTrailingSlashes(match[1].trim()) : null;
 }
 
 function extractDescription(input) {
@@ -34,7 +34,7 @@ function extractLicense(input) {
 function extractSourceUrl(input) {
 	const regex = /\[Source Code\]\(([^\)]+)/;
 	const match = input.match(regex);
-	return match ? match[1].trim() : null;
+	return match ? removeTrailingSlashes(match[1].trim()) : null;
 }
 
 function extractDemoUrl(input) {

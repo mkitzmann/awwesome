@@ -34,9 +34,7 @@ function getLast12Months(): MonthInfo[] {
 
 export async function createQuery(urls: string[]) {
 	const searchString = `repo:${urls
-		.map((url) => {
-			return removeTrailingSlashes(url?.slice(19));
-		})
+		.map((url) => url?.replace('https://github.com/', ''))
 		.join(' repo:')}`;
 	const months = getLast12Months();
 	return `
@@ -44,7 +42,7 @@ export async function createQuery(urls: string[]) {
 	  search(
 		type:REPOSITORY,
 		query: "${searchString}",
-		last: ${chunkSize}
+		first: ${chunkSize + 10}
 	  ) {
 		repos: edges {
 		  repo: node {

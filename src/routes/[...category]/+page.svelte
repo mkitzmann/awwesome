@@ -10,7 +10,7 @@
 	import { allCategory } from '$lib';
 	import { beforeUpdate } from 'svelte';
 	import { goto } from '$app/navigation';
-		import Logo from "../../components/Logo.svelte";
+	import Logo from '../../components/Logo.svelte';
 
 	export let data: ProjectCollection;
 	categoryStore.set(data.categories);
@@ -43,11 +43,11 @@
 		<a href="/">
 			<div class="flex gap-4 items-center mb-4">
 				<Logo />
-			<h1 class="text-3xl font-bold">Awwesome Selfhosted</h1>
+				<h1 class="text-3xl font-bold">Awwesome Selfhosted</h1>
 			</div>
-<!--			<div class="text-sm -mt-4 text-gray-400">-->
-<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
-<!--			</div>-->
+			<!--			<div class="text-sm -mt-4 text-gray-400">-->
+			<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
+			<!--			</div>-->
 		</a>
 		<a href="https://github.com/mkitzmann/awwesome" class="flex-shrink-0">
 			<img src={githubMark} alt="Github repo" class="h-8" />
