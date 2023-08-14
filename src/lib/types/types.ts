@@ -15,7 +15,7 @@ export type Project = {
 			totalCount: number;
 		};
 	};
-	pushedAt: Date;
+	pushedAt?: Date;
 };
 
 export interface AllCategories {

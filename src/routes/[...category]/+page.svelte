@@ -40,16 +40,15 @@
 
 <div class="flex flex-col gap-4 mx-auto my-8 p-4">
 	<div class="flex justify-between">
-		<div>
+		<a href="/">
 			<div class="flex gap-4 items-center mb-4">
-
 				<Logo />
 			<h1 class="text-3xl font-bold">Awwesome Selfhosted</h1>
 			</div>
 <!--			<div class="text-sm -mt-4 text-gray-400">-->
 <!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
 <!--			</div>-->
-		</div>
+		</a>
 		<a href="https://github.com/mkitzmann/awwesome" class="flex-shrink-0">
 			<img src={githubMark} alt="Github repo" class="h-8" />
 		</a>

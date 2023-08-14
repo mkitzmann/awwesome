@@ -33,7 +33,8 @@ function extractLicense(input) {
 function extractSourceUrl(input) {
 	const regex = /\[Source Code\]\(([^\)]+)/;
 	const match = input.match(regex);
-	return match ? match[1].trim() : null;
+	const result = match[1].trim;
+	return result.endsWith('/') ? result.slice(0, -1) : result;
 }
 
 function extractDemoUrl(input) {
