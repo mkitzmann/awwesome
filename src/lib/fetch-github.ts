@@ -1,5 +1,5 @@
-import { TOKEN_GITHUB } from '$env/static/private';
 import { GithubQueryResult, GithubRepo } from './types/types';
+import { TOKEN_GITHUB } from '$env/static/private';
 
 async function request(query) {
 	return fetch('https://api.github.com/graphql', {
