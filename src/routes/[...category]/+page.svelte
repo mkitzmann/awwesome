@@ -52,8 +52,8 @@
 			<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
 			<!--			</div>-->
 		</a>
-		<a href="https://github.com/mkitzmann/awwesome" class="flex-shrink-0">
-			<img src={githubMark} alt="Github repo" class="h-8" />
+		<a href="https://github.com/mkitzmann/awwesome" class="flex-shrink-0 flex items-center gap-2 bg-gray-100 px-4 h-10 rounded-full hover:bg-yellow-400">
+			Star on Github <img src={githubMark} alt="Github repo" class="h-6" />
 		</a>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
@@ -90,7 +90,7 @@
 						.join(' - ')}
 				</h2>
 				<div class="text-sm text-right">
-					{projects.length} Projects
+					{searchedProjects.length} Projects
 				</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
