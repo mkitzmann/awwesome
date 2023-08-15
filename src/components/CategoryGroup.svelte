@@ -20,7 +20,7 @@
 <div class="flex items-center justify-between w-full" style="padding-left: {indent}px">
 	<a
 		{href}
-		class="hover:text-blue-500 truncate w-full text-left text-sm px-2 py-1 rounded-full {isActive
+		class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
 			? 'bg-gray-200'
 			: ''}"
 	>

@@ -11,6 +11,7 @@
 	import { beforeUpdate } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Logo from '../../components/Logo.svelte';
+		import SearchInput from "../../components/SearchInput.svelte";
 
 	export let data: ProjectCollection;
 	categoryStore.set(data.categories);
@@ -22,9 +23,11 @@
 		selectedCategory = category;
 	});
 	$: projects = data.projects;
+	let searchTerm = '';
+	$: searchedProjects = data.projects.filter(project => JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase()))
 
 	let displayLimit = 20;
-	$: limitedProjects = projects.slice(0, displayLimit);
+	$: limitedProjects = searchedProjects.slice(0, displayLimit);
 
 	let categoryNames;
 
@@ -38,8 +41,8 @@
 	};
 </script>
 
-<div class="flex flex-col gap-4 mx-auto my-8 p-4">
-	<div class="flex justify-between">
+<div class="flex flex-col gap-4 mx-auto my-4 p-4">
+	<div class="flex justify-between flex-wrap">
 		<a href="/">
 			<div class="flex gap-4 items-center mb-4">
 				<Logo />
@@ -55,17 +58,19 @@
 	</div>
 	<div class="flex flex-col xl:flex-row gap-8">
 		<div class="xl:hidden flex flex-wrap gap-4">
+			<SearchInput bind:searchTerm={searchTerm} />
 			<CategorySelect
 				categories={data.categories.tree}
 				{selectedCategory}
 				on:change={setSelectedCategory}
 			/>
 		</div>
-		<div class="max-w-[20%] hidden xl:block">
-			<div class="flex gap-1 flex-row flex-wrap lg:flex-col">
+		<aside class="max-w-[20%] hidden xl:block">
+			<SearchInput bind:searchTerm={searchTerm} />
+			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-4">
 				<a
 					href="/"
-					class="truncate max-w-full xl:max-w-full text-left text-sm px-2 py-1 rounded-full"
+					class="truncate max-w-full xl:max-w-full text-left text-sm px-3 py-1 rounded-full {selectedCategory === '' ? 'bg-gray-200' : ''}"
 				>
 					{allCategory.name}
 				</a>
@@ -74,17 +79,17 @@
 						<CategoryGroup {category} {selectedCategory} />
 					{/if}
 				{/each}
-			</div>
-		</div>
+			</nav>
+		</aside>
 		<div class="w-full">
-			<div class="flex justify-between flex-wrap gap-4">
+			<div class="flex justify-between items-center flex-wrap gap-4 mb-8">
 				<h2 class="font-bold text-xl">
 					{selectedCategory
 						.split('/')
 						.map((category) => categoryNames[category])
 						.join(' - ')}
 				</h2>
-				<div class="text-sm mb-4 text-right">
+				<div class="text-sm text-right">
 					{projects.length} Projects
 				</div>
 			</div>

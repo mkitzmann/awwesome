@@ -53,7 +53,7 @@
 			last commit {getRelativeTime(project.pushedAt)}
 		</div>
 	{/if}
-	<div class="mb-auto">{@html project.description}</div>
+	<div class="mb-auto break-words">{@html project.description}</div>
 
 	{#if project.topics}
 		<div class="flex gap-2 flex-wrap">
