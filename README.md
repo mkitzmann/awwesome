@@ -1,6 +1,6 @@
 # Awwesome Selfhosted
 
-Simple user interface for [Awesome Selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)
+Enhanced user interface for [Awesome Selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)
 
 Visit [awweso.me](https://awweso.me) for a demo
 
