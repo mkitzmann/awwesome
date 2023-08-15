@@ -4,7 +4,12 @@ export type Project = {
 	source_url: string | null;
 	demo_url: string | null;
 	description: string | null;
-	license: string | null;
+	license?: {
+		name: string;
+		description: string;
+		url: string;
+		nickname: string;
+	};
 	stack: string | null;
 	category?: string;
 	stars?: number | null;
@@ -74,6 +79,9 @@ export interface GithubRepo {
 	};
 	licenseInfo?: {
 		name: string;
+		description: string;
+		url: string;
+		nickname: string;
 	};
 	openGraphImageUrl?: string;
 	stargazerCount?: number;

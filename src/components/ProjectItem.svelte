@@ -5,7 +5,7 @@
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import CommitGraph from './CommitGraph.svelte';
 	import { categoryStore } from '../stores/stores';
-	import type {Project} from "../lib/types/types";
+	import type { Project } from '../lib/types/types';
 
 	dayjs.extend(relativeTime);
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
@@ -19,6 +19,9 @@
 	categoryStore.subscribe((value) => {
 		categoryNames = value.names;
 	});
+
+	$: license = project.license?.nickname ?? project.license?.name
+	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license
 </script>
 
 <article class="max-w-full bg-white p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg">
@@ -48,26 +51,33 @@
 		{/if}
 		<h2 class="text-3xl font-bold break-all">{project.name}</h2>
 	</a>
-	{#if project.pushedAt}
-		<div class="text-sm text-gray-500">
-			last commit {getRelativeTime(project.pushedAt)}
-		</div>
-	{/if}
-	<div class="mb-auto break-words">{@html project.description}</div>
+	<div class="text-sm text-gray-500">
+		{#if project.pushedAt}
+			last commit {getRelativeTime(project.pushedAt)},
+		{/if}
+		{#if project.license}
+			<a href={project.license.url} class=" inline">
+				{licenseWithSuffix}
+			</a>
+		{/if}
+	</div>
+	<div class="break-words">{@html project.description}</div>
 
-	{#if project.topics}
-		<div class="flex gap-2 flex-wrap">
-			{#each project.topics as topic}
-				<a
-					href="https://github.com/topics/{topic.name}"
-					target="_blank"
-					class="text-xs rounded-full px-2 py-1 bg-gray-100 max-w-full"
-				>
-					{topic.name}
-				</a>
-			{/each}
-		</div>
-	{/if}
+	<div class="mb-auto">
+		{#if project.topics}
+			<div class="flex gap-2 flex-wrap">
+				{#each project.topics as topic}
+					<a
+						href="https://github.com/topics/{topic.name}"
+						target="_blank"
+						class="text-xs rounded-full px-2 py-1 bg-gray-100 max-w-full"
+					>
+						{topic.name}
+					</a>
+				{/each}
+			</div>
+		{/if}
+	</div>
 
 	<div class="flex gap-4 w-full justify-between">
 		{#if project.stars}

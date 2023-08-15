@@ -45,6 +45,7 @@ export function mapProjectToRepo(data: GithubRepo[], project: Project) {
 	project.description = repo.descriptionHTML ?? project.description;
 	project.avatar_url = repo.owner?.avatarUrl;
 	project.commit_history = repo.defaultBranchRef.target;
+	project.license = repo.licenseInfo;
 	project.pushedAt = new Date(repo.pushedAt);
 	project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic) ?? [];
 	return project;

@@ -32,9 +32,9 @@ function extractStack(input) {
 }
 
 function extractLicense(input) {
-	const regex = /`([^`]+)`$/;
+	const regex = /`([^`]+)`\s*`([^`]+)`$/;
 	const match = input.match(regex);
-	return match ? match[1].trim() : null;
+	return match ? match[0].trim() : null;
 }
 
 function extractSourceUrl(input) {

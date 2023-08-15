@@ -53,6 +53,11 @@ export async function createQuery(urls: string[]) {
           }
           descriptionHTML
           stargazerCount
+					licenseInfo {
+            url
+            name
+            nickname
+          }
           pushedAt
 					repositoryTopics(first: 10) {
 					  edges {
