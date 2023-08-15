@@ -26,7 +26,7 @@
 	let searchTerm = '';
 	$: searchedProjects = data.projects.filter(project => JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase()))
 
-	let displayLimit = 20;
+	let displayLimit = 30;
 	$: limitedProjects = searchedProjects.slice(0, displayLimit);
 
 	let categoryNames;
@@ -42,7 +42,7 @@
 </script>
 
 <div class="flex flex-col gap-4 mx-auto my-4 p-4">
-	<div class="flex justify-between flex-wrap">
+	<div class="flex justify-between flex-wrap gap-2">
 		<a href="/">
 			<div class="flex gap-4 items-center mb-4">
 				<Logo />
@@ -56,7 +56,7 @@
 			Star on Github <img src={githubMark} alt="Github repo" class="h-6" />
 		</a>
 	</div>
-	<div class="flex flex-col xl:flex-row gap-8">
+	<div class="flex flex-col xl:flex-row gap-6 xl:gap-12">
 		<div class="xl:hidden flex flex-wrap gap-4">
 			<SearchInput bind:searchTerm={searchTerm} />
 			<CategorySelect

@@ -21,7 +21,7 @@
 	});
 </script>
 
-<article class="max-w-full bg-white p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg">
+<article class="max-w-full bg-white p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg">
 	<div class="flex gap-2 flex-wrap -mb-1 items-center">
 		{#each categories as category, index}
 			<a
