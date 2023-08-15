@@ -20,8 +20,8 @@
 		categoryNames = value.names;
 	});
 
-	$: license = project.license?.nickname ?? project.license?.name
-	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license
+	$: license = project.license?.nickname ?? project.license?.name;
+	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license;
 </script>
 
 <article class="max-w-full bg-white p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg">

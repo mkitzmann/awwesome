@@ -90,7 +90,7 @@
 			</nav>
 		</aside>
 		<div class="w-full">
-			<div class="flex justify-between items-center flex-wrap gap-4 mb-8">
+			<div class="flex justify-between items-center flex-wrap gap-4 mb-8 mt-2">
 				<h2 class="font-bold text-xl">
 					{selectedCategory
 						.split('/')
