@@ -47,7 +47,7 @@
 		class="flex gap-4 items-center"
 	>
 		{#if project.avatar_url}
-			<img src={project.avatar_url} alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
+			<img src="{project.avatar_url}?size=40" alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
 		{/if}
 		<h2 class="text-3xl font-bold break-all">{project.name}</h2>
 	</a>
