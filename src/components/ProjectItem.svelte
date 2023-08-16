@@ -69,6 +69,7 @@
 				{#each project.topics as topic}
 					<a
 						href="?search={topic}"
+						target="_self"
 						class="text-xs rounded-full px-2 py-1 bg-gray-100 max-w-full"
 					>
 						{topic}
