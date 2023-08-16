@@ -47,7 +47,7 @@
 		class="flex gap-4 items-center"
 	>
 		{#if project.avatar_url}
-			<img src="{project.avatar_url}?size=40" alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
+			<img src="{project.avatar_url}" alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
 		{/if}
 		<h2 class="text-3xl font-bold break-all">{project.name}</h2>
 	</a>
@@ -81,7 +81,7 @@
 
 	<div class="flex gap-4 w-full justify-between">
 		{#if project.stars}
-			<div class="flex items-center gap-2 text-yellow-600">
+			<div class="flex items-center gap-2 text-yellow-700">
 				<Star />{numeral(project.stars).format('0,0a')}
 			</div>
 		{/if}

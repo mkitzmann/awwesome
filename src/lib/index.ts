@@ -43,7 +43,7 @@ export function mapProjectToRepo(data: GithubRepo[], project: Project) {
 
 	project.stars = repo.stargazerCount;
 	project.description = repo.descriptionHTML ?? project.description;
-	project.avatar_url = repo.owner?.avatarUrl;
+	project.avatar_url = repo.owner?.avatarUrl.slice(0, -4) + '?size=80';
 	project.commit_history = repo.defaultBranchRef.target;
 	project.license = repo.licenseInfo;
 	project.pushedAt = new Date(repo.pushedAt);

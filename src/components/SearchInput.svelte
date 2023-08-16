@@ -14,6 +14,8 @@
 		const url = new URL(window.location);
 		if (searchTerm !== '') {
 			url.searchParams.set(searchKey, searchTerm);
+		} else {
+			url.searchParams.delete(searchKey)
 		}
 		history.pushState(null, '', url);
 	};
