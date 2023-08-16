@@ -48,7 +48,7 @@
 		<a href="/">
 			<div class="flex gap-4 items-center mb-4">
 				<Logo />
-				<h1 class="text-3xl font-bold">Awwesome Selfhosted</h1>
+				<h1 class="text-2xl md:text-3xl font-bold">Awwesome Selfhosted</h1>
 			</div>
 			<!--			<div class="text-sm -mt-4 text-gray-400">-->
 			<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
