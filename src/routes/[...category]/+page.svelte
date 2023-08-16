@@ -28,7 +28,7 @@
 		JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
-	let displayLimit = 30;
+	let displayLimit = 20;
 	$: limitedProjects = searchedProjects.slice(0, displayLimit);
 
 	let categoryNames;
@@ -109,7 +109,7 @@
 			<div class="flex mt-8">
 				{#if searchedProjects.length > displayLimit}
 					<button
-						on:click={() => (displayLimit += 30)}
+						on:click={() => (displayLimit += 20)}
 						class="mx-auto bg-blue-100 hover:bg-blue-200 rounded-full px-4 py-2"
 					>
 						Show more

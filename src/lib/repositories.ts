@@ -22,31 +22,31 @@ function extractPrimaryUrl(input) {
 function extractDescription(input) {
 	const regex = /-\s*\[(?:[^\]]+)\]\([^)]+\)\s*-\s*(.+?)(?:\s*\(|`)/;
 	const match = input.match(regex);
-	return match ? match[1]?.trim() : null;
+	return match ? match[1]?.trim() : undefined;
 }
 
 function extractStack(input) {
 	const regex = /`([^`]+)`\s*`([^`]+)`$/;
 	const match = input.match(regex);
-	return match ? match[1].trim() : null;
+	return match ? match[1].trim() : undefined;
 }
 
 function extractLicense(input) {
 	const regex = /`([^`]+)`\s*`([^`]+)`$/;
 	const match = input.match(regex);
-	return match ? match[0].trim() : null;
+	return match ? match[0].trim() : undefined;
 }
 
 function extractSourceUrl(input) {
 	const regex = /\[Source Code\]\(([^\)]+)/;
 	const match = input.match(regex);
-	return match ? removeTrailingSlashes(match[1].trim()) : null;
+	return match ? removeTrailingSlashes(match[1].trim()) : undefined;
 }
 
 function extractDemoUrl(input) {
 	const regex = /\[Demo\]\(([^\)]+)/;
 	const match = input.match(regex);
-	return match ? match[1].trim() : null;
+	return match ? match[1].trim() : undefined;
 }
 
 function transformObjectToArray(obj): Category[] {
@@ -112,7 +112,7 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 			primary_url: extractPrimaryUrl(line),
 			description: extractDescription(line),
 			stack: extractStack(line),
-			license: extractLicense(line),
+			license: extractLicense(line) ? { name: extractLicense(line) } : undefined,
 			source_url: extractSourceUrl(line),
 			demo_url: extractDemoUrl(line),
 			category: currentCategoryURL

@@ -1,26 +1,26 @@
 export type Project = {
 	name: string | null;
 	primary_url: string | null;
-	source_url: string | null;
-	demo_url: string | null;
-	description: string | null;
+	source_url?: string | null;
+	demo_url?: string | null;
+	description?: string | null;
 	license?: {
-		name: string;
-		description: string;
-		url: string;
-		nickname: string;
+		name?: string;
+		description?: string;
+		url?: string;
+		nickname?: string;
 	};
-	stack: string | null;
+	stack?: string | null;
 	category?: string;
 	stars?: number | null;
 	avatar_url?: string | null;
-	topics?: Topic[];
-	commit_history?: {
-		[key: string]: {
-			totalCount: number;
-		};
-	};
+	topics?: string[];
+	commit_history?: CommitCount;
 	pushedAt?: Date;
+};
+
+export type CommitCount = {
+	[key: string]: number;
 };
 
 export interface AllCategories {
@@ -101,5 +101,4 @@ export interface GithubRepo {
 
 export type Topic = {
 	name: string;
-	id: string;
 };

@@ -68,18 +68,17 @@
 			<div class="flex gap-2 flex-wrap">
 				{#each project.topics as topic}
 					<a
-						href="https://github.com/topics/{topic.name}"
-						target="_blank"
+						href="?search={topic}"
 						class="text-xs rounded-full px-2 py-1 bg-gray-100 max-w-full"
 					>
-						{topic.name}
+						{topic}
 					</a>
 				{/each}
 			</div>
 		{/if}
 	</div>
 
-	<div class="flex gap-4 w-full justify-between">
+	<div class="flex gap-4 w-full justify-between items-end flex-wrap">
 		{#if project.stars}
 			<div class="flex items-center gap-2 text-yellow-700">
 				<Star />{numeral(project.stars).format('0,0a')}
@@ -87,7 +86,8 @@
 		{/if}
 
 		{#if project.commit_history}
-			<div class="flex w-1/2">
+			<div class="flex flex-col items-end w-64">
+				<div class="text-xs font-light text-gray-400">Commit history of past year</div>
 				<CommitGraph commits={project.commit_history} />
 			</div>
 		{/if}

@@ -64,7 +64,6 @@ export async function createQuery(urls: string[]) {
 					    node {
 					      topic {
 					        name
-					        id
 					      }
 					    }
 					  }

@@ -41,12 +41,16 @@ export function mapProjectToRepo(data: GithubRepo[], project: Project) {
 		return project;
 	}
 
-	project.stars = repo.stargazerCount;
-	project.description = repo.descriptionHTML ?? project.description;
+	project.stars = repo.stargazerCount ?? undefined;
+	project.description = repo.descriptionHTML ?? project.description ?? undefined;
 	project.avatar_url = repo.owner?.avatarUrl.slice(0, -4) + '?size=80';
-	project.commit_history = repo.defaultBranchRef.target;
+	project.commit_history = Object.entries(repo.defaultBranchRef.target).reduce((prev, entry) => {
+		prev[entry[0]] = entry[1].totalCount;
+		return prev;
+	}, {});
 	project.license = repo.licenseInfo;
 	project.pushedAt = new Date(repo.pushedAt);
-	project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic) ?? [];
+	project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic.name) ?? [];
+
 	return project;
 }
