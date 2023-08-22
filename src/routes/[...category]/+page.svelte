@@ -50,6 +50,10 @@
 				<Logo />
 				<h1 class="text-2xl md:text-3xl font-bold">Awwesome Selfhosted</h1>
 			</div>
+			<div class="text-sm -mt-2">
+				Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data">awesome-selfhosted</a> community, licensed under
+				<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>
+			</div>
 			<!--			<div class="text-sm -mt-4 text-gray-400">-->
 			<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
 			<!--			</div>-->
