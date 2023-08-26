@@ -4,6 +4,8 @@ Enhanced user interface for [Awesome Selfhosted](https://github.com/awesome-self
 
 Visit [awweso.me](https://awweso.me) for a demo
 
+Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data">awesome-selfhosted</a> community, licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>
+
 <img width="1586" alt="awwesome_screenshot" src="https://github.com/mkitzmann/awwesome/assets/35574021/a7ce063c-681e-49b3-9abe-3a5086151271">
 
 ## Technology
