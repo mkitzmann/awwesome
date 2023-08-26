@@ -1,4 +1,4 @@
-# Awwesome Selfhosted
+# Awwesome
 
 Enhanced user interface for [Awesome Selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)
 
