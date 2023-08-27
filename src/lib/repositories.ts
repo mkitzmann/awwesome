@@ -80,11 +80,11 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 	const allCategories: AllCategories = { tree: [], names: {}, urls: new Set() };
 
 	for (const line of lines) {
-		// if (line.includes('## List of Licenses')) {
-		// 	break;
-		// }
 		if (line.startsWith('### ')) {
 			const currentCategoryNames = extractCategory(line);
+			if (currentCategoryNames[0] === 'Backup') {
+				currentCategoryNames[0] = 'Backups';
+			}
 			currentCategoryURL = '';
 
 			currentCategoryNames.forEach((categoryName) => {
@@ -120,11 +120,13 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 		projects.push(project);
 	}
 
+	allCategories.tree = allCategories.tree.sort((categoryA, categoryB) =>
+		categoryA.slug.localeCompare(categoryB.slug)
+	);
+
 	return { projects, categories: allCategories };
 }
 
-const url = 'https://raw.githubusercontent.com/awesome-foss/awesome-sysadmin/master/README.md';
-// const url ='https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md';
 const urls = [
 	'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md',
 	'https://raw.githubusercontent.com/awesome-foss/awesome-sysadmin/master/README.md'
