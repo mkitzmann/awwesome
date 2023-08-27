@@ -80,9 +80,9 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 	const allCategories: AllCategories = { tree: [], names: {}, urls: new Set() };
 
 	for (const line of lines) {
-		if (line.includes('## List of Licenses')) {
-			break;
-		}
+		// if (line.includes('## List of Licenses')) {
+		// 	break;
+		// }
 		if (line.startsWith('### ')) {
 			const currentCategoryNames = extractCategory(line);
 			currentCategoryURL = '';
@@ -123,23 +123,36 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 	return { projects, categories: allCategories };
 }
 
+const url = 'https://raw.githubusercontent.com/awesome-foss/awesome-sysadmin/master/README.md';
+// const url ='https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md';
+const urls = [
+	'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md',
+	'https://raw.githubusercontent.com/awesome-foss/awesome-sysadmin/master/README.md'
+];
+
+async function combineSources(urls: string[]): Promise<string> {
+	let combinedMarkdown = '';
+	for (const item of urls) {
+		const response = await fetch(item);
+		const markdown = await response.text();
+		combinedMarkdown = combinedMarkdown + markdown;
+	}
+	return combinedMarkdown;
+}
+
 export async function getProjectsFromAwesomeList(): Promise<Project[]> {
 	const start = performance.now();
-	const awesomeSelfhostedResponse = await fetch(
-		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md'
-	);
-	const awesomeSelfhosted = await awesomeSelfhostedResponse.text();
-	const { projects } = extractRepositories(awesomeSelfhosted);
+	const markdown = await combineSources(urls);
+	const { projects } = extractRepositories(markdown);
 	const end = performance.now();
-	console.log(`loaded ${projects.length} projects from Awesome Selfhosted in ${end - start}ms`);
+	console.log(
+		`loaded ${projects.length} projects from Awesome Selfhosted and Sysadmin in ${end - start}ms`
+	);
 	return projects;
 }
 
 export async function getAllCategories(): Promise<AllCategories> {
-	const awesomeSelfhostedResponse = await fetch(
-		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md'
-	);
-	const awesomeSelfhosted = await awesomeSelfhostedResponse.text();
-	const { categories } = extractRepositories(awesomeSelfhosted);
+	const markdown = await combineSources(urls);
+	const { categories } = extractRepositories(markdown);
 	return categories;
 }
