@@ -25,24 +25,23 @@ export async function load({ params }): Promise<ProjectCollection> {
 	if (allProjects.length === 0) {
 		allProjects = await getProjectsFromAwesomeList();
 	}
-	const githubRepoUrls = extractGithubRepoUrls(allProjects);
 
 	let data: GithubRepo[] = [];
 	if (!loaded) {
+		const githubRepoUrls = extractGithubRepoUrls(allProjects);
+		const start = performance.now();
+		const promises = [];
 		for (let i = 0; i < githubRepoUrls.size; i += chunkSize) {
-			const start = performance.now();
-
 			const chunk = [...githubRepoUrls].slice(i, i + chunkSize);
 			const query = await createQuery(chunk);
-			const result = await fetchRepoInfoFromGithub(query);
-			data = data.concat(result);
-			const end = performance.now();
-			console.log(`fetched ${result.length} repositories from Github in ${end - start}ms`);
-
-			if (dev) {
-				break; // in development its faster to only do one fetch
-			}
+			promises.push(fetchRepoInfoFromGithub(query));
 		}
+
+		const results = await Promise.all(promises);
+		results.forEach((result) => (data = data.concat(result)));
+
+		const end = performance.now();
+		console.log(`fetched ${data.length} repositories from Github in ${end - start}ms`);
 
 		allProjects.map((project) => mapProjectToRepo(data, project));
 

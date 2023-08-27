@@ -33,7 +33,7 @@ export const fetchRepoInfoFromGithub = async (query: string): Promise<GithubRepo
 		if (response.ok) {
 			const { data }: { data: GithubQueryResult } = await response.json();
 			console.log(
-				`Github API cost: ${data.rateLimit.cost}, remaining: ${data.rateLimit.remaining}`
+				`Repos: ${data.search.repos.length}, Github API cost: ${data.rateLimit.cost}, remaining: ${data.rateLimit.remaining}`
 			);
 			return data.search.repos.map((data) => data.repo);
 		}
