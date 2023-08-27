@@ -1,0 +1,2455 @@
+[
+	{
+		"name": "Countly Community Edition",
+		"primary_url": "https://count.ly",
+		"description": "Real time mobile and web analytics, crash reporting and push notifications platform.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Nodejs/Docker`" },
+		"source_url": "https://github.com/countly",
+		"category": "/analytics"
+	},
+	{
+		"name": "feed2toot",
+		"primary_url": "https://feed2toot.readthedocs.io/en/latest",
+		"description": "Feed2toot parses a RSS feed, extracts the last entries and sends them to Mastodon.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://gitlab.com/chaica/feed2toot",
+		"category": "/automation"
+	},
+	{
+		"name": "LazyLibrarian",
+		"primary_url": "https://gitlab.com/LazyLibrarian/LazyLibrarian",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"category": "/automation"
+	},
+	{
+		"name": "YoutubeDL-Server",
+		"primary_url": "https://github.com/nbr23/youtube-dl-server",
+		"description": "Web and REST interface for downloading videos onto a server.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Python/Docker`" },
+		"category": "/automation"
+	},
+	{
+		"name": "Castopod",
+		"primary_url": "https://castopod.org",
+		"description": "A podcast management hosting platform that includes the latest podcast 2.0 standards, an automated Fediverse feed, analytics, an embeddable player, and more.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `PHP/Docker`" },
+		"source_url": "https://code.castopod.org/adaures/castopod",
+		"category": "/blogging-platforms"
+	},
+	{
+		"name": "Dotclear",
+		"primary_url": "https://dotclear.org",
+		"description": "Take control over your blog.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://git.dotclear.org/dev/dotclear",
+		"category": "/blogging-platforms"
+	},
+	{
+		"name": "Shaarli",
+		"primary_url": "https://github.com/shaarli/Shaarli",
+		"description": "Personal, minimalist, super-fast, no-database bookmarking and link sharing platform.",
+		"stack": "Zlib",
+		"license": { "name": "`Zlib` `PHP`" },
+		"demo_url": "https://demo.shaarli.org",
+		"category": "/bookmarks-and-link-sharing"
+	},
+	{
+		"name": "SyncMarks",
+		"primary_url": "https://codeberg.org/Offerel/SyncMarks-Webapp",
+		"description": "Sync and manage your browser bookmarks from Edge, Firefox and Chromium.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `PHP`" },
+		"category": "/bookmarks-and-link-sharing"
+	},
+	{
+		"name": "calypso",
+		"primary_url": "https://keithp.com/calypso",
+		"description": "Python-based CalDAV and CardDAV server",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://keithp.com/cgit",
+		"category": "/calendar-and-contacts/cal-dav-or-card-dav-servers"
+	},
+	{
+		"name": "DAViCal",
+		"primary_url": "https://www.davical.org",
+		"description": "Server for calendar sharing",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://gitlab.com/davical-project/davical",
+		"category": "/calendar-and-contacts/cal-dav-or-card-dav-servers"
+	},
+	{
+		"name": "Conduit",
+		"primary_url": "https://conduit.rs",
+		"description": "A simple, fast, and reliable chat server powered by Matrix.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Rust`" },
+		"source_url": "https://gitlab.com/famedly/conduit",
+		"category": "/communication/custom-communication-systems"
+	},
+	{
+		"name": "GNUnet",
+		"primary_url": "https://gnunet.org",
+		"description": "Free software framework for decentralized, peer-to-peer networking.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://gnunet.org/git",
+		"category": "/communication/custom-communication-systems"
+	},
+	{
+		"name": "Jami",
+		"primary_url": "https://jami.net",
+		"description": "Free and universal communication platform which preserves the user's privacy and freedoms",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C++`" },
+		"source_url": "https://git.jami.net/savoirfairelinux/jami-project",
+		"category": "/communication/custom-communication-systems"
+	},
+	{
+		"name": "StoneAge Messenger",
+		"primary_url": "https://cweb.gitlab.io/StoneAge.html",
+		"description": "A self-hosted Android messenger, S3-compatible storage is the only backend needed.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Java`" },
+		"source_url": "https://gitlab.com/cweb-repos/cweb-conversations",
+		"category": "/communication/custom-communication-systems"
+	},
+	{
+		"name": "Syndie",
+		"primary_url": "https://syndie.de",
+		"description": "Syndie is a libre system for operating distributed forums.",
+		"stack": "CC0-1.0",
+		"license": { "name": "`CC0-1.0` `Java`" },
+		"category": "/communication/custom-communication-systems"
+	},
+	{
+		"name": "Tinode",
+		"primary_url": "https://github.com/tinode",
+		"description": "Instant messaging platform. Backend in Go. Clients: Swift iOS, Java Android, JS webapp, scriptable command line; chatbots.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Go`" },
+		"source_url": "https://github.com/tinode/chat",
+		"demo_url": "https://sandbox.tinode.co/",
+		"category": "/communication/custom-communication-systems"
+	},
+	{
+		"name": "Tox",
+		"primary_url": "https://tox.chat",
+		"description": "Distributed, secure messenger with audio and video chat capabilities.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://github.com/TokTok/c-toxcore",
+		"category": "/communication/custom-communication-systems"
+	},
+	{
+		"name": "Dovel",
+		"primary_url": "https://dovel.email",
+		"description": "SMTP server that sends and receives emails according to a simple configuration file, with an optional web interface that you can use to browse your emails.",
+		"stack": "LGPL-3.0",
+		"license": { "name": "`LGPL-3.0` `Go`" },
+		"source_url": "https://git.derelict.garden/dovel/email/tree",
+		"category": "/communication/email/complete-solutions"
+	},
+	{
+		"name": "Simple NixOS Mailserver",
+		"primary_url": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver",
+		"description": "Complete mailserver solution leveraging the Nix Ecosystem.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Nix`" },
+		"category": "/communication/email/complete-solutions"
+	},
+	{
+		"name": "Piler",
+		"primary_url": "https://www.mailpiler.org/wiki/start",
+		"description": "Feature-rich open source email archiving solution.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://bitbucket.org/jsuto/piler",
+		"category": "/communication/email/mail-delivery-agents"
+	},
+	{
+		"name": "chasquid",
+		"primary_url": "https://blitiri.com.ar/p/chasquid",
+		"description": "SMTP",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Go`" },
+		"source_url": "https://blitiri.com.ar/git/r/chasquid",
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "Courier MTA",
+		"primary_url": "https://www.courier-mta.org",
+		"description": "Fast, scalable, enterprise mail/groupware server providing ESMTP, IMAP, POP3, webmail, mailing list, basic web-based calendaring and scheduling services.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://www.courier-mta.org/repo.html",
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "EmailRelay",
+		"primary_url": "https://emailrelay.sourceforge.net",
+		"description": "A small and easy to configure SMTP and POP3 server for Windows and Linux.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C++`" },
+		"source_url": "https://sourceforge.net/p/emailrelay/code/HEAD/tree",
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "Exim",
+		"primary_url": "https://www.exim.org",
+		"description": "Message transfer agent",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://git.exim.org/exim.git",
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "Maildrop",
+		"primary_url": "https://gitlab.com/markbeeson/maildrop",
+		"description": "Disposable email SMTP server, also useful for development.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Scala`" },
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "OpenSMTPD",
+		"primary_url": "https://opensmtpd.org",
+		"description": "Secure SMTP server implementation from the OpenBSD project.",
+		"stack": "ISC",
+		"license": { "name": "`ISC` `C`" },
+		"source_url": "https://cvsweb.openbsd.org/cgi-bin/cvsweb/src/usr.sbin/smtpd",
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "Postfix",
+		"primary_url": "http://www.postfix.org",
+		"description": "Fast, easy to administer, and secure Sendmail replacement.",
+		"stack": "IPL-1.0",
+		"license": { "name": "`IPL-1.0` `C`" },
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "Sendmail",
+		"primary_url": "https://www.proofpoint.com/us/products/email-protection/open-source-email-solution",
+		"description": "Message transfer agent",
+		"stack": "Sendmail",
+		"license": { "name": "`Sendmail` `C`" },
+		"category": "/communication/email/mail-transfer-agents"
+	},
+	{
+		"name": "HyperKitty",
+		"primary_url": "https://wiki.list.org/HyperKitty",
+		"description": "Open source Django application to provide a web interface to access GNU Mailman v3 archives.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://gitlab.com/mailman/hyperkitty",
+		"demo_url": "https://lists.mailman3.org/",
+		"category": "/communication/email/mailing-lists-and-newsletters"
+	},
+	{
+		"name": "Mailman",
+		"primary_url": "https://www.gnu.org/software/mailman",
+		"description": "The Gnu mailing list server.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"category": "/communication/email/mailing-lists-and-newsletters"
+	},
+	{
+		"name": "Postorius",
+		"primary_url": "https://docs.mailman3.org/projects/postorius/en/latest",
+		"description": "Web user interface to access GNU Mailman.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://gitlab.com/mailman/postorius",
+		"category": "/communication/email/mailing-lists-and-newsletters"
+	},
+	{
+		"name": "Schleuder",
+		"primary_url": "https://schleuder.nadir.org",
+		"description": "GPG-enabled mailing list manager with resending-capabilities.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Ruby`" },
+		"source_url": "https://0xacab.org/schleuder/schleuder/tree/master",
+		"category": "/communication/email/mailing-lists-and-newsletters"
+	},
+	{
+		"name": "IMP",
+		"primary_url": "https://www.horde.org/apps/imp",
+		"description": "HORDE application that provides webmail access to IMAP and POP3 accounts.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://www.horde.org/download/imp",
+		"demo_url": "http://demo.horde.org/",
+		"category": "/communication/email/webmail-clients"
+	},
+	{
+		"name": "MailCare",
+		"primary_url": "https://mailcare.io",
+		"description": "Open source disposable email address service.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `PHP`" },
+		"source_url": "https://gitlab.com/mailcare/mailcare",
+		"category": "/communication/email/webmail-clients"
+	},
+	{
+		"name": "SnappyMail",
+		"primary_url": "https://snappymail.eu",
+		"description": "Simple, modern, lightweight & fast web-based email client",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `PHP`" },
+		"source_url": "https://github.com/the-djmaze/snappymail",
+		"demo_url": "https://snappymail.eu/demo/",
+		"category": "/communication/email/webmail-clients"
+	},
+	{
+		"name": "SquirrelMail",
+		"primary_url": "https://squirrelmail.org",
+		"description": "Another browser-based IMAP client.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://sourceforge.net/p/squirrelmail/code/HEAD/tree",
+		"category": "/communication/email/webmail-clients"
+	},
+	{
+		"name": "Freepbx",
+		"primary_url": "https://www.freepbx.org",
+		"description": "Web-based open source GUI that controls and manages Asterisk.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://git.freepbx.org/projects/FREEPBX",
+		"category": "/communication/sip"
+	},
+	{
+		"name": "SIP3",
+		"primary_url": "https://sip3.io",
+		"description": "VoIP troubleshooting and monitoring platform.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Kotlin`" },
+		"source_url": "https://github.com/sip3io",
+		"demo_url": "https://demo.sip3.io",
+		"category": "/communication/sip"
+	},
+	{
+		"name": "Wazo",
+		"primary_url": "https://wazo-platform.org",
+		"description": "Full-featured IPBX solution built atop Asterisk with integrated Web administration interface and REST-ful API.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://github.com/wazo-platform",
+		"category": "/communication/sip"
+	},
+	{
+		"name": "Yeti-Switch",
+		"primary_url": "https://yeti-switch.org",
+		"description": "Transit class4 softswitch",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C++/Ruby`" },
+		"source_url": "https://github.com/yeti-switch",
+		"demo_url": "https://yeti-switch.org/demo.html",
+		"category": "/communication/sip"
+	},
+	{
+		"name": "Akkoma",
+		"primary_url": "https://akkoma.social",
+		"description": "Federated microblogging server with Mastodon, GNU social, and ActivityPub compatibility.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Elixir/Docker`" },
+		"source_url": "https://akkoma.dev/AkkomaGang/akkoma",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "AsmBB",
+		"primary_url": "https://board.asm32.info",
+		"description": "A fast, SQLite-powered forum engine written in ASM.",
+		"stack": "EUPL-1.2",
+		"license": { "name": "`EUPL-1.2` `Assembly`" },
+		"source_url": "https://asm32.info/fossil/asmbb/index",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Bibliogram",
+		"primary_url": "https://bibliogram.art",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Nodejs`" },
+		"source_url": "https://sr.ht/~cadence/bibliogram",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Buddycloud",
+		"primary_url": "http://buddycloud.com",
+		"description": "Tools, libraries, services and a community to build user-to-user, group and social messaging into your app. Saves time. Scales up. Supports you.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Java`" },
+		"source_url": "https://github.com/buddycloud",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Cactus Comments",
+		"primary_url": "https://cactus.chat",
+		"description": "Cactus Comments is a federated comment system for the open web built on Matrix.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Docker/Python`" },
+		"source_url": "https://gitlab.com/cactus-comments",
+		"demo_url": "https://cactus.chat/demo/",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Commento",
+		"primary_url": "https://gitlab.com/commento/commento",
+		"description": "Commento is a discussion platform that you can embed on your blog, news articles, and any place where you want your readers to add comments.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Go/Docker`" },
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Friendica",
+		"primary_url": "https://friendi.ca",
+		"description": "Social Communication Server.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `PHP`" },
+		"source_url": "https://github.com/friendica/friendica",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Hubzilla",
+		"primary_url": "https://hubzilla.org",
+		"description": "Decentralized identity, privacy, publishing, sharing, cloud storage, and communications/social platform.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `PHP`" },
+		"source_url": "https://framagit.org/hubzilla/core",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Pleroma",
+		"primary_url": "https://pleroma.social",
+		"description": "Federated microblogging server, Mastodon, GNU social, & ActivityPub compatible.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Elixir`" },
+		"source_url": "https://git.pleroma.social/pleroma/pleroma",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Teddit",
+		"primary_url": "https://teddit.net",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Nodejs/Docker`" },
+		"source_url": "https://codeberg.org/teddit/teddit",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "yarn.social",
+		"primary_url": "https://yarn.social",
+		"description": "Self-Hosted, Twitter™-like Decentralised micro-logging platform. No ads, no tracking, your content, your data.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Go`" },
+		"source_url": "https://git.mills.io/yarnsocial/yarn",
+		"category": "/communication/social-networks-and-forums"
+	},
+	{
+		"name": "Prosody IM",
+		"primary_url": "https://prosody.im",
+		"description": "Feature-rich and easy to configure XMPP server.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Lua`" },
+		"source_url": "https://hg.prosody.im",
+		"category": "/communication/xmpp/servers"
+	},
+	{
+		"name": "Libervia",
+		"primary_url": "https://repos.goffi.org/libervia-web",
+		"description": "Web frontend from Salut à Toi.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"category": "/communication/xmpp/web-clients"
+	},
+	{
+		"name": "Salut à Toi",
+		"primary_url": "https://www.salut-a-toi.org",
+		"description": "Multipurpose, multi frontend, libre and decentralized communication tool.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"source_url": "https://repos.goffi.org/libervia-backend",
+		"category": "/communication/xmpp/web-clients"
+	},
+	{
+		"name": "Local Food Nodes",
+		"primary_url": "https://localfoodnodes.org",
+		"description": "Your open source platform for peoples driven local food markets and CSA.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `PHP`" },
+		"source_url": "https://gitlab.com/localfoodnodes/localfoodnodes",
+		"category": "/community-supported-agriculture-csa"
+	},
+	{
+		"name": "Conference Organizing Distribution (COD)",
+		"primary_url": "http://usecod.com",
+		"description": "Create conference and event websites built on top of Drupal.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://git.drupalcode.org/project/cod",
+		"category": "/conference-management"
+	},
+	{
+		"name": "Alfresco Community Edition",
+		"primary_url": "https://www.alfresco.com/products/community/download",
+		"description": "The open source Enterprise Content Management software that handles any type of content, allowing users to easily share and collaborate on content.",
+		"stack": "LGPL-3.0",
+		"license": { "name": "`LGPL-3.0` `Java`" },
+		"source_url": "https://hub.alfresco.com/t5/alfresco-content-services-hub/project-overview-repository/ba-p/290502",
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "CMS Made Simple",
+		"primary_url": "https://www.cmsmadesimple.org",
+		"description": "Open source content management system, faster and easier management of website contents, scalable for small businesses to large corporations.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "http://svn.cmsmadesimple.org/svn/cmsmadesimple/trunk",
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "Drupal",
+		"primary_url": "https://www.drupal.org",
+		"description": "Advanced open source content management platform.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://git.drupalcode.org/project/drupal",
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "Neos",
+		"primary_url": "https://www.neos.io",
+		"description": "Neos or TYPO3 Neos",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"source_url": "https://github.com/neos",
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "Noosfero",
+		"primary_url": "https://gitlab.com/noosfero/noosfero",
+		"description": "Noosfero is a web platform for social and solidarity economy networks with blog, e-Portfolios, CMS, RSS, thematic discussion, events agenda and collective intelligence for solidarity economy in the same system.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Ruby`" },
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "Plone",
+		"primary_url": "https://plone.org",
+		"description": "Powerful open-source CMS system.",
+		"stack": "ZPL-2.0",
+		"license": { "name": "`ZPL-2.0` `Python/Docker`" },
+		"source_url": "https://github.com/plone",
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "Rapido",
+		"primary_url": "https://framagit.org/InfoLibre/rapido",
+		"description": "Create your website with Rapido. Edit, publish and share collaborative content.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Go`" },
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "SilverStripe",
+		"primary_url": "https://www.silverstripe.org",
+		"description": "Easy to use CMS with powerful MVC framework underlying.",
+		"stack": "BSD-3-Clause",
+		"license": { "name": "`BSD-3-Clause` `PHP`" },
+		"source_url": "https://github.com/silverstripe",
+		"demo_url": "https://demo.silverstripe.org/",
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "SPIP",
+		"primary_url": "https://www.spip.net/fr",
+		"description": "Publication system for the Internet aimed at collaborative work, multilingual environments, and simplicity of use for web authors.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"source_url": "https://git.spip.net",
+		"category": "/content-management-systems-cms"
+	},
+	{
+		"name": "Baserow",
+		"primary_url": "https://baserow.io",
+		"description": "Create your own database without technical experience",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Docker`" },
+		"source_url": "https://gitlab.com/bramw/baserow",
+		"category": "/database-management"
+	},
+	{
+		"name": "Mayan EDMS",
+		"primary_url": "https://www.mayan-edms.com",
+		"description": "Free Open Source Electronic Document Management System. An electronic vault for your documents with preview generation, OCR, and automatic categorization among other features.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Python`" },
+		"source_url": "https://gitlab.com/mayan-edms/mayan-edms",
+		"category": "/document-management"
+	},
+	{
+		"name": "paper{s}pace",
+		"primary_url": "https://dedicatedcode.com/projects.html",
+		"description": "Small web application to manage all your offline documents. Provides a searchable storage for your documents and reminds you of upcoming tasks.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Java`" },
+		"source_url": "https://gitlab.com/dedicatedcode/paperspace",
+		"category": "/document-management"
+	},
+	{
+		"name": "Calibre",
+		"primary_url": "https://calibre-ebook.com",
+		"description": "E-book library manager that can view, convert, and catalog e-books in most of the major e-book formats and provides a built-in Web server for remote clients.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://launchpad.net/calibre",
+		"demo_url": "https://calibre-ebook.com/demo",
+		"category": "/document-management/e-books"
+	},
+	{
+		"name": "The Epube",
+		"primary_url": "https://tt-rss.org/the-epube",
+		"description": "Self-hosted web EPUB reader using EPUB.js, Bootstrap, and Calibre.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"source_url": "https://git.tt-rss.org/fox/the-epube",
+		"category": "/document-management/e-books"
+	},
+	{
+		"name": "InvenioRDM",
+		"primary_url": "https://inveniordm.docs.cern.ch",
+		"description": "Highly scalable turn-key research data management platform with a beautiful user experience.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Python`" },
+		"source_url": "https://github.com/inveniosoftware",
+		"demo_url": "https://inveniordm.web.cern.ch/",
+		"category": "/document-management/institutional-repository-and-digital-library-software"
+	},
+	{
+		"name": "Islandora",
+		"primary_url": "https://www.islandora.ca",
+		"description": "Drupal module for browsing and managing Fedora-based digital repositories.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"source_url": "https://github.com/Islandora/islandora",
+		"demo_url": "https://sandbox.islandora.ca/",
+		"category": "/document-management/institutional-repository-and-digital-library-software"
+	},
+	{
+		"name": "Aimeos",
+		"primary_url": "https://aimeos.org",
+		"description": "Ultra fast, Open Source e-commerce framework for building custom online shops, market places and complex B2B applications scaling to billions of items with Laravel.",
+		"stack": "LGPL-3.0/MIT",
+		"license": { "name": "`LGPL-3.0/MIT` `PHP`" },
+		"source_url": "https://github.com/aimeos",
+		"demo_url": "https://demo.aimeos.org/",
+		"category": "/e-commerce"
+	},
+	{
+		"name": "Drupal Commerce",
+		"primary_url": "https://drupalcommerce.org",
+		"description": "Drupal Commerce is a popular e-commerce module for Drupal CMS, with support for dozens of payment, shipping, and shopping related modules.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://git.drupalcode.org/project/commerce",
+		"category": "/e-commerce"
+	},
+	{
+		"name": "Pretix",
+		"primary_url": "https://pretix.eu",
+		"description": "Django based ticket sales platform for events.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Python`" },
+		"source_url": "https://github.com/pretix",
+		"category": "/e-commerce"
+	},
+	{
+		"name": "Newspipe",
+		"primary_url": "https://git.sr.ht/~cedric/newspipe",
+		"description": "Newspipe is a web news reader.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"demo_url": "https://www.newspipe.org/signup",
+		"category": "/feed-readers"
+	},
+	{
+		"name": "Tiny Tiny RSS",
+		"primary_url": "https://tt-rss.org",
+		"description": "Open source web-based news feed",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Docker/PHP`" },
+		"source_url": "https://git.tt-rss.org/fox/tt-rss",
+		"demo_url": "https://srv.tt-rss.org/tt-rss/",
+		"category": "/feed-readers"
+	},
+	{
+		"name": "Git Annex",
+		"primary_url": "https://git-annex.branchable.com",
+		"description": "File synchronization between computers, servers, external drives.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Haskell`" },
+		"source_url": "https://git.joeyh.name/index.cgi/git-annex.git",
+		"category": "/file-transfer-and-synchronization"
+	},
+	{
+		"name": "Kinto",
+		"primary_url": "https://kinto.readthedocs.org",
+		"description": "Kinto is a minimalist JSON storage service with synchronisation and sharing abilities.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Python`" },
+		"source_url": "https://github.com/Kinto",
+		"category": "/file-transfer-and-synchronization"
+	},
+	{
+		"name": "OpenSSH SFTP server",
+		"primary_url": "https://www.openssh.com",
+		"description": "Secure File Transfer Program.",
+		"stack": "BSD-2-Clause",
+		"license": { "name": "`BSD-2-Clause` `C`" },
+		"source_url": "https://cvsweb.openbsd.org/cgi-bin/cvsweb/src/usr.bin/ssh",
+		"category": "/file-transfer-and-synchronization"
+	},
+	{
+		"name": "Peergos",
+		"primary_url": "https://peergos.org",
+		"description": "Secure and private space online where you can store, share and view your photos, videos, music and documents. Also includes a calendar, news feed, task lists, chat and email client.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Java`" },
+		"source_url": "https://github.com/Peergos",
+		"category": "/file-transfer-and-synchronization"
+	},
+	{
+		"name": "Samba",
+		"primary_url": "https://www.samba.org",
+		"description": "Samba is the standard Windows interoperability suite of programs for Linux and Unix. It provides secure, stable and fast file and print services for all clients using the SMB/CIFS protocol.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://git.samba.org/samba.git",
+		"category": "/file-transfer-and-synchronization"
+	},
+	{
+		"name": "GarageHQ",
+		"primary_url": "https://garagehq.deuxfleurs.fr",
+		"description": "An open-source geo-distributed storage service you can self-host to fulfill many needs - S3 compatible.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Rust`" },
+		"source_url": "https://git.deuxfleurs.fr/Deuxfleurs/garage",
+		"category": "/file-transfer/object-storage-and-file-servers"
+	},
+	{
+		"name": "Dat Project",
+		"primary_url": "https://dat-ecosystem.org",
+		"description": "Powerful decentralized file sharing applications built from a large ecosystem of modules.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"source_url": "https://github.com/datproject",
+		"category": "/file-transfer/peer-to-peer-filesharing"
+	},
+	{
+		"name": "Send",
+		"primary_url": "https://github.com/timvisee/send",
+		"description": "Simple, private, end to end encrypted temporary file sharing, originally built by Mozilla.",
+		"stack": "MPL-2.0",
+		"license": { "name": "`MPL-2.0` `Nodejs`" },
+		"category": "/file-transfer/peer-to-peer-filesharing"
+	},
+	{
+		"name": "elixire",
+		"primary_url": "https://elixi.re",
+		"description": "Simple yet advanced screenshot uploading and link shortening service.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"source_url": "https://gitlab.com/elixire/elixire",
+		"category": "/file-transfer/single-click-and-drag-n-drop-upload"
+	},
+	{
+		"name": "Jirafeau",
+		"primary_url": "https://gitlab.com/mojo42/Jirafeau",
+		"description": "Jirafeau is a web site permitting to upload a file in a simple way and give an unique link to it.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `PHP`" },
+		"demo_url": "https://jirafeau.net/",
+		"category": "/file-transfer/single-click-and-drag-n-drop-upload"
+	},
+	{
+		"name": "lufi",
+		"primary_url": "https://framagit.org/fiat-tux/hat-softwares/lufi",
+		"description": "Let's Upload that FIle, client-side encrypted.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Perl`" },
+		"source_url": "https://framagit.org/fiat-tux/hat-softwares/lufi/tree/master",
+		"demo_url": "https://demo.lufi.io",
+		"category": "/file-transfer/single-click-and-drag-n-drop-upload"
+	},
+	{
+		"name": "ResourceSpace",
+		"primary_url": "https://www.resourcespace.com",
+		"description": "ResourceSpace open source digital asset management software is the simple, fast, and free way to organise your digital assets.",
+		"stack": "BSD-4-Clause",
+		"license": { "name": "`BSD-4-Clause` `PHP`" },
+		"source_url": "https://www.resourcespace.com/svn",
+		"demo_url": "https://www.resourcespace.com/trial",
+		"category": "/file-transfer/web-based-file-managers"
+	},
+	{
+		"name": "Surfer",
+		"primary_url": "https://git.cloudron.io/cloudron/surfer",
+		"description": "Simple static file server with webui to manage files.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"category": "/file-transfer/web-based-file-managers"
+	},
+	{
+		"name": "QuakeJS",
+		"primary_url": "https://github.com/begleysm/quakejs",
+		"description": "QuakeJS is a port of ioquake3 to Javascript that can be played in a browser.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"category": "/games"
+	},
+	{
+		"name": "Veloren",
+		"primary_url": "https://veloren.net",
+		"description": "Multiplayer RPG. Open-source game inspired by Cube World, Legend of Zelda, Dwarf Fortress and Minecraft.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Rust`" },
+		"source_url": "https://gitlab.com/veloren/veloren",
+		"category": "/games"
+	},
+	{
+		"name": "Crafty Controller",
+		"primary_url": "https://craftycontrol.com",
+		"description": "Crafty Controller is a free and open-source Minecraft launcher and manager that allows users to start and administer Minecraft servers from a user-friendly interface.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Docker/Python`" },
+		"source_url": "https://gitlab.com/crafty-controller/crafty-4",
+		"category": "/games/administrative-utilities-and-control-panels"
+	},
+	{
+		"name": "BlueMind",
+		"primary_url": "https://www.bluemind.net/en",
+		"description": "Groupware with email, calendar, address books, exchange active sync, exchange MAPI protocol support.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Java`" },
+		"source_url": "https://forge.bluemind.net/stash/projects/BM/repos/bluemind-public/browse",
+		"category": "/groupware"
+	},
+	{
+		"name": "Citadel",
+		"primary_url": "https://www.citadel.org",
+		"description": "Groupware including email, calendar/scheduling, address books, forums, mailing lists, IM, wiki and blog engines, RSS aggregation and more.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://www.citadel.org/source.html",
+		"category": "/groupware"
+	},
+	{
+		"name": "Cozy Cloud",
+		"primary_url": "https://cozy.io",
+		"description": "Personal cloud where you can manage and sync your contact, files and calendars, and manage your budget with an app store full of community contributions.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Nodejs`" },
+		"source_url": "https://github.com/cozy",
+		"category": "/groupware"
+	},
+	{
+		"name": "Kolab",
+		"primary_url": "https://kolab.org",
+		"description": "Kolab community is a unified communication and collaboration system.",
+		"stack": "GPL-2.0/LGPL-2.1/GPL-3.0",
+		"license": { "name": "`GPL-2.0/LGPL-2.1/GPL-3.0` `C++/Python/PHP`" },
+		"source_url": "https://git.kolab.org",
+		"category": "/groupware"
+	},
+	{
+		"name": "Openmeetings",
+		"primary_url": "https://openmeetings.apache.org/index.html",
+		"description": "Openmeetings provides video conferencing, instant messaging, white board, collaborative document editing and other groupware tools using API functions of the Red5 Streaming Server for Remoting and Streaming.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Java`" },
+		"source_url": "https://openmeetings.apache.org/scm.html",
+		"category": "/groupware"
+	},
+	{
+		"name": "Zimbra Collaboration",
+		"primary_url": "https://www.zimbra.com",
+		"description": "Email, calendar, collaboration server with Web interface and lots of integrations.",
+		"stack": "GPL-2.0/CPAL-1.0",
+		"license": { "name": "`GPL-2.0/CPAL-1.0` `Java`" },
+		"source_url": "https://github.com/zimbra",
+		"category": "/groupware"
+	},
+	{
+		"name": "FHEM",
+		"primary_url": "https://fhem.de/fhem.html",
+		"description": "FHEM is used to automate common tasks in the household like switching lamps and heating. It can also be used to log events like temperature or power consumption. You can control it via web or smartphone frontends, telnet or TCP/IP directly.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Perl`" },
+		"source_url": "https://svn.fhem.de/trac",
+		"category": "/internet-of-things-io-t"
+	},
+	{
+		"name": "Dalton Plan",
+		"primary_url": "https://daltonplan.com",
+		"description": "Dalton Plan is a modern adoption of a free teaching method developed by Helen Parkhurst in the 20th century.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `PHP`" },
+		"source_url": "https://git.io/daltonplan",
+		"category": "/learning-and-courses"
+	},
+	{
+		"name": "edX",
+		"primary_url": "https://www.edx.org",
+		"description": "The Open edX platform is open-source code that powers edX.org.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"source_url": "https://github.com/edx",
+		"category": "/learning-and-courses"
+	},
+	{
+		"name": "Moodle",
+		"primary_url": "https://moodle.org",
+		"description": "Moodle is a learning and courses platform with one of the largest open source communities worldwide.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"source_url": "https://git.moodle.org/gw",
+		"demo_url": "https://moodle.org/demo/",
+		"category": "/learning-and-courses"
+	},
+	{
+		"name": "RosarioSIS",
+		"primary_url": "https://www.rosariosis.org",
+		"description": "RosarioSIS, free Student Information System for school management.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://gitlab.com/francoisjacquet/rosariosis",
+		"demo_url": "https://www.rosariosis.org/demo/",
+		"category": "/learning-and-courses"
+	},
+	{
+		"name": "OpenGTS",
+		"primary_url": "http://www.opengts.org",
+		"description": "Entry-level fleet tracking system. Supports variety of tracking devices and protocols. Comes with rich web-interface and reporting features.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Java`" },
+		"source_url": "https://sourceforge.net/projects/opengts/files/server-base",
+		"demo_url": "http://track.opengts.org/track/Track",
+		"category": "/maps-and-global-positioning-system-gps"
+	},
+	{
+		"name": "Traccar",
+		"primary_url": "https://www.traccar.org",
+		"description": "Java application to track GPS positions. Supports loads of tracking devices and protocols, has an Android and iOS App. Has a web interface to view your trips.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Java`" },
+		"source_url": "https://github.com/traccar",
+		"demo_url": "https://demo.traccar.org/",
+		"category": "/maps-and-global-positioning-system-gps"
+	},
+	{
+		"name": "AzuraCast",
+		"primary_url": "https://www.azuracast.com",
+		"description": "A modern and accessible self-hosted web radio management suite.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `PHP`" },
+		"source_url": "https://github.com/AzuraCast/AzuraCast",
+		"category": "/media-streaming/audio-streaming"
+	},
+	{
+		"name": "Funkwhale",
+		"primary_url": "https://dev.funkwhale.audio/funkwhale",
+		"description": "Modern, web-based, convivial, multi-user and free music server.",
+		"stack": "BSD-3-Clause",
+		"license": { "name": "`BSD-3-Clause` `Python/Django`" },
+		"category": "/media-streaming/audio-streaming"
+	},
+	{
+		"name": "Icecast 2",
+		"primary_url": "https://icecast.org",
+		"description": "Streaming audio/video server which can be used to create an Internet radio station or a privately running jukebox and many things in between.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://gitlab.xiph.org/xiph/icecast-server",
+		"category": "/media-streaming/multimedia-streaming"
+	},
+	{
+		"name": "Karaoke Eternal",
+		"primary_url": "https://www.karaoke-eternal.com",
+		"description": "Host awesome karaoke parties where everyone can easily find and queue songs from their phone's browser. The player is also fully browser-based with support for MP3+G, MP4 and WebGL visualizations.",
+		"stack": "ISC",
+		"license": { "name": "`ISC` `Nodejs`" },
+		"source_url": "https://www.karaoke-eternal.com/repo",
+		"category": "/media-streaming/multimedia-streaming"
+	},
+	{
+		"name": "ReadyMedia",
+		"primary_url": "https://sourceforge.net/projects/minidlna",
+		"description": "Simple media server software, with the aim of being fully compliant with DLNA/UPnP-AV clients. Formerly known as MiniDLNA.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://sourceforge.net/p/minidlna/git/ci/master/tree",
+		"category": "/media-streaming/multimedia-streaming"
+	},
+	{
+		"name": "Rygel",
+		"primary_url": "https://wiki.gnome.org/action/show/Projects/Rygel",
+		"description": "Rygel is a UPnP AV MediaServer that allows you to easily share audio, video, and pictures. Media player software may use Rygel to become a MediaRenderer that may be controlled remotely by a UPnP or DLNA Controller.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://gitlab.gnome.org/GNOME/rygel",
+		"category": "/media-streaming/multimedia-streaming"
+	},
+	{
+		"name": "üWave",
+		"primary_url": "https://u-wave.net",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"source_url": "https://github.com/u-wave",
+		"demo_url": "https://wlk.yt/",
+		"category": "/media-streaming/multimedia-streaming"
+	},
+	{
+		"name": "Oddworks",
+		"primary_url": "https://gitlab.com/oddnetworks/oddworks/core",
+		"description": "Oddworks is an open source video distribution platform built to destroy the barriers to streaming television with SDKs for Roku, Apple iOS/tvOS, Google Android, and Amazon FireTV.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"category": "/media-streaming/video-streaming"
+	},
+	{
+		"name": "Olaris",
+		"primary_url": "https://gitlab.com/olaris/olaris-server",
+		"description": "Olaris is an open-source, community driven, media manager and transcoding server.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Go`" },
+		"category": "/media-streaming/video-streaming"
+	},
+	{
+		"name": "Open Streaming Platform",
+		"primary_url": "https://openstreamingplatform.com",
+		"description": "Live and on-demand video streaming",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Python`" },
+		"source_url": "https://gitlab.com/Deamos/flask-nginx-rtmp-manager",
+		"category": "/media-streaming/video-streaming"
+	},
+	{
+		"name": "ShinobiCE",
+		"primary_url": "https://gitlab.com/Shinobi-Systems/ShinobiCE",
+		"description": "Open Source CCTV software written in Node with both IP and local camera support.",
+		"stack": "AGPL-3.0/GPL-3.0",
+		"license": { "name": "`AGPL-3.0/GPL-3.0` `Nodejs`" },
+		"category": "/media-streaming/video-streaming"
+	},
+	{
+		"name": "Tube",
+		"primary_url": "https://git.mills.io/prologic/tube",
+		"description": "Youtube-like",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Go`" },
+		"demo_url": "https://tube.mills.io",
+		"category": "/media-streaming/video-streaming"
+	},
+	{
+		"name": "Apache Solr",
+		"primary_url": "https://lucene.apache.org/solr",
+		"description": "Solr is the popular, blazing-fast, open source enterprise search platform built on Apache Lucene.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Java`" },
+		"source_url": "https://lucene.apache.org/solr/downloads.html",
+		"category": "/miscellaneous"
+	},
+	{
+		"name": "F-Droid",
+		"primary_url": "https://f-droid.org",
+		"description": "Server tools for maintaining an F-Droid repository system.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python/Docker`" },
+		"source_url": "https://gitlab.com/fdroid/fdroidserver",
+		"category": "/miscellaneous"
+	},
+	{
+		"name": "Kasm Workspaces",
+		"primary_url": "https://kasmweb.com",
+		"description": "Streaming containerized apps and desktops to end-users. Examples include Ubuntu in your browser, or simply single apps such as Chrome, OpenOffice, Gimp, Filezilla etc.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Docker`" },
+		"source_url": "https://github.com/kasmtech",
+		"demo_url": "https://www.kasmweb.com/#demo",
+		"category": "/miscellaneous"
+	},
+	{
+		"name": "MailyGo",
+		"primary_url": "https://codeberg.org/jlelse/MailyGo",
+		"description": "MailyGo is a small tool written in Go that allows to send HTML forms, for example from static websites without a dynamic backend, via email.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Go`" },
+		"category": "/miscellaneous"
+	},
+	{
+		"name": "ReleaseBell",
+		"primary_url": "https://releasebell.com",
+		"description": "Send release notifications for starred Github repos.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"source_url": "https://git.cloudron.io/cloudron/releasebell",
+		"category": "/miscellaneous"
+	},
+	{
+		"name": "SANE Network Scanning",
+		"primary_url": "http://sane-project.org",
+		"description": "Allow remote clients to access image acquisition devices",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "http://www.sane-project.org/cvs.html",
+		"category": "/miscellaneous"
+	},
+	{
+		"name": "Bitcart",
+		"primary_url": "https://bitcart.ai",
+		"description": "A self-hosted cryptocurrencies payment processor and development platform.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Docker/Python/Nodejs`" },
+		"source_url": "https://github.com/bitcart",
+		"demo_url": "https://admin.bitcart.ai",
+		"category": "/money-budgeting-and-management"
+	},
+	{
+		"name": "BTCPay Server",
+		"primary_url": "https://btcpayserver.org",
+		"description": "A self-hosted Bitcoin and other cryptocurrencies payment processor.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `C#`" },
+		"source_url": "https://github.com/btcpayserver",
+		"demo_url": "https://mainnet.demo.btcpayserver.org/",
+		"category": "/money-budgeting-and-management"
+	},
+	{
+		"name": "Galette",
+		"primary_url": "https://galette.eu/dc",
+		"description": "Galette is a membership management web application towards non profit organizations.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"source_url": "https://git.tuxfamily.org/galette/galette.git",
+		"category": "/money-budgeting-and-management"
+	},
+	{
+		"name": "Hub20",
+		"primary_url": "https://hub20.io",
+		"description": "A self-hosted payment processor for Ethereum and ERC20 Tokens.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Docker/Python`" },
+		"source_url": "https://gitlab.com/mushroomlabs/hub20",
+		"category": "/money-budgeting-and-management"
+	},
+	{
+		"name": "Turtl",
+		"primary_url": "https://turtl.it",
+		"description": "Totally private personal database and note taking app.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `CommonLisp`" },
+		"source_url": "https://github.com/turtl",
+		"category": "/note-taking-and-editors"
+	},
+	{
+		"name": "Collabora Online Development Edition",
+		"primary_url": "https://www.collaboraoffice.com/code",
+		"description": "Collabora Online Development Edition",
+		"stack": "MPL-2.0",
+		"license": { "name": "`MPL-2.0` `C++`" },
+		"source_url": "https://cgit.freedesktop.org/libreoffice/online",
+		"category": "/office-suites"
+	},
+	{
+		"name": "PHPOffice",
+		"primary_url": "https://github.com/PHPOffice",
+		"description": "PHPOffice contains libraries which permits to write and read files from most office suites.",
+		"stack": "LGPL-3.0",
+		"license": { "name": "`LGPL-3.0` `PHP`" },
+		"category": "/office-suites"
+	},
+	{
+		"name": "PassIt",
+		"primary_url": "https://passit.io",
+		"description": "Simple password manage with sharing features by group and user, but no administration interface.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"source_url": "https://gitlab.com/passit",
+		"demo_url": "https://app.passit.io/",
+		"category": "/password-managers"
+	},
+	{
+		"name": "Psono",
+		"primary_url": "https://psono.com",
+		"description": "A promising password managers fully featured for teams.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Python`" },
+		"source_url": "https://gitlab.com/psono",
+		"demo_url": "https://www.psono.pw",
+		"category": "/password-managers"
+	},
+	{
+		"name": "Lenpaste",
+		"primary_url": "https://git.lcomrade.su/root/lenpaste",
+		"description": "Web service that allows you to share notes anonymously.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Docker/Go`" },
+		"demo_url": "https://paste.lcomrade.su/",
+		"category": "/pastebins"
+	},
+	{
+		"name": "pacebin",
+		"primary_url": "https://paste.swurl.xyz",
+		"description": "A dead-simple, self-hostable, filesystem-backed pastebin, written in C using Mongoose.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `C`" },
+		"source_url": "https://git.swurl.xyz/swirl/pacebin",
+		"category": "/pastebins"
+	},
+	{
+		"name": "SnyPy",
+		"primary_url": "https://snypy.com",
+		"description": "Open source on-prem code snippet manager.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Docker`" },
+		"source_url": "https://github.com/snypy",
+		"demo_url": "https://app.snypy.com",
+		"category": "/pastebins"
+	},
+	{
+		"name": "Damselfly",
+		"primary_url": "https://damselfly.info",
+		"description": "Fast server-based photo management system for large collections of images. Includes face detection, face & object recognition, powerful search, and EXIF Keyword tagging. Runs on Linux, MacOS and Windows.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C#/.NET`" },
+		"category": "/photo-and-video-galleries"
+	},
+	{
+		"name": "Mediagoblin",
+		"primary_url": "https://mediagoblin.org",
+		"description": "Free software media publishing platform that anyone can run",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"source_url": "https://savannah.gnu.org/projects/mediagoblin",
+		"category": "/photo-and-video-galleries"
+	},
+	{
+		"name": "Framadate",
+		"primary_url": "https://framadate.org/abc",
+		"description": "Online service for planning an appointment or make a decision quickly and easily: Make a poll, Define dates or subjects to choose, Send the poll link to your friends or colleagues, Discuss and make a decision.",
+		"stack": "CECILL-B",
+		"license": { "name": "`CECILL-B` `PHP`" },
+		"source_url": "https://framagit.org/framasoft/framadate?",
+		"demo_url": "https://framadate.org/aqg259dth55iuhwm",
+		"category": "/polls-and-events"
+	},
+	{
+		"name": "Gancio",
+		"primary_url": "https://gancio.org",
+		"description": "A shared agenda for local communities.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Nodejs`" },
+		"source_url": "https://framagit.org/les/gancio",
+		"category": "/polls-and-events"
+	},
+	{
+		"name": "Mobilizon",
+		"primary_url": "https://mobilizon.org",
+		"description": "A federated tool that helps you find, create and organise events and groups.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Elixir`" },
+		"source_url": "https://framagit.org/framasoft/mobilizon",
+		"demo_url": "https://demo.mobilizon.org/",
+		"category": "/polls-and-events"
+	},
+	{
+		"name": "inlets",
+		"primary_url": "https://inlets.dev",
+		"description": "Expose your local endpoints to the Internet - with a Kubernetes integration, Docker image and CLI available.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Go/Docker`" },
+		"category": "/proxy"
+	},
+	{
+		"name": "Privoxy",
+		"primary_url": "https://www.privoxy.org",
+		"description": "Non-caching web proxy with advanced filtering capabilities for enhancing privacy, modifying web page data and HTTP headers, controlling access, and removing ads and other obnoxious Internet junk.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"category": "/proxy"
+	},
+	{
+		"name": "Squid",
+		"primary_url": "http://www.squid-cache.org",
+		"description": "Caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It reduces bandwidth and improves response times by caching and reusing frequently-requested web pages.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://code.launchpad.net/squid",
+		"category": "/proxy"
+	},
+	{
+		"name": "Guacamole",
+		"primary_url": "https://guacamole.apache.org",
+		"description": "Guacamole is a clientless remote desktop gateway. It supports standard protocols like VNC and RDP.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Java/C`" },
+		"source_url": "https://github.com/glyptodon",
+		"category": "/remote-access"
+	},
+	{
+		"name": "OFBiz",
+		"primary_url": "https://ofbiz.apache.org",
+		"description": "FOSS enterprise resource planning system with a suite of business applications flexible enough to be used across any industry.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Java`" },
+		"source_url": "https://svn.apache.org/viewvc/ofbiz",
+		"category": "/resource-planning/enterprise-resource-planning"
+	},
+	{
+		"name": "Tryton",
+		"primary_url": "https://www.tryton.org",
+		"description": "Free open source business solution.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://hg.tryton.org",
+		"demo_url": "https://www.tryton.org/download.html",
+		"category": "/resource-planning/enterprise-resource-planning"
+	},
+	{
+		"name": "Bitsii Bridge",
+		"primary_url": "https://gitlab.com/bitsii/Bitsii/-/wikis/home",
+		"stack": "MPL-2.0",
+		"license": { "name": "`MPL-2.0` `Java/Other`" },
+		"source_url": "https://gitlab.com/bitsii/BBridge",
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "FLAP",
+		"primary_url": "https://www.flap.cloud",
+		"description": "Low maintenance framework to manage self-hosted services.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Docker/Shell`" },
+		"source_url": "https://gitlab.com/flap-box/flap",
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "FreedomBox",
+		"primary_url": "https://freedomboxfoundation.org",
+		"description": "Community project to develop, design and promote personal servers running free software for private, personal, communications.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python/Other`" },
+		"source_url": "https://salsa.debian.org/freedombox-team/freedombox",
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "HomelabOS",
+		"primary_url": "https://homelabos.com",
+		"description": "Your very own offline-first privacy-centric open-source data-center. Deploy over 100 services with a few commands.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Docker`" },
+		"source_url": "https://gitlab.com/NickBusey/HomelabOS",
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "Mistborn",
+		"primary_url": "https://gitlab.com/cyber5k/mistborn",
+		"description": "Mistborn is your own virtual private cloud platform and WebUI that manages self hosted services.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Bash/Docker`" },
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "UBOS",
+		"primary_url": "https://ubos.net",
+		"description": "Linux distro that runs on indie boxes",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Perl/Other`" },
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "WikiSuite",
+		"primary_url": "https://wikisuite.org",
+		"description": "The most comprehensive and integrated Free / Libre / Open Source enterprise software suite.",
+		"stack": "GPL-3.0/LGPL-2.1/Apache-2.0/MPL-2.0/MPL-1.1/MIT/AGPL-3.0",
+		"license": { "name": "`GPL-3.0/LGPL-2.1/Apache-2.0/MPL-2.0/MPL-1.1/MIT/AGPL-3.0` `ClearOS`" },
+		"source_url": "https://wikisuite.org/Source-Code",
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "YunoHost",
+		"primary_url": "https://yunohost.org",
+		"description": "Server operating system aiming to make self-hosting accessible to everyone.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python/Other`" },
+		"source_url": "https://github.com/YunoHost",
+		"demo_url": "https://yunohost.org/#/try",
+		"category": "/self-hosting-solutions"
+	},
+	{
+		"name": "form.io",
+		"primary_url": "https://form.io",
+		"description": "A REST API building platform that utilizes a drag & drop form builder, and is application framework agnostic. Contains open source and enterprise version.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"source_url": "https://github.com/formio",
+		"demo_url": "https://portal.form.io",
+		"category": "/software-development/api-management"
+	},
+	{
+		"name": "Cgit",
+		"primary_url": "https://git.zx2c4.com/cgit/about",
+		"description": "A fast lightweight web interface for git repositories.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://git.zx2c4.com/cgit/tree",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Fossil",
+		"primary_url": "https://www.fossil-scm.org/index.html/doc/trunk/www/index.wiki",
+		"description": "Distributed version control system featuring wiki and bug tracker.",
+		"stack": "BSD-2-Clause-FreeBSD",
+		"license": { "name": "`BSD-2-Clause-FreeBSD` `C`" },
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "GitLab",
+		"primary_url": "https://about.gitlab.com",
+		"description": "Self Hosted Git repository management, code reviews, issue tracking, activity feeds and wikis.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Ruby`" },
+		"source_url": "https://gitlab.com/gitlab-org/gitlab-foss",
+		"demo_url": "https://gitlab.com/",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Kallithea",
+		"primary_url": "https://kallithea-scm.org",
+		"description": "Source code management system that supports two leading version control systems, Mercurial and Git, with a web interface.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python`" },
+		"source_url": "https://kallithea-scm.org/repos/kallithea",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "OneDev",
+		"primary_url": "https://onedev.io",
+		"description": "All-In-One DevOps Platform. With Git Management, Issue Tracking, and CI/CD. Simple yet Powerful.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Java`" },
+		"source_url": "https://code.onedev.io/projects/160",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Pagure",
+		"primary_url": "https://pagure.io/pagure",
+		"description": "A lightweight, powerful, and flexible git-centric forge with features laying the foundation for federated and decentralized development.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `Python`" },
+		"demo_url": "https://pagure.io/",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Phorge",
+		"primary_url": "https://we.phorge.it",
+		"description": "Phorge is an open source, community driven platform for collaborating, managing, organizing and reviewing software development projects.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `PHP`" },
+		"source_url": "https://we.phorge.it/source/phorge",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "ProjeQtOr",
+		"primary_url": "https://www.projeqtor.org",
+		"description": "A complete, mature, multi-user project management system with extensive functionality for all phases of a project.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `PHP`" },
+		"source_url": "https://sourceforge.net/p/projectorria/code/HEAD/tree/branches",
+		"demo_url": "https://demo.projeqtor.org/",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Redmine",
+		"primary_url": "https://www.redmine.org",
+		"description": "Redmine is a flexible project management web application.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `Ruby`" },
+		"source_url": "https://svn.redmine.org/redmine",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "RhodeCode",
+		"primary_url": "https://rhodecode.com",
+		"description": "RhodeCode is an open source platform for software development teams. It unifies and simplifies repository management for Git, Subversion, and Mercurial.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `Python`" },
+		"source_url": "https://code.rhodecode.com",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Rukovoditel",
+		"primary_url": "https://www.rukovoditel.net",
+		"description": "Configurable open source project management, web-based application.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://www.rukovoditel.net/download.php",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Sourcehut",
+		"primary_url": "https://sourcehut.org",
+		"description": "A full web git interface with no javascript.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `Go`" },
+		"source_url": "https://git.sr.ht/~sircmpwn/git.sr.ht/tree",
+		"demo_url": "https://sr.ht/",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Taiga",
+		"primary_url": "https://www.taiga.io",
+		"description": "Agile Project Management Tool based on the Kanban and Scrum methods.",
+		"stack": "MPL-2.0",
+		"license": { "name": "`MPL-2.0` `Docker/Python/Nodejs`" },
+		"source_url": "https://github.com/kaleidos-ventures",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Trac",
+		"primary_url": "https://trac.edgewall.org",
+		"description": "Trac is an enhanced wiki and issue tracking system for software development projects.",
+		"stack": "BSD-3-Clause",
+		"license": { "name": "`BSD-3-Clause` `Python`" },
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "Tuleap",
+		"primary_url": "https://www.tuleap.org",
+		"description": "Tuleap is a libre suite to plan, track, code and collaborate on software projects.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://tuleap.net/plugins/git/tuleap/tuleap/stable?p=tuleap%2Fstable.git&a=tree",
+		"category": "/software-development/project-management"
+	},
+	{
+		"name": "StatPing.ng",
+		"primary_url": "https://statping-ng.github.io",
+		"description": "An easy to use Status Page for your websites and applications. Statping will automatically fetch the application and render a beautiful status page with tons of features for you to build an even better status page.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Docker/Go`" },
+		"source_url": "https://github.com/statping-ng/statping-ng",
+		"category": "/status-uptime-pages"
+	},
+	{
+		"name": "Kanbana",
+		"primary_url": "https://github.com/SrGMC/kanbana",
+		"description": "Create boards to track users and projects from flat markdown files",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"category": "/task-management-and-to-do-lists"
+	},
+	{
+		"name": "Taskwarrior",
+		"primary_url": "https://taskwarrior.org",
+		"description": "Taskwarrior is Free and Open Source Software that manages your TODO list from your command line. It is flexible, fast, efficient, and unobtrusive. It does its job then gets out of your way.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `C++`" },
+		"source_url": "https://taskwarrior.org/download/#git",
+		"category": "/task-management-and-to-do-lists"
+	},
+	{
+		"name": "Vikunja",
+		"primary_url": "https://vikunja.io",
+		"description": "The to-do app to organize your life.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Go`" },
+		"source_url": "https://kolaente.dev/vikunja",
+		"demo_url": "https://try.vikunja.io/login",
+		"category": "/task-management-and-to-do-lists"
+	},
+	{
+		"name": "Bugzilla",
+		"primary_url": "https://www.bugzilla.org",
+		"description": "General-purpose bugtracker and testing tool originally developed and used by the Mozilla project.",
+		"stack": "MPL-2.0",
+		"license": { "name": "`MPL-2.0` `Perl`" },
+		"category": "/ticketing"
+	},
+	{
+		"name": "GlitchTip",
+		"primary_url": "https://glitchtip.com",
+		"description": "Open source error-tracking app. GlitchTip collects errors reported by your app.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Python`" },
+		"source_url": "https://gitlab.com/glitchtip/glitchtip",
+		"category": "/ticketing"
+	},
+	{
+		"name": "Roundup Issue Tracker",
+		"primary_url": "https://www.roundup-tracker.org",
+		"description": "A simple-to-use and -install issue-tracking system with command-line, web, REST, XML-RPC, and e-mail interfaces. Designed with flexibility in mind - not just another bug tracker.",
+		"stack": "MIT/ZPL-2.0",
+		"license": { "name": "`MIT/ZPL-2.0` `Python`" },
+		"source_url": "https://www.roundup-tracker.org/code.html",
+		"category": "/ticketing"
+	},
+	{
+		"name": "liteshort",
+		"primary_url": "https://git.ikl.sh/132ikl/liteshort",
+		"description": "User-friendly, actually lightweight, and configurable URL shortener.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Python`" },
+		"category": "/url-shorteners"
+	},
+	{
+		"name": "Simply Shorten",
+		"primary_url": "https://gitlab.com/draganczukp/simply-shorten",
+		"description": "A simple URL shortener that just shortens links.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Java`" },
+		"category": "/url-shorteners"
+	},
+	{
+		"name": "Mediawiki",
+		"primary_url": "https://www.mediawiki.org/wiki/MediaWiki",
+		"description": "MediaWiki is a free and open-source wiki software package written in PHP. It serves as the platform for Wikipedia and the other Wikimedia projects, used by hundreds of millions of people each month.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://phabricator.wikimedia.org/diffusion/MW",
+		"demo_url": "https://en.wikipedia.org/wiki/Main_Page",
+		"category": "/wikis"
+	},
+	{
+		"name": "PmWiki",
+		"primary_url": "https://www.pmwiki.org",
+		"description": "Wiki-based system for collaborative creation and maintenance of websites.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"category": "/wikis"
+	},
+	{
+		"name": "Tiki",
+		"primary_url": "https://tiki.org/HomePage",
+		"description": "Wiki CMS Groupware with the most built-in features.",
+		"stack": "LGPL-2.1",
+		"license": { "name": "`LGPL-2.1` `PHP`" },
+		"source_url": "https://sourceforge.net/p/tikiwiki/code/HEAD/tree",
+		"demo_url": "https://tiki.org/Try-Tiki",
+		"category": "/wikis"
+	},
+	{
+		"name": "TWiki",
+		"primary_url": "https://twiki.org",
+		"description": "TWiki is a Perl-based structured wiki application, typically used to run a collaboration platform, knowledge or document management system, a knowledge base, or team portal.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `Perl`" },
+		"source_url": "http://svn.twiki.org/svn/twiki",
+		"demo_url": "https://twiki.org/cgi-bin/view/Sandbox/WebHome",
+		"category": "/wikis"
+	},
+	{
+		"name": "WiKiss",
+		"primary_url": "https://wikiss.tuxfamily.org",
+		"description": "Wiki, simple to use and install.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP`" },
+		"source_url": "https://svnweb.tuxfamily.org/listing.php?repname=wikiss/svn&path=%2F&sc=0",
+		"category": "/wikis"
+	},
+	{
+		"name": "theme.park",
+		"primary_url": "https://theme-park.dev",
+		"description": "A collection of themes/skins for 50 selfhosted apps!",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `CSS`" },
+		"source_url": "https://github.com/GilbN/theme.park",
+		"category": "/wikis"
+	},
+	{
+		"name": "Track Awesome Selfhosted",
+		"primary_url": "https://www.trackawesomelist.com/awesome-selfhosted/awesome-selfhosted",
+		"category": "/wikis"
+	},
+	{
+		"name": "GNU Make",
+		"primary_url": "http://www.gnu.org/software/make",
+		"description": "The most popular automation build tool for many purposes, make is a tool which controls the generation of executables and other non-source files of a program from the program's source files.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://git.savannah.gnu.org/cgit/make.git",
+		"category": "/automation"
+	},
+	{
+		"name": "Backupninja",
+		"primary_url": "https://0xacab.org/liberate/backupninja",
+		"category": "/backups"
+	},
+	{
+		"name": "Duplicity",
+		"primary_url": "https://duplicity.gitlab.io",
+		"description": "Encrypted bandwidth-efficient backup using the rsync algorithm.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `Python`" },
+		"source_url": "https://gitlab.com/duplicity/duplicity",
+		"category": "/backups"
+	},
+	{
+		"name": "Proxmox Backup Server",
+		"primary_url": "https://www.proxmox.com/en/proxmox-backup-server",
+		"description": "Proxmox Backup Server is an enterprise-class, client-server backup solution thatis capable of backing up virtual machines, containers, and physical hosts.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Rust`" },
+		"source_url": "https://git.proxmox.com/?p=proxmox-backup.git;a=tree",
+		"category": "/backups"
+	},
+	{
+		"name": "Shield",
+		"primary_url": "https://github.com/starkandwayne/shield",
+		"description": "A pluggable architecture for backup and restore of database systems.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Go`" },
+		"category": "/backups"
+	},
+	{
+		"name": "EasyBuild",
+		"primary_url": "https://easybuild.readthedocs.org/en/latest",
+		"description": "EasyBuild builds software and modulefiles for High Performance Computing",
+		"category": "/build-and-software-organization-tools"
+	},
+	{
+		"name": "environment-modules Lmod",
+		"primary_url": "https://www.tacc.utexas.edu/research-development/tacc-projects/lmod",
+		"category": "/build-and-software-organization-tools"
+	},
+	{
+		"name": "HPCBIOS",
+		"primary_url": "http://hpcbios.readthedocs.org/en/latest",
+		"category": "/build-and-software-organization-tools"
+	},
+	{
+		"name": "Spack",
+		"primary_url": "https://spack.io",
+		"category": "/build-and-software-organization-tools"
+	},
+	{
+		"name": "Hubot",
+		"primary_url": "https://hubot.github.com",
+		"description": "A customizable, life embetterment robot.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs`" },
+		"source_url": "https://github.com/hubotio/hubot",
+		"category": "/chat-ops"
+	},
+	{
+		"name": "Clonezilla",
+		"primary_url": "http://clonezilla.org",
+		"description": "Partition and disk imaging/cloning program.",
+		"stack": "GPL-2.0/Other",
+		"license": { "name": "`GPL-2.0/Other` `Perl/Shell/Other`" },
+		"source_url": "https://clonezilla.org/downloads/src",
+		"category": "/cloning"
+	},
+	{
+		"name": "Genesis",
+		"primary_url": "https://github.com/starkandwayne/genesis",
+		"category": "/cloud-computing"
+	},
+	{
+		"name": "Overcast",
+		"primary_url": "http://andrewchilds.github.io/overcast",
+		"description": "Deploy VMs across different cloud providers, and run commands and scripts across any or all of them in parallel via SSH.",
+		"category": "/cloud-computing"
+	},
+	{
+		"name": "Collins",
+		"primary_url": "http://tumblr.github.io/collins",
+		"category": "/configuration-management-database"
+	},
+	{
+		"name": "i-doit",
+		"primary_url": "http://www.i-doit.org",
+		"category": "/configuration-management-database"
+	},
+	{
+		"name": "iTop",
+		"primary_url": "http://www.combodo.com/itop-193",
+		"category": "/configuration-management-database"
+	},
+	{
+		"name": "netbox",
+		"primary_url": "https://github.com/digitalocean/netbox",
+		"description": "IP address management",
+		"category": "/configuration-management-database"
+	},
+	{
+		"name": "drone",
+		"primary_url": "https://drone.io",
+		"description": "Drone is a Continuous Delivery platform built on Docker, written in Go.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Go`" },
+		"source_url": "https://github.com/drone/drone",
+		"category": "/continuous-integration-and-continuous-deployment"
+	},
+	{
+		"name": "GitLab CI",
+		"primary_url": "https://about.gitlab.com/gitlab-ci",
+		"description": "Gitlab's built-in, full-featured CI/CD solution.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Ruby`" },
+		"source_url": "https://gitlab.com/gitlab-org/gitlab-ce",
+		"category": "/continuous-integration-and-continuous-deployment"
+	},
+	{
+		"name": "PHPCI",
+		"primary_url": "https://www.phptesting.org",
+		"description": "Free and open source continuous integration specifically designed for PHP.",
+		"stack": "BSD-2-Clause",
+		"license": { "name": "`BSD-2-Clause` `PHP`" },
+		"source_url": "https://github.com/block8/phpci",
+		"category": "/continuous-integration-and-continuous-deployment"
+	},
+	{
+		"name": "ISPConfig",
+		"primary_url": "http://www.ispconfig.org",
+		"description": "Manage Linux servers directly through your browser.",
+		"stack": "BSD-3-Clause",
+		"license": { "name": "`BSD-3-Clause` `PHP`" },
+		"source_url": "https://git.ispconfig.org/ispconfig/ispconfig3",
+		"category": "/control-panels"
+	},
+	{
+		"name": "Virtualmin",
+		"primary_url": "http://www.virtualmin.com",
+		"description": "Powerful and flexible web hosting control panel for Linux and BSD systems.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Shell/Perl/Other`" },
+		"source_url": "https://github.com/virtualmin",
+		"category": "/control-panels"
+	},
+	{
+		"name": "Capistrano",
+		"primary_url": "http://capistranorb.com",
+		"description": "Deploy your application to any number of machines simultaneously, in sequence or as a rolling set via SSH",
+		"category": "/deployment-automation"
+	},
+	{
+		"name": "Fabric",
+		"primary_url": "http://www.fabfile.org",
+		"category": "/deployment-automation"
+	},
+	{
+		"name": "Mina",
+		"primary_url": "http://nadarei.co/mina",
+		"description": "Really fast deployer and server automation tool",
+		"category": "/deployment-automation"
+	},
+	{
+		"name": "munki",
+		"primary_url": "https://www.munki.org/munki",
+		"category": "/deployment-automation"
+	},
+	{
+		"name": "Diagrams.net",
+		"primary_url": "https://app.diagrams.net",
+		"description": "A.K.A. [Draw.io]",
+		"category": "/diagramming"
+	},
+	{ "name": "DrawThe.Net", "primary_url": "http://go.drawthe.net", "category": "/diagramming" },
+	{
+		"name": "Mermaid",
+		"primary_url": "https://mermaid-js.github.io/mermaid-live-editor",
+		"category": "/diagramming"
+	},
+	{
+		"name": "Lustre",
+		"primary_url": "https://www.lustre.org",
+		"description": "Parallel distributed file system, generally used for large-scale cluster computing.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://git.whamcloud.com/?p=fs/lustre-release.git;a=summary",
+		"category": "/distributed-filesystems"
+	},
+	{
+		"name": "OpenAFS",
+		"primary_url": "https://www.openafs.org",
+		"description": "Distributed network file system with read-only replicas and multi-OS support.",
+		"stack": "IPL-1.0",
+		"license": { "name": "`IPL-1.0` `C`" },
+		"source_url": "https://git.openafs.org/?p=openafs.git;a=summary",
+		"category": "/distributed-filesystems"
+	},
+	{
+		"name": "Openstack Swift",
+		"primary_url": "https://docs.openstack.org/developer/swift",
+		"description": "A highly available, distributed, eventually consistent object/blob store.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Python`" },
+		"source_url": "https://opendev.org/openstack/swift",
+		"category": "/distributed-filesystems"
+	},
+	{
+		"name": "Bind",
+		"primary_url": "https://www.isc.org/bind",
+		"description": "Versatile, classic, complete name server software.",
+		"stack": "MPL-2.0",
+		"license": { "name": "`MPL-2.0` `C`" },
+		"source_url": "https://gitlab.isc.org/isc-projects/bind9",
+		"category": "/dns/servers"
+	},
+	{
+		"name": "djbdns",
+		"primary_url": "http://cr.yp.to/djbdns.html",
+		"description": "A collection of DNS applications, including tinydns.",
+		"stack": "Public Domain",
+		"license": { "name": "`Public Domain` `C`" },
+		"source_url": "https://salsa.debian.org/debian/djbdns",
+		"category": "/dns/servers"
+	},
+	{
+		"name": "dnsmasq",
+		"primary_url": "https://www.thekelleys.org.uk/dnsmasq/doc.html",
+		"description": "Provides network infrastructure for small networks: DNS, DHCP, router advertisement and network boot.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=tree",
+		"category": "/dns/servers"
+	},
+	{
+		"name": "Knot",
+		"primary_url": "https://www.knot-dns.cz",
+		"description": "High performance authoritative-only DNS server.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C`" },
+		"source_url": "https://gitlab.nic.cz/knot/knot-dns",
+		"category": "/dns/servers"
+	},
+	{
+		"name": "Designate",
+		"primary_url": "https://wiki.openstack.org/wiki/Designate",
+		"description": "DNSaaS services for OpenStack.",
+		"source_url": "https://opendev.org/openstack/designate",
+		"category": "/dns/control-panels-and-domain-management"
+	},
+	{
+		"name": "DomainMOD",
+		"primary_url": "https://domainmod.org",
+		"description": "Manage your domains and other internet assets in a central location.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `PHP`" },
+		"source_url": "https://github.com/domainmod/domainmod.git",
+		"category": "/dns/control-panels-and-domain-management"
+	},
+	{
+		"name": "octoDNS",
+		"primary_url": "https://github.com/github/octodns",
+		"description": "DNS as code - Tools for managing DNS across multiple providers.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Python`" },
+		"category": "/dns/control-panels-and-domain-management"
+	},
+	{
+		"name": "Atom Community",
+		"primary_url": "https://github.com/atom-community/atom",
+		"description": "A fork of [atom]",
+		"category": "/editors"
+	},
+	{ "name": "Brackets", "primary_url": "http://brackets.io", "category": "/editors" },
+	{ "name": "Eclipse", "primary_url": "http://www.eclipse.org", "category": "/editors" },
+	{ "name": "Geany", "primary_url": "http://www.geany.org", "category": "/editors" },
+	{
+		"name": "GNU Emacs",
+		"primary_url": "http://www.gnu.org/software/emacs",
+		"category": "/editors"
+	},
+	{ "name": "Haroopad", "primary_url": "http://pad.haroopress.com", "category": "/editors" },
+	{ "name": "ICEcoder", "primary_url": "https://icecoder.net", "category": "/editors" },
+	{ "name": "KDevelop", "primary_url": "https://www.kdevelop.org", "category": "/editors" },
+	{ "name": "Micro", "primary_url": "https://micro-editor.github.io", "category": "/editors" },
+	{ "name": "Nano", "primary_url": "http://nano-editor.org", "category": "/editors" },
+	{ "name": "Notepad++", "primary_url": "https://notepad-plus-plus.org", "category": "/editors" },
+	{ "name": "Vim", "primary_url": "http://www.vim.org", "category": "/editors" },
+	{
+		"name": "FreeIPA",
+		"primary_url": "https://www.freeipa.org",
+		"description": "Integrated security information management solution combining Linux",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Python/C/JavaScript`" },
+		"source_url": "https://pagure.io/freeipa",
+		"category": "/identity-management/ldap"
+	},
+	{
+		"name": "lldap",
+		"primary_url": "https://github.com/nitnelave/lldap",
+		"description": "Light",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Rust`" },
+		"category": "/identity-management/ldap"
+	},
+	{
+		"name": "OpenLDAP",
+		"primary_url": "https://www.openldap.org",
+		"description": "Open-source implementation of the Lightweight Directory Access Protocol",
+		"stack": "OLDAP-2.8",
+		"license": { "name": "`OLDAP-2.8` `C`" },
+		"source_url": "https://git.openldap.org/openldap/openldap",
+		"category": "/identity-management/ldap"
+	},
+	{
+		"name": "BounCA",
+		"primary_url": "https://bounca.org",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "Fusion Directory",
+		"primary_url": "https://www.fusiondirectory.org",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "Indieauth",
+		"primary_url": "https://indieauth.com",
+		"description": "Sign in with your domain name",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "LDAP Account Manager (LAM)",
+		"primary_url": "https://www.ldap-account-manager.org/lamcms",
+		"description": "Web frontend for managing entries",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "Libravatar",
+		"primary_url": "https://www.libravatar.org",
+		"description": "Libravatar is a service which delivers your avatar",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "OpenID Connect",
+		"primary_url": "http://openid.net/developers/libraries",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "OSIAM",
+		"primary_url": "http://osiam.github.io",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "Pomerium",
+		"primary_url": "https://www.pomerium.io",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "Samba",
+		"primary_url": "https://www.samba.org",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "Smallstep Certificates",
+		"primary_url": "https://smallstep.com/certificates",
+		"description": "A private certificate authority",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "ZITADEL",
+		"primary_url": "https://github.com/caos/zitadel",
+		"category": "/identity-management/tools-and-web-interfaces"
+	},
+	{
+		"name": "OCS Inventory NG",
+		"primary_url": "https://ocsinventory-ng.org",
+		"description": "Asset management and deployment solution for all devices in your IT Department.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `PHP/Perl`" },
+		"source_url": "https://github.com/OCSInventory-NG",
+		"category": "/it-asset-management"
+	},
+	{
+		"name": "OPSI",
+		"primary_url": "http://www.opsi.org",
+		"description": "Hardware and software inventory, client management, deployment, and patching for Linux and Windows.",
+		"stack": "GPL-3.0/AGPL-3.0",
+		"license": { "name": "`GPL-3.0/AGPL-3.0` `OVF/Python`" },
+		"source_url": "https://github.com/opsi-org",
+		"category": "/it-asset-management"
+	},
+	{
+		"name": "Claws Mail",
+		"primary_url": "http://www.claws-mail.org",
+		"description": "Old school email client",
+		"source_url": "https://git.claws-mail.org/?p=claws.git;a=tree",
+		"category": "/mail-clients"
+	},
+	{
+		"name": "Mutt",
+		"primary_url": "http://www.mutt.org",
+		"description": "Small but very powerful text-based mail client.",
+		"source_url": "https://gitlab.com/muttmua/mutt",
+		"category": "/mail-clients"
+	},
+	{
+		"name": "Thunderbird",
+		"primary_url": "https://www.thunderbird.net",
+		"description": "Free email application that's easy to set up and customize.",
+		"source_url": "https://hg.mozilla.org/comm-central/file",
+		"category": "/mail-clients"
+	},
+	{
+		"name": "Bloonix",
+		"primary_url": "https://bloonix-monitoring.org",
+		"description": "Bloonix is a monitoring solution that helps businesses to ensure high availability and performance.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `Perl`" },
+		"source_url": "https://github.com/bloonix",
+		"category": "/monitoring"
+	},
+	{
+		"name": "checkmk",
+		"primary_url": "https://checkmk.com",
+		"description": "Comprehensive solution for monitoring of applications, servers, and networks.",
+		"source_url": "https://github.com/tribe29/checkmk",
+		"category": "/monitoring"
+	},
+	{
+		"name": "EdMon",
+		"primary_url": "https://github.com/Edraens/EdMon",
+		"description": "A command-line monitoring application helping you to check that your hosts and services are available, with notifications support.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Java`" },
+		"category": "/monitoring"
+	},
+	{
+		"name": "Linux Dash",
+		"primary_url": "https://github.com/afaqurk/linux-dash",
+		"description": "A low-overhead monitoring web dashboard for a GNU/Linux machine.",
+		"stack": "MIT",
+		"license": { "name": "`MIT` `Nodejs/Go/Python/PHP`" },
+		"category": "/monitoring"
+	},
+	{
+		"name": "Monit",
+		"primary_url": "http://mmonit.com/monit/#home",
+		"description": "Small utility for managing and monitoring Unix systems.",
+		"stack": "AGPL-3.0",
+		"license": { "name": "`AGPL-3.0` `C`" },
+		"source_url": "https://bitbucket.org/tildeslash/monit/src/master",
+		"category": "/monitoring"
+	},
+	{ "name": "Observium", "primary_url": "http://www.observium.org", "category": "/monitoring" },
+	{ "name": "OMD", "primary_url": "http://omdistro.org", "category": "/monitoring" },
+	{ "name": "Performance Co-Pilot", "primary_url": "http://pcp.io", "category": "/monitoring" },
+	{
+		"name": "pyDash",
+		"primary_url": "https://k3oni.github.io/pydash",
+		"description": "Small web-based monitoring dashboard for linux.",
+		"source_url": "https://gitlab.com/k3oni/pydash",
+		"category": "/monitoring"
+	},
+	{
+		"name": "Zabbix",
+		"primary_url": "http://www.zabbix.com",
+		"description": "Enterprise-class software for monitoring of networks and applications.",
+		"source_url": "https://git.zabbix.com/projects/ZBX/repos/zabbix/browse",
+		"category": "/monitoring"
+	},
+	{
+		"name": "Statsd",
+		"primary_url": "https://github.com/etsy/statsd",
+		"description": "Daemon that listens for statistics like counters and timers, sent over UDP or TCP, and sends aggregates to one or more pluggable backend services.",
+		"stack": "Nodejs",
+		"license": { "name": "`Nodejs` `MIT`" },
+		"category": "/metrics-and-metric-collection"
+	},
+	{
+		"name": "OpenWISP",
+		"primary_url": "https://openwisp.org",
+		"description": "Open Source Network Management System for OpenWRT based routers and access points.",
+		"source_url": "https://github.com/openwisp",
+		"demo_url": "https://openwisp.org/demo.html",
+		"category": "/network-configuration-management"
+	},
+	{ "name": "DadaMail", "primary_url": "http://dadamailproject.com", "category": "/newsletters" },
+	{ "name": "phpList", "primary_url": "https://www.phplist.com", "category": "/newsletters" },
+	{
+		"name": "tito",
+		"primary_url": "https://github.com/dgoodwin/tito",
+		"description": "Builds RPMs for git-based projects.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `Python`" },
+		"category": "/packaging"
+	},
+	{
+		"name": "Gearman",
+		"primary_url": "http://gearman.org",
+		"description": "Fast multi-language queuing/job processing platform.",
+		"stack": "BSD-3-Clause",
+		"license": { "name": "`BSD-3-Clause` `C++`" },
+		"source_url": "https://github.com/gearman/gearmand",
+		"category": "/queuing"
+	},
+	{
+		"name": "ZeroMQ",
+		"primary_url": "https://zeromq.org",
+		"description": "Lightweight queuing system.",
+		"stack": "GPL-3.0",
+		"license": { "name": "`GPL-3.0` `C++`" },
+		"source_url": "https://github.com/zeromq",
+		"category": "/queuing"
+	},
+	{
+		"name": "Remmina",
+		"primary_url": "https://www.remmina.org",
+		"description": "Feature-rich remote desktop application for linux and other unixes.",
+		"source_url": "https://gitlab.com/Remmina/Remmina",
+		"category": "/remote-desktop-clients"
+	},
+	{
+		"name": "X2go",
+		"primary_url": "https://wiki.x2go.org/doku.php",
+		"description": "X2Go is an open source remote desktop software for Linux that uses the NoMachine/NX technology protocol.",
+		"source_url": "https://code.x2go.org/gitweb",
+		"category": "/remote-desktop-clients"
+	},
+	{
+		"name": "DD-WRT",
+		"primary_url": "https://dd-wrt.com",
+		"description": "A Linux-based firmware for wireless routers and access points, originally designed for the Linksys WRT54G series.",
+		"source_url": "https://svn.dd-wrt.com",
+		"category": "/router"
+	},
+	{
+		"name": "OpenWrt",
+		"primary_url": "https://openwrt.org",
+		"description": "A Linux-based router featuring Mesh networking, IPS via snort and AQM among many other features.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://git.openwrt.org/openwrt/openwrt.git",
+		"category": "/router"
+	},
+	{
+		"name": "OPNsense",
+		"primary_url": "https://opnsense.org",
+		"description": "An open source FreeBSD-based firewall and router with traffic shaping, load balancing, and virtual private network capabilities.",
+		"stack": "C",
+		"license": { "name": "`C` `PHP`" },
+		"source_url": "https://github.com/opnsense",
+		"category": "/router"
+	},
+	{
+		"name": "etcd",
+		"primary_url": "https://etcd.io",
+		"description": "distributed K/V-Store, authenticating via SSL PKI and a REST HTTP Api for shared configuration and service discovery.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Go`" },
+		"source_url": "https://github.com/coreos/etcd",
+		"category": "/service-discovery"
+	},
+	{
+		"name": "Docker",
+		"primary_url": "https://www.docker.com",
+		"description": "Platform for developers and sysadmins to build, ship, and run distributed applications.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Go`" },
+		"source_url": "https://www.docker.com/community/open-source",
+		"category": "/software-containers"
+	},
+	{
+		"name": "LXD",
+		"primary_url": "https://linuxcontainers.org/lxd",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `Go`" },
+		"source_url": "https://github.com/lxc/lxd",
+		"category": "/software-containers"
+	},
+	{
+		"name": "OpenVZ",
+		"primary_url": "https://openvz.org",
+		"description": "Container-based virtualization for Linux.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://src.openvz.org/projects/OVZ",
+		"category": "/software-containers"
+	},
+	{ "name": "grml", "primary_url": "https://grml.org", "category": "/troubleshooting" },
+	{ "name": "mitmproxy", "primary_url": "http://mitmproxy.org", "category": "/troubleshooting" },
+	{ "name": "mtr", "primary_url": "https://www.bitwizard.nl/mtr", "category": "/troubleshooting" },
+	{ "name": "Sysdig", "primary_url": "http://www.sysdig.org", "category": "/troubleshooting" },
+	{
+		"name": "Wireshark",
+		"primary_url": "https://www.wireshark.org",
+		"category": "/troubleshooting"
+	},
+	{
+		"name": "Darcs",
+		"primary_url": "http://darcs.net",
+		"description": "Patch-based distributed version control",
+		"category": "/version-control"
+	},
+	{ "name": "Fossil", "primary_url": "http://www.fossil-scm.org", "category": "/version-control" },
+	{
+		"name": "Git",
+		"primary_url": "http://git-scm.com",
+		"description": "Distributed revision control and source code management",
+		"category": "/version-control"
+	},
+	{
+		"name": "GNU Bazaar",
+		"primary_url": "http://bazaar.canonical.com",
+		"category": "/version-control"
+	},
+	{
+		"name": "Mercurial",
+		"primary_url": "https://www.mercurial-scm.org",
+		"category": "/version-control"
+	},
+	{
+		"name": "Subversion",
+		"primary_url": "http://subversion.apache.org",
+		"category": "/version-control"
+	},
+	{
+		"name": "ConVirt",
+		"primary_url": "http://www.convirture.com/products_opensource.php",
+		"category": "/virtualization"
+	},
+	{ "name": "Ganeti", "primary_url": "http://www.ganeti.org", "category": "/virtualization" },
+	{ "name": "KVM", "primary_url": "http://www.linux-kvm.org", "category": "/virtualization" },
+	{ "name": "OpenNebula", "primary_url": "http://opennebula.org", "category": "/virtualization" },
+	{ "name": "OpenNode", "primary_url": "http://opennodecloud.com", "category": "/virtualization" },
+	{ "name": "oVirt", "primary_url": "http://www.ovirt.org", "category": "/virtualization" },
+	{ "name": "Packer", "primary_url": "https://www.packer.io", "category": "/virtualization" },
+	{
+		"name": "Proxmox VE",
+		"primary_url": "https://www.proxmox.com/proxmox-ve",
+		"category": "/virtualization"
+	},
+	{ "name": "QEMU", "primary_url": "http://www.qemu.org", "category": "/virtualization" },
+	{ "name": "Vagrant", "primary_url": "https://www.vagrantup.com", "category": "/virtualization" },
+	{
+		"name": "VirtualBox",
+		"primary_url": "https://www.virtualbox.org",
+		"category": "/virtualization"
+	},
+	{ "name": "XCP-ng", "primary_url": "http://www.xcp-ng.org", "category": "/virtualization" },
+	{
+		"name": "Xen",
+		"primary_url": "http://www.xenproject.org",
+		"description": "Virtual machine monitor for 32/64 bit Intel / AMD",
+		"category": "/virtualization"
+	},
+	{ "name": "Dockovpn", "primary_url": "https://dockovpn.io", "category": "/vpn" },
+	{ "name": "Firezone", "primary_url": "https://www.firez.one", "category": "/vpn" },
+	{ "name": "ocserv", "primary_url": "http://www.infradead.org/ocserv", "category": "/vpn" },
+	{ "name": "OpenVPN", "primary_url": "https://community.openvpn.net", "category": "/vpn" },
+	{ "name": "Pritunl", "primary_url": "http://pritunl.com", "category": "/vpn" },
+	{ "name": "SoftEther", "primary_url": "https://www.softether.org", "category": "/vpn" },
+	{ "name": "strongSwan", "primary_url": "https://www.strongswan.org", "category": "/vpn" },
+	{ "name": "tinc", "primary_url": "http://www.tinc-vpn.org", "category": "/vpn" },
+	{ "name": "WireGuard", "primary_url": "https://www.wireguard.com", "category": "/vpn" },
+	{
+		"name": "Apache HTTP Server",
+		"primary_url": "https://httpd.apache.org",
+		"description": "Secure, efficient and extensible server that provides HTTP services in sync with the current HTTP standards.",
+		"stack": "Apache-2.0",
+		"license": { "name": "`Apache-2.0` `C`" },
+		"source_url": "https://svn.apache.org/viewvc/httpd/httpd/branches/2.4.x",
+		"category": "/web"
+	},
+	{
+		"name": "HAProxy",
+		"primary_url": "https://www.haproxy.org",
+		"description": "Very fast and reliable reverse-proxy offering high availability, load balancing, and proxying for TCP and HTTP-based applications.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://git.haproxy.org/?p=haproxy.git;a=tree",
+		"category": "/web"
+	},
+	{
+		"name": "Hiawatha",
+		"primary_url": "https://www.hiawatha-webserver.org",
+		"description": "An advanced and secure webserver for Unix.",
+		"stack": "GPL-2.0",
+		"license": { "name": "`GPL-2.0` `C`" },
+		"source_url": "https://gitlab.com/hsleisink/hiawatha",
+		"category": "/web"
+	},
+	{
+		"name": "Lighttpd",
+		"primary_url": "https://www.lighttpd.net",
+		"description": "Secure, fast, compliant, and very flexible web server that has been optimized for high-performance environments.",
+		"stack": "BSD-3-Clause",
+		"license": { "name": "`BSD-3-Clause` `C`" },
+		"source_url": "https://git.lighttpd.net/lighttpd/lighttpd1.4",
+		"category": "/web"
+	},
+	{
+		"name": "Nginx",
+		"primary_url": "https://nginx.org/en",
+		"description": "HTTP and reverse proxy server, mail proxy server, and generic TCP/UDP proxy server.",
+		"stack": "BSD-2-Clause",
+		"license": { "name": "`BSD-2-Clause` `C`" },
+		"source_url": "https://hg.nginx.org/nginx/file/tip",
+		"category": "/web"
+	},
+	{
+		"name": "ArsTechnica OpenForum",
+		"primary_url": "http://arstechnica.com/civis",
+		"category": "/web"
+	},
+	{ "name": "Reddit", "primary_url": "https://www.reddit.com", "category": "/web" },
+	{
+		"name": "Spiceworks Community",
+		"primary_url": "https://community.spiceworks.com/start",
+		"category": "/web"
+	},
+	{
+		"name": "StackExchange Network",
+		"primary_url": "https://stackexchange.com/sites#technology",
+		"category": "/web"
+	},
+	{ "name": "AlternativeTo", "primary_url": "http://alternativeto.net", "category": "/web" },
+	{ "name": "deb.sury.org", "primary_url": "https://deb.sury.org", "category": "/web" },
+	{
+		"name": "ElRepo",
+		"primary_url": "http://elrepo.org/tiki/tiki-index.php",
+		"description": "Community Repo for Enterprise Linux",
+		"category": "/web"
+	},
+	{
+		"name": "EPEL",
+		"primary_url": "https://fedoraproject.org/wiki/EPEL",
+		"description": "Repository for RHEL and compatibles",
+		"category": "/web"
+	},
+	{ "name": "IUS", "primary_url": "https://ius.io", "category": "/web" },
+	{ "name": "Remi", "primary_url": "http://rpms.famillecollet.com", "category": "/web" },
+	{
+		"name": "Software Collections",
+		"primary_url": "https://www.softwarecollections.org",
+		"description": "Community Release of [Red Hat Software Collections]",
+		"category": "/web"
+	},
+	{
+		"name": "Cloud Native Software Landscape",
+		"primary_url": "https://landscape.cncf.io/card-mode?license=open-source&grouping=category",
+		"category": "/web"
+	},
+	{ "name": "ArchWiki", "primary_url": "https://wiki.archlinux.org", "category": "/web" },
+	{ "name": "Gentoo Wiki", "primary_url": "https://wiki.gentoo.org", "category": "/web" },
+	{
+		"name": "Awesome SysAdmin @ LibHunt",
+		"primary_url": "https://sysadmin.libhunt.com",
+		"category": "/web"
+	},
+	{ "name": "Ops School", "primary_url": "http://www.opsschool.org", "category": "/web" },
+	{
+		"name": "Digital Ocean Tutorials",
+		"primary_url": "https://www.digitalocean.com/community/tutorials",
+		"category": "/web"
+	}
+]

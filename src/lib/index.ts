@@ -25,7 +25,10 @@ export function extractGithubRepoUrls(projects: Project[]) {
 	return githubRepoUrls;
 }
 
-export function mapProjectToRepo(data: GithubRepo[], project: Project) {
+export function mapProjectToRepo(
+	data: GithubRepo[],
+	project: Project
+): { project: Project; found: boolean } {
 	const repo = data.find(
 		(repo) =>
 			repo.url.toLowerCase() === project.primary_url?.toLowerCase() ||
@@ -33,12 +36,10 @@ export function mapProjectToRepo(data: GithubRepo[], project: Project) {
 	);
 	if (!repo) {
 		// We are not fetching all repos in dev so this would just flood the console
-		if (!dev) {
-			console.error(
-				`Project not found: primary_url: ${project.primary_url} source_url: ${project.source_url} `
-			);
-		}
-		return project;
+		// 	console.error(
+		// 		`Project not found: primary_url: ${project.primary_url} source_url: ${project.source_url} `
+		// 	);
+		return { project, found: false };
 	}
 
 	project.stars = repo.stargazerCount ?? undefined;
@@ -52,5 +53,5 @@ export function mapProjectToRepo(data: GithubRepo[], project: Project) {
 	project.pushedAt = new Date(repo.pushedAt);
 	project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic.name) ?? [];
 
-	return project;
+	return { project, found: true };
 }

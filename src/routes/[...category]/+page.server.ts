@@ -1,14 +1,20 @@
 import { createQuery } from '../../lib/query';
-import type { GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
+import type {
+	AllCategories,
+	Category,
+	GithubRepo,
+	Project,
+	ProjectCollection
+} from '../../lib/types/types';
 import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
-import { dev } from '$app/environment';
 import {
 	chunkSize,
 	extractGithubRepoUrls,
 	mapProjectToRepo,
 	removeTrailingSlashes
 } from '../../lib';
+import * as fs from 'fs';
 
 export async function entries(): Promise<Array<{ category: string }>> {
 	console.log('creating entries function');
@@ -17,13 +23,16 @@ export async function entries(): Promise<Array<{ category: string }>> {
 }
 
 let allProjects: Project[] = [];
+let allCategories: AllCategories;
 let loaded = false;
 
 export async function load({ params }): Promise<ProjectCollection> {
+	const startComplete = performance.now();
 	const requestedCategory: string = removeTrailingSlashes(params.category) ?? '';
 	console.log('creating load function, category: ', requestedCategory);
 	if (allProjects.length === 0) {
 		allProjects = await getProjectsFromAwesomeList();
+		allCategories = await getAllCategories();
 	}
 
 	let data: GithubRepo[] = [];
@@ -43,7 +52,23 @@ export async function load({ params }): Promise<ProjectCollection> {
 		const end = performance.now();
 		console.log(`fetched ${data.length} repositories from Github in ${end - start}ms`);
 
-		allProjects.map((project) => mapProjectToRepo(data, project));
+		const notFoundProjects = [];
+		allProjects.map((project) => {
+			const { project: mappedProject, found } = mapProjectToRepo(data, project);
+			if (!found) {
+				notFoundProjects.push(mappedProject);
+			}
+			return mappedProject;
+		});
+
+		fs.writeFile('notfound.json', JSON.stringify(notFoundProjects), (err) => {
+			if (err) {
+				return console.error(err);
+			}
+			console.log(
+				`${notFoundProjects.length} Projects could not be found on GitHub. List saved to notfound.json.`
+			);
+		});
 
 		loaded = true;
 	}
@@ -64,8 +89,11 @@ export async function load({ params }): Promise<ProjectCollection> {
 		return starsB - starsA;
 	});
 
+	const endComplete = performance.now();
+	console.log(`processed ${sortedProjects.length} projects in ${endComplete - startComplete}ms`);
+
 	return {
 		projects: sortedProjects,
-		categories: await getAllCategories()
+		categories: allCategories
 	};
 }
