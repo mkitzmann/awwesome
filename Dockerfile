@@ -1,2 +1,5 @@
-FROM nginx
-COPY ./build /usr/share/nginx/html
+FROM node:20-slim
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm ci
+COPY . .

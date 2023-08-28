@@ -1,0 +1,6 @@
+.env
+/build
+/html
+node_modules
+npm-debug.log
+/.netlify

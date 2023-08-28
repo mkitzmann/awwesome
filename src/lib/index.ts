@@ -1,9 +1,7 @@
-// import { GithubRepo, Project } from '$lib/types/types';
-import { dev } from '$app/environment';
 import type { GithubRepo, Project } from './types/types';
 
 export const allCategory = { name: 'All', slug: '' };
-export const chunkSize = 40;
+export const chunkSize = 20;
 
 export const removeTrailingSlashes = (input?: string | unknown): string => {
 	if (!input || typeof input !== 'string') {

@@ -1,9 +1,33 @@
 version: '3'
 services:
-  web:
+  ofelia:
+    image: mcuadros/ofelia:latest
+    container_name: ofelia
+    depends_on:
+      - source
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      ofelia.job-run.awwesome.schedule: "@daily"
+      ofelia.job-run.awwesome.container: "awwesome"
+      ofelia.job-run.awwesome.command: "sh -c 'npm run build'"
+  source:
     image: mkitzmann/awwesome
-    build: .
     container_name: awwesome
-    restart: always
+    env_file:
+      - .env
+    working_dir: /usr/src/app
+    command: sh -c "npm run build"
+    volumes:
+      - shared_volume:/usr/src/app/html
+  web:
+    image: nginx
+    container_name: nginx
     ports:
-      - "8080:80"
+      - "80:80"
+    volumes:
+      - shared_volume:/usr/share/nginx/html:ro
+volumes:
+  shared_volume:
+
