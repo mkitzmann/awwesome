@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    image: mkitzmann/awwesome
+    build: .
+    container_name: awwesome
+    restart: always
+    ports:
+      - "8080:80"
