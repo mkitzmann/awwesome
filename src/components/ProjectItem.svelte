@@ -22,6 +22,10 @@
 
 	$: license = project.license?.nickname ?? project.license?.name;
 	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license;
+
+	$: totalCommits = project?.commit_history
+		? Object.values(project.commit_history).reduce((prev, current) => prev + current)
+		: 0;
 </script>
 
 <article class="max-w-full bg-white p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg">
@@ -47,7 +51,7 @@
 		class="flex gap-4 items-center"
 	>
 		{#if project.avatar_url}
-			<img src="{project.avatar_url}" alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
+			<img src={project.avatar_url} alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
 		{/if}
 		<h2 class="text-3xl font-bold break-all">{project.name}</h2>
 	</a>
@@ -88,8 +92,10 @@
 
 		{#if project.commit_history}
 			<div class="flex flex-col items-end w-64">
-				<div class="text-xs font-light text-gray-400">Commit history of past year</div>
-				<CommitGraph commits={project.commit_history} />
+				<div class="text-sm font-light text-green-600 -mb-3" class:text-red-600={totalCommits < 10}>
+					<span class="font-bold">{numeral(totalCommits).format('0,0a')}</span> commits past year
+				</div>
+				<CommitGraph commits={project.commit_history} id={project.primary_url} />
 			</div>
 		{/if}
 	</div>
