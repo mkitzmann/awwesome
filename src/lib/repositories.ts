@@ -115,7 +115,8 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 			license: extractLicense(line) ? { name: extractLicense(line) } : undefined,
 			source_url: extractSourceUrl(line),
 			demo_url: extractDemoUrl(line),
-			category: currentCategoryURL
+			category: currentCategoryURL,
+			firstAdded: new Date()
 		};
 		projects.push(project);
 	}

@@ -1,6 +1,7 @@
 {
 	"name": "awwesome",
-	"version": "0.3",
+  	"description": "Enhanced user interface for Awesome Selfhosted",
+	"version": "0.4",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",

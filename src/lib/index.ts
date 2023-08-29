@@ -53,3 +53,9 @@ export function mapProjectToRepo(
 
 	return { project, found: true };
 }
+
+export function findPreviousProject(data: Project[], project: Project): Project {
+	return data.find(
+		(repo) => repo.primary_url?.toLowerCase() === project.primary_url?.toLowerCase()
+	);
+}

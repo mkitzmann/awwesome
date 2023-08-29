@@ -17,6 +17,7 @@ export type Project = {
 	topics?: string[];
 	commit_history?: CommitCount;
 	pushedAt?: Date;
+	firstAdded?: Date;
 };
 
 export type CommitCount = {

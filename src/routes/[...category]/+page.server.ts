@@ -1,20 +1,16 @@
 import { createQuery } from '../../lib/query';
-import type {
-	AllCategories,
-	Category,
-	GithubRepo,
-	Project,
-	ProjectCollection
-} from '../../lib/types/types';
+import type { AllCategories, GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
 import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
 import { fetchRepoInfoFromGithub } from '../../lib/fetch-github';
 import {
 	chunkSize,
 	extractGithubRepoUrls,
+	findPreviousProject,
 	mapProjectToRepo,
 	removeTrailingSlashes
 } from '../../lib';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
+import { writeJsonToFile } from '../../lib/files';
 
 export async function entries(): Promise<Array<{ category: string }>> {
 	console.log('creating entries function');
@@ -53,22 +49,30 @@ export async function load({ params }): Promise<ProjectCollection> {
 		console.log(`fetched ${data.length} repositories from Github in ${end - start}ms`);
 
 		const notFoundProjects = [];
-		allProjects.map((project) => {
+		allProjects.map(async (project) => {
 			const { project: mappedProject, found } = mapProjectToRepo(data, project);
 			if (!found) {
 				notFoundProjects.push(mappedProject);
 			}
+			const projectLogFile = await fs.readFile('log/projects.json', 'utf8');
+			const projectLog: Project[] = JSON.parse(projectLogFile);
+
+			const previousProject = findPreviousProject(projectLog, project);
+
+			if (previousProject?.firstAdded) {
+				mappedProject.firstAdded = previousProject.firstAdded;
+			}
+
 			return mappedProject;
 		});
 
-		fs.writeFile('notfound.json', JSON.stringify(notFoundProjects), (err) => {
-			if (err) {
-				return console.error(err);
-			}
-			console.log(
-				`${notFoundProjects.length} Projects could not be found on GitHub. List saved to notfound.json.`
-			);
-		});
+		await writeJsonToFile({ filename: 'log/projects.json', data: allProjects });
+		console.log(`${allProjects.length} total Projects. List saved to log/projects.json.`);
+
+		await writeJsonToFile({ filename: 'log/notfound.json', data: notFoundProjects });
+		console.log(
+			`${notFoundProjects.length} Projects could not be found on GitHub. List saved to log/notfound.json.`
+		);
 
 		loaded = true;
 	}
