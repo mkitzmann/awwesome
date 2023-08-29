@@ -92,8 +92,13 @@
 
 		{#if project.commit_history}
 			<div class="flex flex-col items-end w-64">
-				<div class="text-sm font-light text-green-600 -mb-3" class:text-red-600={totalCommits < 10}>
-					<span class="font-bold">{numeral(totalCommits).format('0,0a')}</span> commits past year
+				<div>
+					<span class="font-bold text-lg text-green-600" class:text-red-600={totalCommits < 10}>
+						{numeral(totalCommits).format('0,0a')}
+					</span>
+					<span class="text-xs font-light text-green-600" class:text-red-600={totalCommits < 10}>
+						commits past year
+					</span>
 				</div>
 				<CommitGraph commits={project.commit_history} id={project.primary_url} />
 			</div>
