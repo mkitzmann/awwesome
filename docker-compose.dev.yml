@@ -1,0 +1,16 @@
+version: '3'
+services:
+  source:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: awwesome
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    command: sh -c "npm run dev --host"
