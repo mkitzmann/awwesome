@@ -2,6 +2,7 @@ import type { GithubRepo, Project } from './types/types';
 
 export const allCategory = { name: 'All', slug: '' };
 export const chunkSize = 20;
+export const lowCommitCount = 2;
 
 export const removeTrailingSlashes = (input?: string | unknown): string => {
 	if (!input || typeof input !== 'string') {

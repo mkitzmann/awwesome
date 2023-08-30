@@ -6,6 +6,7 @@
 	import CommitGraph from './CommitGraph.svelte';
 	import { categoryStore } from '../stores/stores';
 	import type { Project } from '../lib/types/types';
+	import { lowCommitCount } from '$lib';
 
 	dayjs.extend(relativeTime);
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
@@ -82,21 +83,26 @@
 			</div>
 		{/if}
 	</div>
-
-	<div class="flex gap-4 w-full justify-between items-end flex-wrap">
+	<div class="flex flex-col min-[460px]:flex-row sm:gap-6 w-full justify-between sm:items-end">
 		{#if project.stars}
-			<div class="flex items-center gap-2 text-yellow-700">
+			<div class="flex items-center gap-2 text-yellow-700 -mb-2">
 				<Star />{numeral(project.stars).format('0,0a')}
 			</div>
 		{/if}
 
 		{#if project.commit_history}
-			<div class="flex flex-col items-end w-64">
-				<div>
-					<span class="font-bold text-lg text-green-600" class:text-red-600={totalCommits < 10}>
+			<div class="flex flex-col items-end w-full min-[460px]:w-64">
+				<div class="-mb-3">
+					<span
+						class="font-bold text-lg text-green-600"
+						class:text-red-600={totalCommits < lowCommitCount}
+					>
 						{numeral(totalCommits).format('0,0a')}
 					</span>
-					<span class="text-xs font-light text-green-600" class:text-red-600={totalCommits < 10}>
+					<span
+						class="text-xs font-light text-green-600"
+						class:text-red-600={totalCommits < lowCommitCount}
+					>
 						commits past year
 					</span>
 				</div>

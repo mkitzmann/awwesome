@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { CommitCount } from '../lib/types/types';
+	import { lowCommitCount } from '../lib';
 
 	export let commits: CommitCount;
 	export let id: string;
@@ -10,8 +11,8 @@
 
 	$: totalCommits = commits ? Object.values(commits).reduce((prev, current) => prev + current) : 0;
 
-	$: topColor = totalCommits < 10 ? '#944' : '#216e39';
-	$: bottomColor = totalCommits < 10 ? '#faa' : '#9be9a8';
+	$: topColor = totalCommits < lowCommitCount ? '#944' : '#216e39';
+	$: bottomColor = totalCommits < lowCommitCount ? '#faa' : '#9be9a8';
 </script>
 
 <svg viewBox="0 0 110 20" xmlns="http://www.w3.org/2000/svg">
