@@ -24,6 +24,9 @@ export type CommitCount = {
 	[key: string]: number;
 };
 
+export type SortTerm = 'stars' | 'firstAdded';
+export type SortOrder = 'asc' | 'desc';
+
 export interface AllCategories {
 	tree: Category[];
 	urls: Set<string>;

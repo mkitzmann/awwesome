@@ -49,22 +49,30 @@ export async function load({ params }): Promise<ProjectCollection> {
 		console.log(`fetched ${data.length} repositories from Github in ${end - start}ms`);
 
 		const notFoundProjects = [];
-		allProjects.map(async (project) => {
-			const { project: mappedProject, found } = mapProjectToRepo(data, project);
-			if (!found) {
-				notFoundProjects.push(mappedProject);
-			}
-			const projectLogFile = await fs.readFile('log/projects.json', 'utf8');
-			const projectLog: Project[] = JSON.parse(projectLogFile);
+		const newProjects = [];
+		await Promise.all(
+			allProjects.map(async (project) => {
+				const { project: mappedProject, found } = mapProjectToRepo(data, project);
+				if (!found) {
+					notFoundProjects.push(mappedProject);
+				}
+				const projectLogFile = await fs.readFile('log/projects.json', 'utf8');
+				if (projectLogFile) {
+					const projectLog: Project[] = JSON.parse(projectLogFile);
 
-			const previousProject = findPreviousProject(projectLog, project);
+					const previousProject = findPreviousProject(projectLog, mappedProject);
 
-			if (previousProject?.firstAdded) {
-				mappedProject.firstAdded = previousProject.firstAdded;
-			}
+					if (previousProject?.firstAdded) {
+						mappedProject.firstAdded = new Date(previousProject.firstAdded);
+					} else {
+						newProjects.push(mappedProject);
+					}
+				}
 
-			return mappedProject;
-		});
+				return mappedProject;
+			})
+		);
+		console.log(`${newProjects.length} new Projects found`);
 
 		await writeJsonToFile({ filename: 'log/projects.json', data: allProjects });
 		console.log(`${allProjects.length} total Projects. List saved to log/projects.json.`);

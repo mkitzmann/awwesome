@@ -1,6 +1,6 @@
 <script lang="ts">
 	import githubMark from '$lib/assets/github-mark.svg';
-	import type { ProjectCollection } from '../../lib/types/types';
+	import type { ProjectCollection, SortOrder, SortTerm } from '../../lib/types/types';
 	import ProjectItem from '../../components/ProjectItem.svelte';
 	import { page } from '$app/stores';
 	import { removeTrailingSlashes } from '../../lib';
@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
 	import Logo from '../../components/Logo.svelte';
 	import SearchInput from '../../components/SearchInput.svelte';
+	import SortButton from '../../components/SortButton.svelte';
 
 	export let data: ProjectCollection;
 	categoryStore.set(data.categories);
@@ -24,9 +25,22 @@
 	});
 	$: projects = data.projects;
 	let searchTerm = '';
-	$: searchedProjects = data.projects.filter((project) =>
-		JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase())
-	);
+
+	let selectedSortTerm: SortTerm = 'stars';
+	let selectedSortOrder: SortOrder = 'desc';
+	$: searchedProjects = data.projects
+		.filter((project) => JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase()))
+		.sort((projectA, projectB) => {
+			const getValue = (project) => {
+				const value = project[selectedSortTerm];
+				return selectedSortTerm === 'firstAdded' ? (value ? value.getTime() : 0) : value;
+			};
+
+			const valueA = getValue(projectA);
+			const valueB = getValue(projectB);
+
+			return selectedSortOrder === 'desc' ? valueB - valueA : valueA - valueB;
+		});
 
 	let displayLimit = 20;
 	$: limitedProjects = searchedProjects.slice(0, displayLimit);
@@ -51,7 +65,10 @@
 				<h1 class="text-2xl md:text-3xl font-bold">Awwesome Selfhosted</h1>
 			</div>
 			<div class="text-sm -mt-2">
-				Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data">awesome-selfhosted</a> community, licensed under
+				Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data"
+					>awesome-selfhosted</a
+				>
+				community, licensed under
 				<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>
 			</div>
 			<!--			<div class="text-sm -mt-4 text-gray-400">-->
@@ -101,8 +118,18 @@
 						.map((category) => categoryNames[category])
 						.join(' - ')}
 				</h2>
-				<div class="text-sm text-right">
-					{searchedProjects.length} Projects
+				<div class="flex items-center gap-4 flex-wrap">
+					<div class="text-sm">
+						<SortButton bind:selectedSortTerm sortTerm="stars" rounded="left">
+							Most Stars
+						</SortButton>
+						<SortButton bind:selectedSortTerm sortTerm="firstAdded" rounded="right">
+							Recently Added
+						</SortButton>
+					</div>
+					<div class="text-sm text-right">
+						{searchedProjects.length} Projects
+					</div>
 				</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
