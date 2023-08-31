@@ -70,14 +70,13 @@ services:
     labels:
       ofelia.job-run.awwesome.schedule: "@daily"
       ofelia.job-run.awwesome.container: "awwesome"
-      ofelia.job-run.awwesome.command: "sh -c 'npm run build'"
   source:
     image: mkitzmann/awwesome
     container_name: awwesome
     working_dir: /usr/src/app
     environment:
       TOKEN_GITHUB: ${TOKEN_GITHUB}
-    command: sh -c "npm run build"
+    command: sh -c "npm run build && rm -r html/* && cp -r dist/* html && exit"
     volumes:
       - shared_volume:/usr/src/app/html
   web:

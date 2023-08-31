@@ -9,7 +9,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
-      ofelia.job-run.awwesome.schedule: "@every 2m"
+      ofelia.job-run.awwesome.schedule: "@daily"
       ofelia.job-run.awwesome.container: "awwesome"
   source:
     image: mkitzmann/awwesome
@@ -18,14 +18,14 @@ services:
     env_file:
       - .env
     working_dir: /usr/src/app
-    command: sh -c "npm run build && rm -r html/* && cp -r dist/* html"
+    command: sh -c "npm run build && rm -r html/* && cp -r dist/* html && exit"
     volumes:
       - shared_volume:/usr/src/app/html
   web:
     image: nginx
     container_name: nginx
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - shared_volume:/usr/share/nginx/html:ro
 volumes:
