@@ -50,16 +50,18 @@ export async function load({ params }): Promise<ProjectCollection> {
 
 		const notFoundProjects = [];
 		const newProjects = [];
+		const projectLogFile = await fs.readFile('log/projects.json', 'utf8');
+		let projectLog: Project[] = [];
+		if (projectLogFile) {
+			projectLog = JSON.parse(projectLogFile);
+		}
 		await Promise.all(
 			allProjects.map(async (project) => {
 				const { project: mappedProject, found } = mapProjectToRepo(data, project);
 				if (!found) {
 					notFoundProjects.push(mappedProject);
 				}
-				const projectLogFile = await fs.readFile('log/projects.json', 'utf8');
-				if (projectLogFile) {
-					const projectLog: Project[] = JSON.parse(projectLogFile);
-
+				if (projectLog) {
 					const previousProject = findPreviousProject(projectLog, mappedProject);
 
 					if (previousProject?.firstAdded) {

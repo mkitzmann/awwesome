@@ -11,6 +11,7 @@ vite.config.ts.timestamp-*
 /.idea
 /docs
 /log
+/dist
 
 # Local Netlify folder
 .netlify
