@@ -34,10 +34,6 @@ export function mapProjectToRepo(
 			repo.url.toLowerCase() === project.source_url?.toLowerCase()
 	);
 	if (!repo) {
-		// We are not fetching all repos in dev so this would just flood the console
-		// 	console.error(
-		// 		`Project not found: primary_url: ${project.primary_url} source_url: ${project.source_url} `
-		// 	);
 		return { project, found: false };
 	}
 
@@ -50,6 +46,7 @@ export function mapProjectToRepo(
 	}, {});
 	project.license = repo.licenseInfo;
 	project.pushedAt = new Date(repo.pushedAt);
+	project.createdAt = new Date(repo.createdAt);
 	project.topics = repo?.repositoryTopics.edges.map((edge) => edge.node.topic.name) ?? [];
 
 	return { project, found: true };

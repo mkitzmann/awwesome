@@ -33,7 +33,7 @@
 		.sort((projectA, projectB) => {
 			const getValue = (project) => {
 				const value = project[selectedSortTerm];
-				return selectedSortTerm === 'firstAdded' ? (value ? value.getTime() : 0) : value;
+				return selectedSortTerm === 'createdAt' ? (value ? value.getTime() : 0) : value;
 			};
 
 			const valueA = getValue(projectA);
@@ -123,8 +123,8 @@
 						<SortButton bind:selectedSortTerm sortTerm="stars" rounded="left">
 							Most Stars
 						</SortButton>
-						<SortButton bind:selectedSortTerm sortTerm="firstAdded" rounded="right">
-							Recently Added
+						<SortButton bind:selectedSortTerm sortTerm="createdAt" rounded="right">
+							Recently Created
 						</SortButton>
 					</div>
 					<div class="text-sm text-right">

@@ -41,11 +41,13 @@ async function updateProjectsAndLogs(data: GithubRepo[]) {
 			if (projectLog.length > 0) {
 				const previousProject = findPreviousProject(projectLog, mappedProject);
 
-				if (previousProject?.firstAdded) {
-					mappedProject.firstAdded = new Date(previousProject.firstAdded);
+				if (previousProject) {
+					mappedProject.firstAdded = previousProject?.firstAdded
+						? new Date(previousProject.firstAdded)
+						: new Date();
 				} else {
-					mappedProject.firstAdded = project.createdAt;
 					newProjects.push(mappedProject);
+					mappedProject.firstAdded = project.createdAt;
 				}
 			}
 
