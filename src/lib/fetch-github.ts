@@ -1,5 +1,28 @@
-import { GithubQueryResult, GithubRepo } from './types/types';
+import { GithubQueryResult, GithubRepo, Project } from './types/types';
 import { TOKEN_GITHUB } from '$env/static/private';
+import { chunkSize, extractGithubRepoUrls } from './index';
+import { createQuery } from './query';
+
+export async function fetchAllGithubRepositories(allProjects: Project[]) {
+	const githubRepoUrls = extractGithubRepoUrls(allProjects);
+	const start = performance.now();
+	const urls = [...githubRepoUrls];
+	const promises = [];
+
+	for (let i = 0; i < urls.length; i += chunkSize) {
+		const chunk = urls.slice(i, i + chunkSize);
+		const query = await createQuery(chunk);
+		promises.push(fetchRepoInfoFromGithub(query));
+	}
+
+	const results = await Promise.all(promises);
+	const data: GithubRepo[] = results.flat();
+
+	const end = performance.now();
+	console.log(`fetched ${data.length} repositories from Github in ${end - start}ms`);
+
+	return data;
+}
 
 async function request(query) {
 	return fetch('https://api.github.com/graphql', {
