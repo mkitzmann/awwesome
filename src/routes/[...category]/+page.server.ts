@@ -50,11 +50,14 @@ export async function load({ params }): Promise<ProjectCollection> {
 
 		const notFoundProjects = [];
 		const newProjects = [];
-		const projectLogFile = await fs.readFile('log/projects.json', 'utf8');
 		let projectLog: Project[] = [];
-		if (projectLogFile) {
+		try {
+			const projectLogFile = await fs.readFile('log/projects.json', 'utf8');
 			projectLog = JSON.parse(projectLogFile);
+		} catch (e) {
+			console.error(e);
 		}
+
 		await Promise.all(
 			allProjects.map(async (project) => {
 				const { project: mappedProject, found } = mapProjectToRepo(data, project);
@@ -67,6 +70,7 @@ export async function load({ params }): Promise<ProjectCollection> {
 					if (previousProject?.firstAdded) {
 						mappedProject.firstAdded = new Date(previousProject.firstAdded);
 					} else {
+						mappedProject.firstAdded = project.createdAt;
 						newProjects.push(mappedProject);
 					}
 				}

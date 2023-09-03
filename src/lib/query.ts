@@ -46,6 +46,7 @@ export async function createQuery(urls: string[]) {
 		repos: edges {
 		  repo: node {
 			... on Repository {
+					createdAt
           url
           name
           owner {

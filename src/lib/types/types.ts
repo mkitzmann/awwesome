@@ -18,6 +18,7 @@ export type Project = {
 	commit_history?: CommitCount;
 	pushedAt?: Date;
 	firstAdded?: Date;
+	createdAt?: Date;
 };
 
 export type CommitCount = {
@@ -73,6 +74,7 @@ export interface GithubRepo {
 			};
 		}[];
 	};
+	createdAt?: string;
 	archivedAt?: string;
 	collaborators?: {
 		totalCount: number;
