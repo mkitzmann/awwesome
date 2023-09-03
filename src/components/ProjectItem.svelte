@@ -31,20 +31,22 @@
 
 <article class="max-w-full bg-white p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg">
 	<div class="flex gap-2 flex-wrap -mb-1 items-center">
-		{#each categories as category, index}
-			<a
-				href={project.category
-					.split('/')
-					.slice(0, index + 2)
-					.join('/')}
-				class="text-sm text-gray-500 max-w-full"
-			>
-				{categoryNames[category]}
-			</a>
-			{#if categories.length > index + 1}
-				-
-			{/if}
-		{/each}
+		{#if categories.length > 0}
+			{#each categories as category, index}
+				<a
+					href={project.category
+						.split('/')
+						.slice(0, index + 2)
+						.join('/')}
+					class="text-sm text-gray-500 max-w-full"
+				>
+					{categoryNames[category]}
+				</a>
+				{#if categories.length > index + 1}
+					-
+				{/if}
+			{/each}
+		{/if}
 	</div>
 	<a
 		href={project.source_url ?? project.primary_url}
@@ -66,7 +68,9 @@
 			</a>
 		{/if}
 	</div>
-	<div class="break-words">{@html project.description}</div>
+	{#if project.description}
+		<div class="break-words">{@html project.description}</div>
+	{/if}
 
 	<div class="mb-auto">
 		{#if project.topics}
