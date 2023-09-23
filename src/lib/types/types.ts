@@ -108,3 +108,10 @@ export interface GithubRepo {
 export type Topic = {
 	name: string;
 };
+
+export type Sources = Record<string, string>;
+
+export type Collection = {
+	name: string;
+	projectCount: number;
+};

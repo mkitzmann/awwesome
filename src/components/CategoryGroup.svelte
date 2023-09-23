@@ -1,15 +1,16 @@
 <script lang="ts">
 	import ChevronRight from './ChevronRight.svelte';
 	import { navigating } from '$app/stores';
-	import type {Category} from "../lib/types/types";
+	import type { Category } from '../lib/types/types';
 	export let category: Category;
+	export let collection: string;
 	export let selectedCategory;
 	export let indent = 0;
 
-	export let href = '/' + category.slug;
+	export let href = '/' + collection + '/' + category.slug;
 
-	let isOpen = false
-	$: if($navigating) (selectedCategory.includes(category.slug) ? (isOpen = true) : (isOpen = false));
+	let isOpen = false;
+	$: if ($navigating) selectedCategory.includes(category.slug) ? (isOpen = true) : (isOpen = false);
 	$: isActive = selectedCategory === href.slice(1);
 </script>
 

@@ -1,19 +1,12 @@
-import type { AllCategories, GithubRepo, Project, ProjectCollection } from '../../lib/types/types';
-import { getAllCategories, getProjectsFromAwesomeList } from '../../lib/repositories';
-import { fetchAllGithubRepositories } from '../../lib/fetch-github';
-import { findPreviousProject, mapProjectToRepo, removeTrailingSlashes } from '../../lib';
+import type { AllCategories, GithubRepo, Project, ProjectCollection } from '$lib/types/types';
+import { getAllCategories, getProjectsFromAwesomeList } from '$lib/repositories';
+import { fetchAllGithubRepositories } from '$lib/fetch-github';
+import { findPreviousProject, mapProjectToRepo, removeTrailingSlashes } from '$lib';
 import * as fs from 'fs/promises';
-import { writeJsonToFile } from '../../lib/files';
-
-export async function entries(): Promise<Array<{ category: string }>> {
-	console.log('creating entries function');
-	const { urls } = await getAllCategories();
-	return [{ category: '' }].concat([...urls].map((url) => ({ category: url.slice(1) })));
-}
+import { writeJsonToFile } from '$lib/files';
 
 let allProjects: Project[] = [];
 let allCategories: AllCategories;
-let loaded = false;
 
 async function loadPreviousProjectLog(): Promise<Project[]> {
 	let projectLog: Project[] = [];
@@ -67,22 +60,24 @@ async function updateProjectsAndLogs(data: GithubRepo[]) {
 	loaded = true;
 }
 
-export async function load({ params }): Promise<ProjectCollection> {
+export async function loadProjectCollection({
+	urls,
+	category = ''
+}: {
+	urls: string[];
+	category?: string;
+}): Promise<ProjectCollection> {
 	const startComplete = performance.now();
-	const requestedCategory: string = removeTrailingSlashes(params.category) ?? '';
+	const requestedCategory: string = removeTrailingSlashes(category) ?? '';
 	console.log('creating load function, category: ', requestedCategory);
 
-	if (allProjects.length === 0) {
-		allProjects = await getProjectsFromAwesomeList();
-		allCategories = await getAllCategories();
-	}
+	allProjects = await getProjectsFromAwesomeList(urls);
+	allCategories = await getAllCategories(urls);
 
 	let data: GithubRepo[] = [];
 
-	if (!loaded) {
-		data = await fetchAllGithubRepositories(allProjects);
-		await updateProjectsAndLogs(data);
-	}
+	data = await fetchAllGithubRepositories(allProjects);
+	await updateProjectsAndLogs(data);
 
 	const filteredProjects = [...allProjects].filter((project) => {
 		if (!project.category) {
