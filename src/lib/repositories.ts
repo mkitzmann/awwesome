@@ -1,7 +1,6 @@
 import type { AllCategories, Category, Project } from './types/types';
 import slugify from '@sindresorhus/slugify';
 import { removeTrailingSlashes } from './index';
-import { AWWESOME_SOURCES } from '$env/static/private';
 
 export interface ProjectsAndCategories {
 	projects: Project[];
@@ -143,14 +142,15 @@ export async function getProjectsFromAwesomeList(urls: string[]): Promise<Projec
 	const markdown = await combineSources(urls);
 	const { projects } = extractRepositories(markdown);
 	const end = performance.now();
-	console.log(
-		`loaded ${projects.length} projects from Awesome Selfhosted and Sysadmin in ${end - start}ms`
-	);
+	console.log(`loaded ${projects.length} projects in ${end - start}ms (${urls})`);
 	return projects;
 }
 
 export async function getAllCategories(urls): Promise<AllCategories> {
-	const markdown = await combineSources(urls);
+	// const markdown = await combineSources(urls);
+	console.log(urls);
+	const response = await fetch(urls);
+	const markdown = await response.text();
 	const { categories } = extractRepositories(markdown);
 	return categories;
 }

@@ -57,7 +57,7 @@ async function updateProjectsAndLogs(data: GithubRepo[]) {
 		`${notFoundProjects.length} Projects could not be found on GitHub. List saved to log/notfound.json.`
 	);
 
-	loaded = true;
+	// loaded = true;
 }
 
 export async function loadProjectCollection({

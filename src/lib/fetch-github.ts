@@ -61,6 +61,7 @@ export const fetchRepoInfoFromGithub = async (query: string): Promise<GithubRepo
 			return data.search.repos.map((data) => data.repo);
 		}
 
+		console.log(query);
 		throw new Error(JSON.stringify(response.statusText));
 	} catch (e) {
 		console.error(e);
