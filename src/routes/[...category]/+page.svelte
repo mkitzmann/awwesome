@@ -77,9 +77,9 @@
 		</a>
 		<a
 			href="https://github.com/mkitzmann/awwesome"
-			class="flex-shrink-0 flex items-center gap-2 bg-gray-100 px-4 h-10 rounded-full hover:bg-yellow-400"
+			class="flex-shrink-0 flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-4 h-10 rounded-full hover:bg-yellow-400 dark:hover:bg-yellow-700"
 		>
-			Star on Github <img src={githubMark} alt="Github repo" class="h-6" />
+			Star on Github <img src={githubMark} alt="Github repo" class="h-6 dark:fill-white" />
 		</a>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-6 xl:gap-12">
@@ -141,7 +141,7 @@
 				{#if searchedProjects.length > displayLimit}
 					<button
 						on:click={() => (displayLimit += 20)}
-						class="mx-auto bg-blue-100 hover:bg-blue-200 rounded-full px-4 py-2"
+						class="mx-auto bg-blue-100 dark:bg-blue-700 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full px-4 py-2"
 					>
 						Show more
 					</button>

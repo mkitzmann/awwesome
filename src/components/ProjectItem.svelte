@@ -29,7 +29,9 @@
 		: 0;
 </script>
 
-<article class="max-w-full bg-white p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg">
+<article
+	class="max-w-full bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg"
+>
 	<div class="flex gap-2 flex-wrap -mb-1 items-center">
 		{#if categories.length > 0}
 			{#each categories as category, index}
@@ -79,7 +81,7 @@
 					<a
 						href="?search={topic}"
 						target="_self"
-						class="text-xs rounded-full px-2 py-1 bg-gray-100 max-w-full"
+						class="text-xs rounded-full px-2 py-1 bg-gray-100 dark:bg-gray-700 max-w-full"
 					>
 						{topic}
 					</a>
@@ -89,7 +91,7 @@
 	</div>
 	<div class="flex flex-col min-[460px]:flex-row sm:gap-6 w-full justify-between sm:items-end">
 		{#if project.stars}
-			<div class="flex items-center gap-2 text-yellow-700 -mb-2">
+			<div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 -mb-2">
 				<Star />{numeral(project.stars).format('0,0a')}
 			</div>
 		{/if}

@@ -1,15 +1,15 @@
 <script lang="ts">
 	import ChevronRight from './ChevronRight.svelte';
 	import { navigating } from '$app/stores';
-	import type {Category} from "../lib/types/types";
+	import type { Category } from '../lib/types/types';
 	export let category: Category;
 	export let selectedCategory;
 	export let indent = 0;
 
 	export let href = '/' + category.slug;
 
-	let isOpen = false
-	$: if($navigating) (selectedCategory.includes(category.slug) ? (isOpen = true) : (isOpen = false));
+	let isOpen = false;
+	$: if ($navigating) selectedCategory.includes(category.slug) ? (isOpen = true) : (isOpen = false);
 	$: isActive = selectedCategory === href.slice(1);
 </script>
 
@@ -20,7 +20,7 @@
 				<a
 					{href}
 					class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-						? 'bg-gray-200'
+						? 'bg-gray-200 dark:bg-gray-800'
 						: ''}"
 				>
 					{category.name}
@@ -45,7 +45,7 @@
 		<a
 			{href}
 			class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-				? 'bg-gray-200'
+				? 'bg-gray-200 dark:bg-gray-800'
 				: ''}"
 		>
 			{category.name}

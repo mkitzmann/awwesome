@@ -51,7 +51,7 @@
 		name="search"
 		bind:value={searchTerm}
 		on:input={debounceSetQueryParams}
-		class="rounded-full pr-8 pl-12 py-2 w-full font-light placeholder-gray-400"
+		class="rounded-full pr-8 pl-12 py-2 w-full font-light placeholder-gray-400 dark:bg-gray-800"
 		placeholder="Search in Category"
 	/>
 </div>
