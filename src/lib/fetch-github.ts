@@ -7,16 +7,18 @@ export async function fetchAllGithubRepositories(allProjects: Project[]) {
 	const githubRepoUrls = extractGithubRepoUrls(allProjects);
 	const start = performance.now();
 	const urls = [...githubRepoUrls];
-	const promises = [];
+	let data: GithubRepo[] = [];
 
 	for (let i = 0; i < urls.length; i += chunkSize) {
 		const chunk = urls.slice(i, i + chunkSize);
 		const query = await createQuery(chunk);
-		promises.push(fetchRepoInfoFromGithub(query));
-	}
+		const result = await fetchRepoInfoFromGithub(query);
+		data = data.concat(result);
 
-	const results = await Promise.all(promises);
-	const data: GithubRepo[] = results.flat();
+		if (import.meta.env.DEV) {
+			break;
+		}
+	}
 
 	const end = performance.now();
 	console.log(`fetched ${data.length} repositories from Github in ${end - start}ms`);
