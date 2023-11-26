@@ -1,5 +1,4 @@
 <script lang="ts">
-	import githubMark from '$lib/assets/github-mark.svg';
 	import type { ProjectCollection, SortOrder, SortTerm } from '../../lib/types/types';
 	import ProjectItem from '../../components/ProjectItem.svelte';
 	import { page } from '$app/stores';
@@ -13,6 +12,8 @@
 	import Logo from '../../components/Logo.svelte';
 	import SearchInput from '../../components/SearchInput.svelte';
 	import SortButton from '../../components/SortButton.svelte';
+	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
+	import StarOnGithub from '../../components/StarOnGithub.svelte';
 
 	export let data: ProjectCollection;
 	categoryStore.set(data.categories);
@@ -75,12 +76,10 @@
 			<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
 			<!--			</div>-->
 		</a>
-		<a
-			href="https://github.com/mkitzmann/awwesome"
-			class="flex-shrink-0 flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-4 h-10 rounded-full hover:bg-yellow-400 dark:hover:bg-yellow-700"
-		>
-			Star on Github <img src={githubMark} alt="Github repo" class="h-6 dark:fill-white" />
-		</a>
+		<div class="flex gap-8">
+			<StarOnGithub />
+			<DarkModeSwitch />
+		</div>
 	</div>
 	<div class="flex flex-col xl:flex-row gap-6 xl:gap-12">
 		<div class="xl:hidden flex flex-wrap gap-4">

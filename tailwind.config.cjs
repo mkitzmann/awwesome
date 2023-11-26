@@ -7,7 +7,8 @@ const config = {
 		}
 	},
 
-	plugins: []
+	plugins: [],
+	darkMode: 'class',
 };
 
 module.exports = config;
