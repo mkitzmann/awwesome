@@ -16,7 +16,7 @@
 </script>
 
 <main>
-	<label class="flex h-10 items-center cursor-pointer select-none" on:click={toggleDarkMode}>
+	<button class="flex h-10 items-center cursor-pointer select-none" on:click={toggleDarkMode}>
 		{#if darkMode}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -42,5 +42,5 @@
 				/>
 			</svg>
 		{/if}
-	</label>
+	</button>
 </main>

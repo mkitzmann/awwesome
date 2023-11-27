@@ -12,7 +12,7 @@ services:
       ofelia.job-run.awwesome.schedule: "@daily"
       ofelia.job-run.awwesome.container: "awwesome"
   source:
-    image: mkitzmann/awwesome
+    image: mkitzmann/awwesome:0.7
     container_name: awwesome
     restart: no
     env_file:

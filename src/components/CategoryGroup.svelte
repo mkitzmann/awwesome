@@ -20,7 +20,7 @@
 				<a
 					{href}
 					class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-						? 'bg-gray-200 dark:bg-gray-800'
+						? 'bg-gray-200 dark:bg-gray-950'
 						: ''}"
 				>
 					{category.name}
@@ -45,7 +45,7 @@
 		<a
 			{href}
 			class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-				? 'bg-gray-200 dark:bg-gray-800'
+				? 'bg-gray-200 dark:bg-gray-950'
 				: ''}"
 		>
 			{category.name}

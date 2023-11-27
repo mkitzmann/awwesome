@@ -97,7 +97,7 @@
 					href="/"
 					class="truncate max-w-full xl:max-w-full text-left text-sm px-3 py-1 rounded-full {selectedCategory ===
 					''
-						? 'bg-gray-200'
+						? 'bg-gray-200 dark:bg-gray-950'
 						: ''}"
 				>
 					{allCategory.name}

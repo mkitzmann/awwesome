@@ -81,7 +81,7 @@
 					<a
 						href="?search={topic}"
 						target="_self"
-						class="text-xs rounded-full px-2 py-1 bg-gray-100 dark:bg-gray-700 max-w-full"
+						class="text-xs rounded-full px-2 py-1 bg-gray-100 dark:bg-gray-900 max-w-full"
 					>
 						{topic}
 					</a>
