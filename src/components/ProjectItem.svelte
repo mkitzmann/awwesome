@@ -90,11 +90,16 @@
 		{/if}
 	</div>
 	<div class="flex flex-col min-[460px]:flex-row sm:gap-6 w-full justify-between sm:items-end">
-		{#if project.stars}
-			<div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 -mb-2">
-				<Star />{numeral(project.stars).format('0,0a')}
+		<div class="flex flex-col gap-2">
+			{#if project.stars}
+				<div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 -mb-2">
+					<Star />{numeral(project.stars).format('0,0a')}
+				</div>
+			{/if}
+			<div class="text-sm text-gray-500">
+				created {getRelativeTime(project.createdAt)}
 			</div>
-		{/if}
+		</div>
 
 		{#if project.commit_history}
 			<div class="flex flex-col items-end w-full min-[460px]:w-64">
