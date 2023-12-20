@@ -62,8 +62,9 @@
 	<div class="flex justify-between flex-wrap gap-2">
 		<a href="/">
 			<div class="flex gap-4 items-center mb-4">
-				<Logo />
-				<h1 class="text-2xl md:text-3xl font-bold">Awwesome Selfhosted</h1>
+				<img src="/logo_complete_dark.svg" alt="Logo" class="h-16 mb-4 hidden dark:block" />
+				<img src="/logo_complete_light.svg" alt="Logo" class="h-16 mb-4 dark:hidden" />
+				<!--				<Logo />-->
 			</div>
 			<div class="text-sm -mt-2">
 				Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data"
