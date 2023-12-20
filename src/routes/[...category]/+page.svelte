@@ -60,12 +60,13 @@
 
 <div class="flex flex-col gap-4 mx-auto my-4 p-4">
 	<div class="flex justify-between flex-wrap gap-2">
-		<a href="/">
-			<div class="flex gap-4 items-center mb-4">
-				<img src="/logo_complete_dark.svg" alt="Logo" class="h-16 mb-4 hidden dark:block" />
-				<img src="/logo_complete_light.svg" alt="Logo" class="h-16 mb-4 dark:hidden" />
-				<!--				<Logo />-->
-			</div>
+		<div>
+			<a href="/" class="block">
+				<div class="flex gap-4 items-center mb-4">
+					<img src="/logo_complete_dark.svg" alt="Logo" class="h-16 mb-4 hidden dark:block" />
+					<img src="/logo_complete_light.svg" alt="Logo" class="h-16 mb-4 dark:hidden" />
+				</div>
+			</a>
 			<div class="text-sm -mt-2">
 				Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data"
 					>awesome-selfhosted</a
@@ -73,10 +74,8 @@
 				community, licensed under
 				<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>
 			</div>
-			<!--			<div class="text-sm -mt-4 text-gray-400">-->
-			<!--				updated {new Intl.DateTimeFormat('en-US').format(Date.now())}-->
-			<!--			</div>-->
-		</a>
+		</div>
+
 		<div class="flex gap-8">
 			<StarOnGithub />
 			<DarkModeSwitch />
