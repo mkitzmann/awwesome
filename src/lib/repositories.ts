@@ -1,6 +1,7 @@
 import type { AllCategories, Category, Project } from './types/types';
 import slugify from '@sindresorhus/slugify';
 import { removeTrailingSlashes } from './index';
+import { config } from '../config';
 
 export interface ProjectsAndCategories {
 	projects: Project[];
@@ -127,11 +128,6 @@ function extractRepositories(markdownText: string): ProjectsAndCategories {
 	return { projects, categories: allCategories };
 }
 
-const urls = [
-	'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md',
-	'https://raw.githubusercontent.com/awesome-foss/awesome-sysadmin/master/README.md'
-];
-
 async function combineSources(urls: string[]): Promise<string> {
 	let combinedMarkdown = '';
 	for (const item of urls) {
@@ -144,7 +140,7 @@ async function combineSources(urls: string[]): Promise<string> {
 
 export async function getProjectsFromAwesomeList(): Promise<Project[]> {
 	const start = performance.now();
-	const markdown = await combineSources(urls);
+	const markdown = await combineSources(config.urls);
 	const { projects } = extractRepositories(markdown);
 	const end = performance.now();
 	console.log(
@@ -154,7 +150,7 @@ export async function getProjectsFromAwesomeList(): Promise<Project[]> {
 }
 
 export async function getAllCategories(): Promise<AllCategories> {
-	const markdown = await combineSources(urls);
+	const markdown = await combineSources(config.urls);
 	const { categories } = extractRepositories(markdown);
 	return categories;
 }
