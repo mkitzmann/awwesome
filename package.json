@@ -12,8 +12,6 @@
 		"test": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"deploy": "npm run gh-pages",
-		"gh-pages": "gh-pages -d docs -b gh-pages"
 	},
 	"devDependencies": {
 		"@dimfeld/svelte-lazyload": "^0.0.4",
