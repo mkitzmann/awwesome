@@ -1,4 +1,4 @@
-import { chunkSize } from './index';
+import { config } from '../config';
 
 interface MonthInfo {
 	name: string;
@@ -41,7 +41,7 @@ export async function createQuery(urls: string[]) {
 	  search(
 		type:REPOSITORY,
 		query: "${searchString}",
-		first: ${chunkSize + 10}
+		first: ${config.chunkSize + 10}
 	  ) {
 		repos: edges {
 		  repo: node {

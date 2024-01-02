@@ -1,7 +1,8 @@
 import { GithubQueryResult, GithubRepo, Project } from './types/types';
 import { TOKEN_GITHUB } from '$env/static/private';
-import { chunkSize, extractGithubRepoUrls } from './index';
+import { extractGithubRepoUrls } from './index';
 import { createQuery } from './query';
+import { config } from '../config';
 
 export async function fetchAllGithubRepositories(allProjects: Project[]) {
 	const githubRepoUrls = extractGithubRepoUrls(allProjects);
@@ -9,8 +10,8 @@ export async function fetchAllGithubRepositories(allProjects: Project[]) {
 	const urls = [...githubRepoUrls];
 	let data: GithubRepo[] = [];
 
-	for (let i = 0; i < urls.length; i += chunkSize) {
-		const chunk = urls.slice(i, i + chunkSize);
+	for (let i = 0; i < urls.length; i += config.chunkSize) {
+		const chunk = urls.slice(i, i + config.chunkSize);
 		const query = await createQuery(chunk);
 		const result = await fetchRepoInfoFromGithub(query);
 		data = data.concat(result);
