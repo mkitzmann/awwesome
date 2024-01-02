@@ -4,5 +4,6 @@ export const config = {
 	urls: [
 		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md',
 		'https://raw.githubusercontent.com/awesome-foss/awesome-sysadmin/master/README.md'
-	]
+	],
+	requestDelay: 10
 };

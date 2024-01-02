@@ -1,4 +1,4 @@
-import { GithubQueryResult, GithubRepo, Project } from './types/types';
+import type { GithubQueryResult, GithubRepo, Project } from './types/types';
 import { TOKEN_GITHUB } from '$env/static/private';
 import { extractGithubRepoUrls } from './index';
 import { createQuery } from './query';
@@ -27,7 +27,7 @@ export async function fetchAllGithubRepositories(allProjects: Project[]) {
 	return data;
 }
 
-async function request(query) {
+async function request(query: string) {
 	return fetch('https://api.github.com/graphql', {
 		method: 'POST',
 		headers: {
