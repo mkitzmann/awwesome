@@ -9,10 +9,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
-      ofelia.job-run.awwesome.schedule: "@daily"
-      ofelia.job-run.awwesome.container: "awwesome"
+      ofelia.job-run.awwesome.schedule: '@daily'
+      ofelia.job-run.awwesome.container: 'awwesome'
   source:
-    image: mkitzmann/awwesome:0.7
+    image: mkitzmann/awwesome:latest
     container_name: awwesome
     restart: no
     env_file:
@@ -25,9 +25,8 @@ services:
     image: nginx
     container_name: nginx
     ports:
-      - "8080:80"
+      - '8080:80'
     volumes:
       - shared_volume:/usr/share/nginx/html:ro
 volumes:
   shared_volume:
-

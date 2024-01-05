@@ -14,7 +14,6 @@ This projects uses Svelte and Tailwind.
 
 The projects are crawled from [Awesome Selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) and then additional data is fetched from GitHubs GraphQL API.
 
-
 ## Personal Access Token
 
 You will need a personal access token from Github to be able to use the GraphQL API.
@@ -92,6 +91,5 @@ volumes:
 
 This will generate the static website daily using [ofelia](https://github.com/mcuadros/ofelia).
 The website is served by an nginx server which is mapped to port 8080 on the host computer.
-
 
 The environment variable TOKEN_GITHUB needs to be provided (see [Personal Access Token](#personal-access-token)).
