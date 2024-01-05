@@ -15,7 +15,7 @@ function extractName(input) {
 }
 
 function extractPrimaryUrl(input) {
-	const regex = /\((https?:\/\/[^\)]+)\)/;
+	const regex = /\((https?:\/\/[^)]+)\)/;
 	const match = input.match(regex);
 	return match ? removeTrailingSlashes(match[1].trim()) : null;
 }
@@ -39,13 +39,13 @@ function extractLicense(input) {
 }
 
 function extractSourceUrl(input) {
-	const regex = /\[Source Code\]\(([^\)]+)/;
+	const regex = /\[Source Code\]\(([^)]+)/;
 	const match = input.match(regex);
 	return match ? removeTrailingSlashes(match[1].trim()) : undefined;
 }
 
 function extractDemoUrl(input) {
-	const regex = /\[Demo\]\(([^\)]+)/;
+	const regex = /\[Demo\]\(([^)]+)/;
 	const match = input.match(regex);
 	return match ? match[1].trim() : undefined;
 }

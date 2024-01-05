@@ -9,7 +9,6 @@
 	import { allCategory } from '$lib';
 	import { beforeUpdate } from 'svelte';
 	import { goto } from '$app/navigation';
-	import Logo from '../../components/Logo.svelte';
 	import SearchInput from '../../components/SearchInput.svelte';
 	import SortButton from '../../components/SortButton.svelte';
 	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
@@ -24,7 +23,7 @@
 	beforeUpdate(() => {
 		selectedCategory = category;
 	});
-	$: projects = data.projects;
+	// $: projects = data.projects;
 	let searchTerm = '';
 
 	let selectedSortTerm: SortTerm = 'stars';

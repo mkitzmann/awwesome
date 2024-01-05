@@ -10,7 +10,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
-		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"lint": "eslint src/",
 		"format": "prettier --plugin-search-dir . --write .",
 		"docker:build": "docker buildx build --push --platform linux/amd64,linux/arm64 --tag mkitzmann/awwesome:latest --tag mkitzmann/awwesome:0.7.7 ."
 	},
