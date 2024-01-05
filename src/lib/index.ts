@@ -55,3 +55,9 @@ export function findPreviousProject(data: Project[], project: Project): Project 
 		(repo) => repo.primary_url?.toLowerCase() === project.primary_url?.toLowerCase()
 	);
 }
+
+export function delay(time) {
+	return new Promise((res) => {
+		setTimeout(res, time);
+	});
+}

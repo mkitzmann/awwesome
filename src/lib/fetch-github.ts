@@ -1,6 +1,6 @@
 import type { GithubQueryResult, GithubRepo, Project } from './types/types';
 import { TOKEN_GITHUB } from '$env/static/private';
-import { extractGithubRepoUrls } from './index';
+import { delay, extractGithubRepoUrls } from './index';
 import { createQuery } from './query';
 import { config } from '../config';
 
@@ -16,9 +16,13 @@ export async function fetchAllGithubRepositories(allProjects: Project[]) {
 		const result = await fetchRepoInfoFromGithub(query);
 		data = data.concat(result);
 
-		if (import.meta.env.DEV) {
-			break;
+		if (config.requestDelay > 0) {
+			await delay(config.requestDelay);
+			console.log('delay:', config.requestDelay);
 		}
+		// if (import.meta.env.DEV) {
+		// 	break;
+		// }
 	}
 
 	const end = performance.now();
