@@ -1,4 +1,4 @@
-import { config } from '../config';
+import { appConfig } from '../lib/createConfig';
 
 interface MonthInfo {
 	name: string;
@@ -41,7 +41,7 @@ export async function createQuery(urls: string[]) {
 	  search(
 		type:REPOSITORY,
 		query: "${searchString}",
-		first: ${config.chunkSize + 10}
+		first: ${appConfig.chunkSize + 10}
 	  ) {
 		repos: edges {
 		  repo: node {

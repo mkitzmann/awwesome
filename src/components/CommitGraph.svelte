@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CommitCount } from '../lib/types/types';
-	import { config } from '../config';
+	import { appConfig } from '../lib/createConfig';
 
 	export let commits: CommitCount;
 	export let id: string;
@@ -11,8 +11,8 @@
 
 	$: totalCommits = commits ? Object.values(commits).reduce((prev, current) => prev + current) : 0;
 
-	$: topColor = totalCommits < config.lowCommitCount ? '#944' : '#216e39';
-	$: bottomColor = totalCommits < config.lowCommitCount ? '#faa' : '#9be9a8';
+	$: topColor = totalCommits < appConfig.lowCommitCount ? '#944' : '#216e39';
+	$: bottomColor = totalCommits < appConfig.lowCommitCount ? '#faa' : '#9be9a8';
 </script>
 
 <svg viewBox="0 0 110 20" xmlns="http://www.w3.org/2000/svg">

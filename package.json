@@ -1,7 +1,7 @@
 {
 	"name": "awwesome",
 	"description": "Enhanced user interface for Awesome Selfhosted",
-	"version": "0.7.8",
+	"version": "0.7.9",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -12,7 +12,7 @@
 		"test": "vitest",
 		"lint": "eslint src/",
 		"format": "prettier --plugin-search-dir . --write .",
-		"docker:build": "docker buildx build --push --platform linux/amd64,linux/arm64 --tag mkitzmann/awwesome:latest --tag mkitzmann/awwesome:0.7.8 ."
+		"docker:build": "docker buildx build --push --platform linux/amd64,linux/arm64 --tag mkitzmann/awwesome:latest --tag mkitzmann/awwesome:0.7.9 ."
 	},
 	"devDependencies": {
 		"@dimfeld/svelte-lazyload": "^0.0.4",

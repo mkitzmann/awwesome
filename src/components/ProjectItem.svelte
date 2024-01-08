@@ -6,7 +6,7 @@
 	import CommitGraph from './CommitGraph.svelte';
 	import { categoryStore } from '../stores/stores';
 	import type { Project } from '../lib/types/types';
-	import { config } from '../config.js';
+	import { appConfig } from '../lib/createConfig';
 
 	dayjs.extend(relativeTime);
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
@@ -106,13 +106,13 @@
 				<div class="-mb-3">
 					<span
 						class="font-bold text-lg text-green-600"
-						class:text-red-600={totalCommits < config.lowCommitCount}
+						class:text-red-600={totalCommits < appConfig.lowCommitCount}
 					>
 						{numeral(totalCommits).format('0,0a')}
 					</span>
 					<span
 						class="text-xs font-light text-green-600"
-						class:text-red-600={totalCommits < config.lowCommitCount}
+						class:text-red-600={totalCommits < appConfig.lowCommitCount}
 					>
 						commits past year
 					</span>

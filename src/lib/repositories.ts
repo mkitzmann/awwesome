@@ -1,7 +1,7 @@
 import type { AllCategories, Category, Project } from './types/types';
 import slugify from '@sindresorhus/slugify';
 import { removeTrailingSlashes } from './index';
-import { config } from '../config';
+import { appConfig } from '../lib/createConfig';
 
 export interface ProjectsAndCategories {
 	projects: Project[];
@@ -140,7 +140,7 @@ async function combineSources(urls: string[]): Promise<string> {
 
 export async function getProjectsFromAwesomeList(): Promise<Project[]> {
 	const start = performance.now();
-	const markdown = await combineSources(config.urls);
+	const markdown = await combineSources(appConfig.urls);
 	const { projects } = extractRepositories(markdown);
 	const end = performance.now();
 	console.log(
@@ -150,7 +150,7 @@ export async function getProjectsFromAwesomeList(): Promise<Project[]> {
 }
 
 export async function getAllCategories(): Promise<AllCategories> {
-	const markdown = await combineSources(config.urls);
+	const markdown = await combineSources(appConfig.urls);
 	const { categories } = extractRepositories(markdown);
 	return categories;
 }

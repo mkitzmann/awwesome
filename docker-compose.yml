@@ -15,6 +15,10 @@ services:
     image: mkitzmann/awwesome:latest
     container_name: awwesome
     restart: no
+    environment:
+      - REQUEST_DELAY=0
+      - CHUNK_SIZE=20
+      - LOW_COMMIT_COUNT=2
     env_file:
       - .env
     working_dir: /usr/src/app

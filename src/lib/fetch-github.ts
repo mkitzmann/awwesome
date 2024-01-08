@@ -2,7 +2,7 @@ import type { GithubQueryResult, GithubRepo, Project } from './types/types';
 import { TOKEN_GITHUB } from '$env/static/private';
 import { delay, extractGithubRepoUrls } from './index';
 import { createQuery } from './query';
-import { config } from '../config';
+import { appConfig } from './createConfig';
 
 export async function fetchAllGithubRepositories(allProjects: Project[]) {
 	const githubRepoUrls = extractGithubRepoUrls(allProjects);
@@ -10,15 +10,15 @@ export async function fetchAllGithubRepositories(allProjects: Project[]) {
 	const urls = [...githubRepoUrls];
 	let data: GithubRepo[] = [];
 
-	for (let i = 0; i < urls.length; i += config.chunkSize) {
-		const chunk = urls.slice(i, i + config.chunkSize);
+	for (let i = 0; i < urls.length; i += appConfig.chunkSize) {
+		const chunk = urls.slice(i, i + appConfig.chunkSize);
 		const query = await createQuery(chunk);
 		const result = await fetchRepoInfoFromGithub(query);
 		data = data.concat(result);
 
-		if (config.requestDelay > 0) {
-			await delay(config.requestDelay);
-			console.log('delay:', config.requestDelay);
+		if (appConfig.requestDelay > 0) {
+			await delay(appConfig.requestDelay);
+			console.log('delay:', appConfig.requestDelay);
 		}
 		// if (import.meta.env.DEV) {
 		// 	break;
