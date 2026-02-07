@@ -13,5 +13,11 @@ vite.config.ts.timestamp-*
 /log
 /dist
 
+# Database
+/data/*.db
+/data/*.db-wal
+/data/*.db-shm
+/drizzle
+
 # Local Netlify folder
 .netlify

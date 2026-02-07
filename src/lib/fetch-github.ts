@@ -1,8 +1,15 @@
 import type { GithubQueryResult, GithubRepo, Project } from './types/types';
-import { TOKEN_GITHUB } from '$env/static/private';
 import { delay, extractGithubRepoUrls } from './index';
 import { createQuery } from './query';
 import { appConfig } from './createConfig';
+
+function getGithubToken(): string {
+	const token = process.env.TOKEN_GITHUB;
+	if (!token) {
+		throw new Error('TOKEN_GITHUB environment variable is required');
+	}
+	return token;
+}
 
 export async function fetchAllGithubRepositories(allProjects: Project[]) {
 	const githubRepoUrls = extractGithubRepoUrls(allProjects);
@@ -36,7 +43,7 @@ async function request(query: string) {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: 'bearer ' + TOKEN_GITHUB
+			Authorization: 'bearer ' + getGithubToken()
 		},
 		body: JSON.stringify({ query })
 	});
