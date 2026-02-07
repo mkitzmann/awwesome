@@ -1,393 +1,209 @@
 /**
- * Seed script: Fetches projects from Awesome lists, enriches with GitHub data,
+ * Seed script: Reads structured YAML data from the awesome-selfhosted-data repo,
  * and stores everything in the SQLite database.
  *
  * Usage: npm run seed
- * Requires TOKEN_GITHUB environment variable.
+ * No GitHub API token required — the data repo already includes stars, commit history, etc.
+ *
+ * Data source: https://github.com/awesome-selfhosted/awesome-selfhosted-data
  */
 
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { sql } from 'drizzle-orm';
 import path from 'path';
+import fs from 'fs';
+import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import yaml from 'js-yaml';
+import slugify from '@sindresorhus/slugify';
 import * as schema from '../src/lib/server/db/schema.js';
+
+// ── Config ──
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PROJECT_ROOT = path.resolve(__dirname, '..');
+const DB_PATH = process.env.DATABASE_URL || path.resolve(PROJECT_ROOT, 'data/awwesome.db');
+const DATA_REPO_URL = 'https://github.com/awesome-selfhosted/awesome-selfhosted-data.git';
+const DATA_REPO_DIR = path.resolve(PROJECT_ROOT, 'data/awesome-selfhosted-data');
 
 // ── Setup database ──
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = process.env.DATABASE_URL || path.resolve(__dirname, '../data/awwesome.db');
 const sqlite = new Database(DB_PATH);
 sqlite.pragma('journal_mode = WAL');
 sqlite.pragma('foreign_keys = ON');
-
 const db = drizzle(sqlite, { schema });
 
-// ── Inline the necessary functions to avoid SvelteKit module resolution issues ──
+// ── Types for YAML data ──
 
-import slugify from '@sindresorhus/slugify';
-
-// Config
-const config = {
-	chunkSize: process.env.CHUNK_SIZE ? Number(process.env.CHUNK_SIZE) : 20,
-	requestDelay: process.env.REQUEST_DELAY ? Number(process.env.REQUEST_DELAY) : 0,
-	urls: [
-		'https://raw.githubusercontent.com/awesome-selfhosted/awesome-selfhosted/master/README.md',
-		'https://raw.githubusercontent.com/awesome-foss/awesome-sysadmin/master/README.md'
-	]
-};
-
-// Types (minimal subset for seed)
-interface Project {
-	name: string | null;
-	primary_url: string | null;
-	source_url?: string | null;
-	demo_url?: string | null;
-	description?: string | null;
-	license?: { name?: string; description?: string; url?: string; nickname?: string };
-	stack?: string | null;
-	category?: string;
-	stars?: number | null;
-	avatar_url?: string | null;
-	topics?: string[];
-	commit_history?: { [key: string]: number };
-	pushedAt?: Date;
-	firstAdded?: Date;
-	createdAt?: Date;
-}
-
-interface Category {
-	slug: string;
+interface SoftwareYaml {
 	name: string;
-	children?: Category[];
+	description: string;
+	website_url?: string;
+	source_code_url?: string;
+	demo_url?: string;
+	licenses?: string[];
+	platforms?: string[];
+	tags?: string[];
+	stargazers_count?: number;
+	updated_at?: string;
+	archived?: boolean;
+	depends_3rdparty?: boolean;
+	current_release?: {
+		tag?: string;
+		published_at?: string;
+	};
+	commit_history?: Record<string, number>;
 }
 
-interface AllCategories {
-	tree: Category[];
-	urls: Set<string>;
-	names: { [key: string]: string };
-}
-
-// ── Markdown parsing (from repositories.ts) ──
-
-function removeTrailingSlashes(input?: string | unknown): string | undefined {
-	if (!input || typeof input !== 'string') return undefined;
-	return input.replace(/\/$/, '');
-}
-
-function extractName(input: string) {
-	const regex = /\[([^\]]+)\]\(/;
-	const match = input.match(regex);
-	return match ? match[1].trim() : null;
-}
-
-function extractPrimaryUrl(input: string) {
-	const regex = /\((https?:\/\/[^)]+)\)/;
-	const match = input.match(regex);
-	return match ? removeTrailingSlashes(match[1].trim()) ?? null : null;
-}
-
-function extractDescription(input: string) {
-	const regex = /-\s*\[(?:[^\]]+)\]\([^)]+\)\s*-\s*(.+?)(?:\s*\(|`)/;
-	const match = input.match(regex);
-	return match ? match[1]?.trim() : undefined;
-}
-
-function extractStack(input: string) {
-	const regex = /`([^`]+)`\s*`([^`]+)`$/;
-	const match = input.match(regex);
-	return match ? match[1].trim() : undefined;
-}
-
-function extractLicense(input: string) {
-	const regex = /`([^`]+)`\s*`([^`]+)`$/;
-	const match = input.match(regex);
-	return match ? match[0].trim() : undefined;
-}
-
-function extractSourceUrl(input: string) {
-	const regex = /\[Source Code\]\(([^)]+)/;
-	const match = input.match(regex);
-	return match ? removeTrailingSlashes(match[1].trim()) : undefined;
-}
-
-function extractDemoUrl(input: string) {
-	const regex = /\[Demo\]\(([^)]+)/;
-	const match = input.match(regex);
-	return match ? match[1].trim() : undefined;
-}
-
-function extractCategory(line: string) {
-	return line.slice(4).trim().split(' - ');
-}
-
-function transformObjectToArray(obj: Record<string, any>): Category[] {
-	const array: Category[] = [];
-	for (const key in obj) {
-		const entry: Category = { name: key, slug: slugify(key), children: [] };
-		if (Object.keys(obj[key]).length > 0) {
-			entry.children = transformObjectToArray(obj[key]);
-		}
-		array.push(entry);
-	}
-	return array;
-}
-
-function extractRepositories(markdownText: string): { projects: Project[]; categories: AllCategories } {
-	const lines = markdownText.split('\n');
-	const projects: Project[] = [];
-	let currentCategoryURL = '';
-	const allCategoriesObject: Record<string, any> = {};
-	const allCategories: AllCategories = { tree: [], names: {}, urls: new Set() };
-
-	for (const line of lines) {
-		if (line.startsWith('### ')) {
-			const currentCategoryNames = extractCategory(line);
-			if (currentCategoryNames[0] === 'Backup') {
-				currentCategoryNames[0] = 'Backups';
-			}
-			currentCategoryURL = '';
-			currentCategoryNames.forEach((categoryName) => {
-				allCategories.names[slugify(categoryName)] = categoryName;
-				currentCategoryURL = `${currentCategoryURL}/${slugify(categoryName)}`;
-				allCategories.urls.add(currentCategoryURL);
-			});
-			[...currentCategoryNames].reduce(
-				(prev: any, current: string) => (prev[current] = prev[current] ?? {}),
-				allCategoriesObject
-			);
-			allCategories.tree = transformObjectToArray(allCategoriesObject);
-			continue;
-		}
-		if (!line.startsWith('- [')) continue;
-		if (!extractPrimaryUrl(line)) continue;
-
-		const project: Project = {
-			name: extractName(line),
-			primary_url: extractPrimaryUrl(line),
-			description: extractDescription(line),
-			stack: extractStack(line),
-			license: extractLicense(line) ? { name: extractLicense(line) } : undefined,
-			source_url: extractSourceUrl(line),
-			demo_url: extractDemoUrl(line),
-			category: currentCategoryURL
-		};
-		projects.push(project);
-	}
-
-	allCategories.tree = allCategories.tree.sort((a, b) => a.slug.localeCompare(b.slug));
-	return { projects, categories: allCategories };
-}
-
-async function combineSources(urls: string[]): Promise<string> {
-	let combined = '';
-	for (const url of urls) {
-		const response = await fetch(url);
-		combined += await response.text();
-	}
-	return combined;
-}
-
-// ── GitHub API (from fetch-github.ts + query.ts) ──
-
-interface MonthInfo {
+interface TagYaml {
 	name: string;
-	since: string;
-	until: string;
+	description?: string;
+	related_tags?: string[];
+	external_links?: { title: string; url: string }[];
+	redirect?: string;
 }
 
-function getLast12Months(): MonthInfo[] {
-	const currentDate = new Date(new Date().setHours(0, 0, 0, 0));
-	const months: MonthInfo[] = [];
-	for (let i = 0; i < 12; i++) {
-		const year = currentDate.getFullYear();
-		const month = currentDate.getMonth() - i;
-		const firstDay = new Date(year, month, 2);
-		firstDay.setUTCHours(0, 0, 0, 0);
-		const nextMonth = new Date(year, month + 1, 1);
-		nextMonth.setUTCHours(0, 0, 0, 0);
-		months.unshift({
-			name: firstDay.toISOString().slice(0, 7).replace('-', ''),
-			since: firstDay.toISOString(),
-			until: nextMonth.toISOString()
-		});
+// ── Git operations ──
+
+function cloneOrPullDataRepo(): void {
+	if (fs.existsSync(path.join(DATA_REPO_DIR, '.git'))) {
+		console.log('   Updating existing data repo...');
+		execSync('git pull --ff-only', { cwd: DATA_REPO_DIR, stdio: 'pipe' });
+	} else {
+		console.log('   Cloning data repo with full history (first run may take a minute)...');
+		fs.mkdirSync(path.dirname(DATA_REPO_DIR), { recursive: true });
+		execSync(`git clone ${DATA_REPO_URL} "${DATA_REPO_DIR}"`, { stdio: 'pipe' });
 	}
-	return months;
 }
 
-function createQuery(urls: string[]): string {
-	const searchString = `repo:${urls
-		.map((url) => url?.replace('https://github.com/', ''))
-		.join(' repo:')}`;
-	const months = getLast12Months();
-	return `
-	query {
-	  search(
-		type:REPOSITORY,
-		query: "${searchString}",
-		first: ${config.chunkSize + 10}
-	  ) {
-		repos: edges {
-		  repo: node {
-			... on Repository {
-					createdAt
-          url
-          name
-          owner {
-            avatarUrl
-          }
-          descriptionHTML
-          stargazerCount
-					licenseInfo {
-            url
-            name
-            nickname
-          }
-          pushedAt
-					repositoryTopics(first: 10) {
-					  edges {
-					    node {
-					      topic {
-					        name
-					      }
-					    }
-					  }
-					}
-          defaultBranchRef {
-            target {
-              ... on Commit {
-              	${months
-									.map(
-										(month) =>
-											`m${month.name}: history(since: "${month.since}", until: "${month.until}") {\n\ttotalCount\n}`
-									)
-									.join('\n')}
-              }
-            }
-					}
-        }
-		  }
-		}
-	  }
-		rateLimit {
-			limit
-			cost
-			remaining
-			resetAt
-		}
-	}
-	`;
-}
-
-function extractGithubRepoUrls(projects: Project[]): Set<string> {
-	const githubRepoUrls = new Set<string>();
-	for (const project of projects) {
-		let url: string | undefined;
-		if (project.source_url?.includes('github.com')) url = project.source_url;
-		if (project.primary_url?.includes('github.com')) url = project.primary_url;
-		if (url) githubRepoUrls.add(removeTrailingSlashes(url) ?? url);
-	}
-	return githubRepoUrls;
-}
-
-async function fetchGithubRequest(query: string) {
-	const token = process.env.TOKEN_GITHUB;
-	if (!token) throw new Error('TOKEN_GITHUB environment variable is required');
-	return fetch('https://api.github.com/graphql', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: 'bearer ' + token
-		},
-		body: JSON.stringify({ query })
-	});
-}
-
-interface GithubRepo {
-	url: string;
-	name: string;
-	owner?: { avatarUrl: string };
-	createdAt?: string;
-	descriptionHTML?: string;
-	licenseInfo?: { name: string; description: string; url: string; nickname: string };
-	stargazerCount?: number;
-	repositoryTopics: { edges: { node: { topic: { name: string } } }[] };
-	defaultBranchRef: { target: { [key: string]: { totalCount: number } } };
-	pushedAt: string;
-}
-
-async function fetchRepoInfoFromGithub(query: string): Promise<GithubRepo[]> {
-	let response = await fetchGithubRequest(query);
-
-	if (response.status === 502) {
-		for (let i = 0; i < 4; i++) {
-			console.log(`received 502 error, retrying ${i + 1} of 4`);
-			response = await fetchGithubRequest(query);
-			if (response.ok) break;
-		}
-	}
-
-	if (response.ok) {
-		const { data } = await response.json();
-		console.log(
-			`Repos: ${data.search.repos.length}, API cost: ${data.rateLimit.cost}, remaining: ${data.rateLimit.remaining}`
+/**
+ * Batch-load firstAdded dates for all software/*.yml files in a single git log pass.
+ * Uses --reverse --diff-filter=A to list files in chronological order of when they were added.
+ * For each file, the first occurrence gives us the first-added date.
+ */
+function buildFirstAddedMap(): Map<string, string> {
+	const map = new Map<string, string>();
+	try {
+		const output = execSync(
+			'git log --reverse --diff-filter=A --format=%aI --name-only -- software/',
+			{ cwd: DATA_REPO_DIR, encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, stdio: ['pipe', 'pipe', 'pipe'] }
 		);
-		return data.search.repos.map((d: any) => d.repo);
+
+		// Output format: alternating lines of date and filename(s), separated by blank lines
+		// Example:
+		//   2021-07-15T10:30:00+00:00
+		//   software/nextcloud.yml
+		//   software/bitwarden.yml
+		//
+		//   2021-07-16T12:00:00+00:00
+		//   software/gitea.yml
+		let currentDate = '';
+		for (const line of output.split('\n')) {
+			const trimmed = line.trim();
+			if (!trimmed) continue;
+
+			// ISO date lines start with a digit (year)
+			if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) {
+				currentDate = trimmed;
+			} else if (trimmed.startsWith('software/') && currentDate) {
+				// Only record the first occurrence (earliest date) for each file
+				if (!map.has(trimmed)) {
+					map.set(trimmed, currentDate);
+				}
+			}
+		}
+	} catch (err) {
+		console.warn('   Warning: could not read git history for firstAdded dates:', err);
 	}
-
-	throw new Error(`GitHub API error: ${response.statusText}`);
+	return map;
 }
 
-function delay(ms: number) {
-	return new Promise((res) => setTimeout(res, ms));
+// ── YAML reading ──
+
+function readYamlFile<T>(filePath: string): T | null {
+	try {
+		const content = fs.readFileSync(filePath, 'utf-8');
+		return yaml.load(content) as T;
+	} catch (err) {
+		console.warn(`   Warning: failed to read ${filePath}: ${err}`);
+		return null;
+	}
 }
 
-async function fetchAllGithubRepositories(allProjects: Project[]): Promise<GithubRepo[]> {
-	const githubRepoUrls = extractGithubRepoUrls(allProjects);
-	const urls = [...githubRepoUrls];
-	let data: GithubRepo[] = [];
+function readAllSoftware(): { filename: string; data: SoftwareYaml }[] {
+	const softwareDir = path.join(DATA_REPO_DIR, 'software');
+	const files = fs.readdirSync(softwareDir).filter((f) => f.endsWith('.yml'));
+	const results: { filename: string; data: SoftwareYaml }[] = [];
 
-	console.log(`Fetching ${urls.length} GitHub repos in chunks of ${config.chunkSize}...`);
-
-	for (let i = 0; i < urls.length; i += config.chunkSize) {
-		const chunk = urls.slice(i, i + config.chunkSize);
-		const query = createQuery(chunk);
-		const result = await fetchRepoInfoFromGithub(query);
-		data = data.concat(result);
-		console.log(`  chunk ${Math.floor(i / config.chunkSize) + 1}/${Math.ceil(urls.length / config.chunkSize)} done (${data.length} repos total)`);
-
-		if (config.requestDelay > 0) {
-			await delay(config.requestDelay);
+	for (const file of files) {
+		const data = readYamlFile<SoftwareYaml>(path.join(softwareDir, file));
+		if (data && data.name) {
+			results.push({ filename: file, data });
 		}
 	}
 
-	return data;
+	return results;
 }
 
-function mapProjectToRepo(data: GithubRepo[], project: Project): { project: Project; found: boolean } {
-	const repo = data.find(
-		(repo) =>
-			repo.url.toLowerCase() === project.primary_url?.toLowerCase() ||
-			repo.url.toLowerCase() === project.source_url?.toLowerCase()
-	);
-	if (!repo) return { project, found: false };
+function readAllTags(): Map<string, TagYaml> {
+	const tagsDir = path.join(DATA_REPO_DIR, 'tags');
+	const files = fs.readdirSync(tagsDir).filter((f) => f.endsWith('.yml'));
+	const tags = new Map<string, TagYaml>();
 
-	project.stars = repo.stargazerCount ?? undefined;
-	project.description = repo.descriptionHTML ?? project.description ?? undefined;
-	project.avatar_url = repo.owner?.avatarUrl ? repo.owner.avatarUrl.slice(0, -4) + '?size=80' : undefined;
-	project.commit_history = Object.entries(repo.defaultBranchRef.target).reduce(
-		(prev: Record<string, number>, entry) => {
-			prev[entry[0]] = entry[1].totalCount;
-			return prev;
-		},
-		{}
-	);
-	project.license = repo.licenseInfo ?? undefined;
-	project.pushedAt = new Date(repo.pushedAt);
-	project.createdAt = repo.createdAt ? new Date(repo.createdAt) : undefined;
-	project.topics = repo.repositoryTopics?.edges?.map((edge) => edge.node.topic.name) ?? [];
+	for (const file of files) {
+		const data = readYamlFile<TagYaml>(path.join(tagsDir, file));
+		if (data && data.name) {
+			tags.set(data.name, data);
+		}
+	}
 
-	return { project, found: true };
+	return tags;
+}
+
+// ── Category/tag mapping ──
+// Tag filenames encode hierarchy with "---" separators.
+// e.g. "communication---email---complete-solutions.yml" → /communication/email/complete-solutions
+// Simple tags like "dns.yml" → /dns
+
+function tagNameToFullPath(tagName: string, tagDefinitions: Map<string, TagYaml>): string {
+	// Find the tag file that has this name to get its filename-based hierarchy
+	// Tag filenames use --- for hierarchy, but we match by the name field
+	const tagsDir = path.join(DATA_REPO_DIR, 'tags');
+	const files = fs.readdirSync(tagsDir).filter((f) => f.endsWith('.yml'));
+
+	for (const file of files) {
+		const data = tagDefinitions.get(tagName) ?? readYamlFile<TagYaml>(path.join(tagsDir, file));
+		// Check if this file's name field matches
+		if (data && data.name === tagName) {
+			// Use the filename (without .yml) to derive the path
+			const stem = file.replace('.yml', '');
+			const parts = stem.split('---');
+			return '/' + parts.map((p) => slugify(p)).join('/');
+		}
+	}
+
+	// Fallback: slugify the tag name directly
+	return '/' + slugify(tagName);
+}
+
+// Pre-build a tag name → full path map by reading filenames directly
+function buildTagPathMap(): Map<string, string> {
+	const tagsDir = path.join(DATA_REPO_DIR, 'tags');
+	const files = fs.readdirSync(tagsDir).filter((f) => f.endsWith('.yml'));
+	const map = new Map<string, string>();
+
+	for (const file of files) {
+		const data = readYamlFile<TagYaml>(path.join(tagsDir, file));
+		if (!data || !data.name) continue;
+
+		const stem = file.replace('.yml', '');
+		const parts = stem.split('---');
+		const fullPath = '/' + parts.map((p) => slugify(p)).join('/');
+		map.set(data.name, fullPath);
+	}
+
+	return map;
 }
 
 // ── Database operations ──
@@ -478,7 +294,7 @@ function upsertCategoryPath(fullPath: string, slugToName: Record<string, string>
 				.insert(schema.categories)
 				.values({ slug, name, parentId, fullPath: currentPath })
 				.returning({ id: schema.categories.id })
-				.get();
+				.get() as { id: number };
 			parentId = result.id;
 			lastId = result.id;
 		}
@@ -487,35 +303,44 @@ function upsertCategoryPath(fullPath: string, slugToName: Record<string, string>
 	return lastId;
 }
 
-function upsertProject(project: Project, categoryId: number): number {
+function upsertProject(
+	data: SoftwareYaml,
+	categoryId: number,
+	firstAdded: string | null
+): number {
+	// Use website_url as primary, falling back to source_code_url
+	const primaryUrl = data.website_url || data.source_code_url || null;
+
+	if (!primaryUrl) return -1;
+
 	const existing = db
 		.select({ id: schema.projects.id, firstAdded: schema.projects.firstAdded })
 		.from(schema.projects)
-		.where(sql`${schema.projects.primaryUrl} = ${project.primary_url}`)
+		.where(sql`${schema.projects.primaryUrl} = ${primaryUrl}`)
 		.get();
+
+	const values = {
+		name: data.name,
+		sourceUrl: data.source_code_url ?? null,
+		demoUrl: data.demo_url ?? null,
+		description: data.description ?? null,
+		licenseName: data.licenses?.[0] ?? null,
+		licenseUrl: null as string | null,
+		licenseNickname: null as string | null,
+		stack: data.platforms?.join(', ') ?? null,
+		categoryId,
+		stars: data.stargazers_count ?? null,
+		avatarUrl: null as string | null,
+		pushedAt: null as string | null,
+		createdAt: null as string | null,
+		updatedAt: data.updated_at ?? new Date().toISOString()
+	};
 
 	if (existing) {
 		db.update(schema.projects)
 			.set({
-				name: project.name,
-				sourceUrl: project.source_url ?? null,
-				demoUrl: project.demo_url ?? null,
-				description: project.description ?? null,
-				licenseName: project.license?.name ?? null,
-				licenseUrl: project.license?.url ?? null,
-				licenseNickname: project.license?.nickname ?? null,
-				stack: project.stack ?? null,
-				categoryId,
-				stars: project.stars ?? null,
-				avatarUrl: project.avatar_url ?? null,
-				pushedAt: project.pushedAt?.toISOString() ?? null,
-				createdAt: project.createdAt?.toISOString() ?? null,
-				firstAdded:
-					existing.firstAdded ??
-					project.firstAdded?.toISOString() ??
-					project.createdAt?.toISOString() ??
-					null,
-				updatedAt: new Date().toISOString()
+				...values,
+				firstAdded: existing.firstAdded ?? firstAdded
 			})
 			.where(sql`${schema.projects.id} = ${existing.id}`)
 			.run();
@@ -525,22 +350,9 @@ function upsertProject(project: Project, categoryId: number): number {
 	const result = db
 		.insert(schema.projects)
 		.values({
-			name: project.name,
-			primaryUrl: project.primary_url,
-			sourceUrl: project.source_url ?? null,
-			demoUrl: project.demo_url ?? null,
-			description: project.description ?? null,
-			licenseName: project.license?.name ?? null,
-			licenseUrl: project.license?.url ?? null,
-			licenseNickname: project.license?.nickname ?? null,
-			stack: project.stack ?? null,
-			categoryId,
-			stars: project.stars ?? null,
-			avatarUrl: project.avatar_url ?? null,
-			pushedAt: project.pushedAt?.toISOString() ?? null,
-			createdAt: project.createdAt?.toISOString() ?? null,
-			firstAdded: project.firstAdded?.toISOString() ?? project.createdAt?.toISOString() ?? null,
-			updatedAt: new Date().toISOString()
+			primaryUrl,
+			...values,
+			firstAdded
 		})
 		.returning({ id: schema.projects.id })
 		.get();
@@ -578,7 +390,7 @@ function replaceTopics(projectId: number, topics: string[]): void {
 // ── Main seed function ──
 
 async function seed() {
-	console.log('=== awwesome database seed ===');
+	console.log('=== awwesome database seed (YAML data source) ===');
 	console.log(`Database: ${DB_PATH}`);
 	const startTime = performance.now();
 
@@ -596,83 +408,119 @@ async function seed() {
 	const crawlId = crawlLogResult.id;
 
 	try {
-		// 3. Fetch and parse markdown
-		console.log('\n2. Fetching and parsing awesome lists...');
-		const markdown = await combineSources(config.urls);
-		const { projects: parsedProjects, categories } = extractRepositories(markdown);
-		console.log(`   Found ${parsedProjects.length} projects in ${categories.urls.size} categories.`);
+		// 3. Clone or update the data repo
+		console.log('\n2. Fetching awesome-selfhosted-data repo...');
+		cloneOrPullDataRepo();
+		console.log('   Data repo ready.');
 
-		// 4. Insert categories
-		console.log('\n3. Inserting categories...');
+		// 4. Read tags and build category structure
+		console.log('\n3. Reading tags and building categories...');
+		const tagPathMap = buildTagPathMap();
+		const tagDefinitions = readAllTags();
+
+		// Build slug→name mapping from tag paths
+		const slugToName: Record<string, string> = {};
+		for (const [tagName, fullPath] of tagPathMap) {
+			const parts = fullPath.split('/').filter(Boolean);
+			// The last slug in the path corresponds to this tag's name
+			if (parts.length > 0) {
+				slugToName[parts[parts.length - 1]] = tagName;
+			}
+			// For parent parts derived from filename segments, use the segment as-is if no better name
+			for (const part of parts.slice(0, -1)) {
+				if (!slugToName[part]) {
+					// Try to find a tag whose path matches this parent
+					for (const [name, fp] of tagPathMap) {
+						if (fp === '/' + part) {
+							slugToName[part] = name;
+							break;
+						}
+					}
+					if (!slugToName[part]) {
+						slugToName[part] = part; // fallback to slug itself
+					}
+				}
+			}
+		}
+
+		// Insert all category paths
 		const categoryIdMap = new Map<string, number>();
-		for (const url of categories.urls) {
-			const id = upsertCategoryPath(url, categories.names);
-			categoryIdMap.set(url, id);
-		}
-		console.log(`   Inserted ${categoryIdMap.size} category paths.`);
+		for (const [tagName, fullPath] of tagPathMap) {
+			const tagDef = tagDefinitions.get(tagName);
+			// Skip redirect tags (they don't hold software directly)
+			if (tagDef?.redirect) continue;
 
-		// 5. Insert raw projects (before GitHub enrichment)
-		console.log('\n4. Inserting raw projects...');
-		const projectIdMap = new Map<string, number>();
+			const id = upsertCategoryPath(fullPath, slugToName);
+			categoryIdMap.set(tagName, id);
+		}
+		console.log(`   Inserted ${categoryIdMap.size} categories from ${tagDefinitions.size} tags.`);
+
+		// 5. Read all software YAML files
+		console.log('\n4. Reading software YAML files...');
+		const softwareEntries = readAllSoftware();
+		console.log(`   Found ${softwareEntries.length} software entries.`);
+
+		// 5b. Batch-load firstAdded dates from git history
+		console.log('\n   Loading firstAdded dates from git history...');
+		const firstAddedMap = buildFirstAddedMap();
+		console.log(`   Found firstAdded dates for ${firstAddedMap.size} files.`);
+
+		// 6. Insert projects
+		console.log('\n5. Inserting projects...');
+		let inserted = 0;
 		let skipped = 0;
-		for (const project of parsedProjects) {
-			if (!project.primary_url || !project.category) {
+		let withHistory = 0;
+
+		for (const { filename, data } of softwareEntries) {
+			// Skip archived projects
+			if (data.archived) {
 				skipped++;
 				continue;
 			}
-			const categoryId = categoryIdMap.get(project.category);
+
+			// Get the primary tag (first tag) for category assignment
+			const primaryTag = data.tags?.[0];
+			if (!primaryTag) {
+				skipped++;
+				continue;
+			}
+
+			const categoryId = categoryIdMap.get(primaryTag);
 			if (!categoryId) {
+				// Tag might be a redirect or unknown
 				skipped++;
 				continue;
 			}
-			const projectId = upsertProject(project, categoryId);
-			projectIdMap.set(project.primary_url, projectId);
-		}
-		console.log(`   Inserted ${projectIdMap.size} projects (${skipped} skipped).`);
 
-		// 6. Fetch GitHub data
-		let enrichedCount = 0;
-		if (process.env.TOKEN_GITHUB) {
-			console.log('\n5. Fetching GitHub data...');
-			const githubData = await fetchAllGithubRepositories(parsedProjects);
-			console.log(`   Fetched ${githubData.length} GitHub repos.`);
+			// Get firstAdded date from pre-built map
+			const firstAdded = firstAddedMap.get(`software/${filename}`) ?? null;
 
-			// 7. Enrich projects with GitHub data
-			console.log('\n6. Enriching projects with GitHub data...');
-			for (const project of parsedProjects) {
-				if (!project.primary_url) continue;
-
-				const { project: enrichedProject, found } = mapProjectToRepo(githubData, project);
-				if (!found) continue;
-
-				const categoryId = categoryIdMap.get(enrichedProject.category!);
-				if (!categoryId) continue;
-
-				const projectId = upsertProject(enrichedProject, categoryId);
-				enrichedCount++;
-
-				// Store commit history
-				if (enrichedProject.commit_history) {
-					replaceCommitHistory(projectId, enrichedProject.commit_history);
-				}
-
-				// Store topics
-				if (enrichedProject.topics && enrichedProject.topics.length > 0) {
-					replaceTopics(projectId, enrichedProject.topics);
-				}
+			const projectId = upsertProject(data, categoryId, firstAdded);
+			if (projectId === -1) {
+				skipped++;
+				continue;
 			}
-			console.log(`   Enriched ${enrichedCount} projects.`);
-		} else {
-			console.log('\n5. Skipping GitHub enrichment (TOKEN_GITHUB not set).');
-			console.log('   Set TOKEN_GITHUB environment variable to enrich projects with GitHub data.');
-		}
+			inserted++;
 
-		// 8. Update crawl log
+			// Insert commit history
+			if (data.commit_history && Object.keys(data.commit_history).length > 0) {
+				replaceCommitHistory(projectId, data.commit_history);
+				withHistory++;
+			}
+
+			// Insert all tags as topics (for multi-tag search/filtering)
+			if (data.tags && data.tags.length > 0) {
+				replaceTopics(projectId, data.tags);
+			}
+		}
+		console.log(`   Inserted ${inserted} projects (${skipped} skipped, ${withHistory} with commit history).`);
+
+		// 7. Update crawl log
 		db.update(schema.crawlLog)
 			.set({
 				finishedAt: new Date().toISOString(),
-				projectsFound: projectIdMap.size,
-				projectsEnriched: enrichedCount,
+				projectsFound: inserted,
+				projectsEnriched: withHistory,
 				status: 'completed'
 			})
 			.where(sql`${schema.crawlLog.id} = ${crawlId}`)
@@ -680,9 +528,10 @@ async function seed() {
 
 		const duration = ((performance.now() - startTime) / 1000).toFixed(1);
 		console.log(`\n=== Seed completed in ${duration}s ===`);
-		console.log(`   Projects: ${projectIdMap.size}`);
-		console.log(`   Enriched: ${enrichedCount}`);
+		console.log(`   Projects: ${inserted}`);
+		console.log(`   With commit history: ${withHistory}`);
 		console.log(`   Categories: ${categoryIdMap.size}`);
+		console.log(`   Skipped: ${skipped}`);
 	} catch (error) {
 		db.update(schema.crawlLog)
 			.set({

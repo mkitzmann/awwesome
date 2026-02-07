@@ -17,6 +17,7 @@ vite.config.ts.timestamp-*
 /data/*.db
 /data/*.db-wal
 /data/*.db-shm
+/data/awesome-selfhosted-data
 /drizzle
 
 # Local Netlify folder
