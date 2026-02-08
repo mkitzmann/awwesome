@@ -1,6 +1,6 @@
 import { eq, like, desc, sql } from 'drizzle-orm';
 import { db } from './index';
-import { categories, projects, projectTopics, commitHistory, crawlLog } from './schema';
+import { categories, projects, projectCategories, commitHistory } from './schema';
 import type {
 	Project,
 	AllCategories,
@@ -10,11 +10,17 @@ import type {
 
 // ── Read queries ──
 
+/**
+ * Get projects by category path. Uses the project_categories join table
+ * so a project tagged with multiple categories appears in all of them.
+ */
 export function getProjectsByCategory(categoryPath: string): Project[] {
 	const isRoot = !categoryPath || categoryPath === '/';
 
-	// Get matching projects with their category full_path
-	const rows = isRoot
+	// Find projects via the many-to-many project_categories join.
+	// For the root page, return all projects with their primary category.
+	// For a specific category, find all projects that have a matching category.
+	const projectRows = isRoot
 		? db
 				.select({
 					id: projects.id,
@@ -57,30 +63,45 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 					firstAdded: projects.firstAdded,
 					categoryFullPath: categories.fullPath
 				})
-				.from(projects)
-				.innerJoin(categories, eq(projects.categoryId, categories.id))
+				.from(projectCategories)
+				.innerJoin(projects, eq(projectCategories.projectId, projects.id))
+				.innerJoin(categories, eq(projectCategories.categoryId, categories.id))
 				.where(like(categories.fullPath, categoryPath + '%'))
 				.orderBy(desc(projects.stars))
 				.all();
 
-	if (rows.length === 0) return [];
+	if (projectRows.length === 0) return [];
 
-	// Batch-load topics for all project IDs
+	// Deduplicate (a project may match multiple sub-categories)
+	const seen = new Set<number>();
+	const rows = projectRows.filter((r) => {
+		if (seen.has(r.id)) return false;
+		seen.add(r.id);
+		return true;
+	});
+
 	const projectIds = rows.map((r) => r.id);
-	const topicRows = db
-		.select({ projectId: projectTopics.projectId, topic: projectTopics.topic })
-		.from(projectTopics)
-		.where(sql`${projectTopics.projectId} IN (${sql.join(projectIds.map(id => sql`${id}`), sql`, `)})`)
+	const idPlaceholders = sql.join(projectIds.map((id) => sql`${id}`), sql`, `);
+
+	// Batch-load category tag names for each project (shown as topic badges in UI)
+	const tagRows = db
+		.select({
+			projectId: projectCategories.projectId,
+			tagName: categories.name
+		})
+		.from(projectCategories)
+		.innerJoin(categories, eq(projectCategories.categoryId, categories.id))
+		.where(sql`${projectCategories.projectId} IN (${idPlaceholders})`)
 		.all();
 
-	const topicsByProject = new Map<number, string[]>();
-	for (const row of topicRows) {
-		const list = topicsByProject.get(row.projectId) || [];
-		list.push(row.topic);
-		topicsByProject.set(row.projectId, list);
+	const tagsByProject = new Map<number, string[]>();
+	for (const row of tagRows) {
+		const list = tagsByProject.get(row.projectId) || [];
+		list.push(row.tagName);
+		tagsByProject.set(row.projectId, list);
 	}
 
-	// Batch-load commit history for all project IDs
+	// Batch-load commit history
 	const historyRows = db
 		.select({
 			projectId: commitHistory.projectId,
@@ -88,7 +109,7 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 			commitCount: commitHistory.commitCount
 		})
 		.from(commitHistory)
-		.where(sql`${commitHistory.projectId} IN (${sql.join(projectIds.map(id => sql`${id}`), sql`, `)})`)
+		.where(sql`${commitHistory.projectId} IN (${idPlaceholders})`)
 		.all();
 
 	const historyByProject = new Map<number, CommitCount>();
@@ -106,13 +127,17 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 		demo_url: row.demoUrl,
 		description: row.description,
 		license: row.licenseName
-			? { name: row.licenseName, url: row.licenseUrl ?? undefined, nickname: row.licenseNickname ?? undefined }
+			? {
+					name: row.licenseName,
+					url: row.licenseUrl ?? undefined,
+					nickname: row.licenseNickname ?? undefined
+				}
 			: undefined,
 		stack: row.stack,
 		category: row.categoryFullPath,
 		stars: row.stars,
 		avatar_url: row.avatarUrl,
-		topics: topicsByProject.get(row.id) || [],
+		topics: tagsByProject.get(row.id) || [],
 		commit_history: historyByProject.get(row.id) || {},
 		pushedAt: row.pushedAt ? new Date(row.pushedAt) : undefined,
 		firstAdded: row.firstAdded ? new Date(row.firstAdded) : undefined,
@@ -131,7 +156,6 @@ export function getCategoryTree(): AllCategories {
 		names[row.slug] = row.name;
 	}
 
-	// Build hierarchical tree from flat rows
 	const tree = buildCategoryTree(rows);
 
 	return { tree, urls, names };
@@ -163,152 +187,4 @@ function buildCategoryTree(
 	}
 
 	return rootRows.map(buildNode).sort((a, b) => a.slug.localeCompare(b.slug));
-}
-
-// ── Write queries (used by seed script) ──
-
-export function upsertCategoryPath(
-	fullPath: string,
-	slugToName: Record<string, string>
-): number {
-	const parts = fullPath.split('/').filter(Boolean); // e.g. ["backups", "incremental"]
-	let parentId: number | null = null;
-	let currentPath = '';
-	let lastId = 0;
-
-	for (const slug of parts) {
-		currentPath += '/' + slug;
-		const name = slugToName[slug] || slug;
-
-		// Try to find existing
-		const existing = db
-			.select({ id: categories.id })
-			.from(categories)
-			.where(eq(categories.fullPath, currentPath))
-			.get();
-
-		if (existing) {
-			parentId = existing.id;
-			lastId = existing.id;
-		} else {
-			const result: { id: number } = db
-				.insert(categories)
-				.values({ slug, name, parentId, fullPath: currentPath })
-				.returning({ id: categories.id })
-				.get();
-			parentId = result.id;
-			lastId = result.id;
-		}
-	}
-
-	return lastId;
-}
-
-export function upsertProject(
-	project: Project,
-	categoryId: number
-): number {
-	const existing = db
-		.select({ id: projects.id, firstAdded: projects.firstAdded })
-		.from(projects)
-		.where(eq(projects.primaryUrl, project.primary_url!))
-		.get();
-
-	if (existing) {
-		db.update(projects)
-			.set({
-				name: project.name,
-				sourceUrl: project.source_url ?? null,
-				demoUrl: project.demo_url ?? null,
-				description: project.description ?? null,
-				licenseName: project.license?.name ?? null,
-				licenseUrl: project.license?.url ?? null,
-				licenseNickname: project.license?.nickname ?? null,
-				stack: project.stack ?? null,
-				categoryId,
-				stars: project.stars ?? null,
-				avatarUrl: project.avatar_url ?? null,
-				pushedAt: project.pushedAt?.toISOString() ?? null,
-				createdAt: project.createdAt?.toISOString() ?? null,
-				firstAdded: existing.firstAdded ?? project.firstAdded?.toISOString() ?? project.createdAt?.toISOString() ?? null,
-				updatedAt: new Date().toISOString()
-			})
-			.where(eq(projects.id, existing.id))
-			.run();
-		return existing.id;
-	}
-
-	const result = db
-		.insert(projects)
-		.values({
-			name: project.name,
-			primaryUrl: project.primary_url,
-			sourceUrl: project.source_url ?? null,
-			demoUrl: project.demo_url ?? null,
-			description: project.description ?? null,
-			licenseName: project.license?.name ?? null,
-			licenseUrl: project.license?.url ?? null,
-			licenseNickname: project.license?.nickname ?? null,
-			stack: project.stack ?? null,
-			categoryId,
-			stars: project.stars ?? null,
-			avatarUrl: project.avatar_url ?? null,
-			pushedAt: project.pushedAt?.toISOString() ?? null,
-			createdAt: project.createdAt?.toISOString() ?? null,
-			firstAdded: project.firstAdded?.toISOString() ?? project.createdAt?.toISOString() ?? null,
-			updatedAt: new Date().toISOString()
-		})
-		.returning({ id: projects.id })
-		.get();
-
-	return result.id;
-}
-
-export function replaceCommitHistory(projectId: number, history: CommitCount): void {
-	db.delete(commitHistory).where(eq(commitHistory.projectId, projectId)).run();
-
-	const rows = Object.entries(history).map(([monthKey, commitCount]) => ({
-		projectId,
-		monthKey,
-		commitCount
-	}));
-
-	if (rows.length > 0) {
-		db.insert(commitHistory).values(rows).run();
-	}
-}
-
-export function replaceTopics(projectId: number, topics: string[]): void {
-	db.delete(projectTopics).where(eq(projectTopics.projectId, projectId)).run();
-
-	if (topics.length > 0) {
-		const rows = topics.map((topic) => ({ projectId, topic }));
-		db.insert(projectTopics).values(rows).run();
-	}
-}
-
-export function createCrawlLogEntry(): number {
-	const result = db
-		.insert(crawlLog)
-		.values({ startedAt: new Date().toISOString(), status: 'running' })
-		.returning({ id: crawlLog.id })
-		.get();
-	return result.id;
-}
-
-export function completeCrawlLogEntry(
-	id: number,
-	projectsFound: number,
-	projectsEnriched: number,
-	status: 'completed' | 'failed' = 'completed'
-): void {
-	db.update(crawlLog)
-		.set({
-			finishedAt: new Date().toISOString(),
-			projectsFound,
-			projectsEnriched,
-			status
-		})
-		.where(eq(crawlLog.id, id))
-		.run();
 }

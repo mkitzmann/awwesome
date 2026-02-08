@@ -47,18 +47,21 @@ export const projects = sqliteTable(
 	})
 );
 
-export const projectTopics = sqliteTable(
-	'project_topics',
+export const projectCategories = sqliteTable(
+	'project_categories',
 	{
 		id: integer('id').primaryKey({ autoIncrement: true }),
 		projectId: integer('project_id')
 			.notNull()
 			.references(() => projects.id, { onDelete: 'cascade' }),
-		topic: text('topic').notNull()
+		categoryId: integer('category_id')
+			.notNull()
+			.references(() => categories.id, { onDelete: 'cascade' })
 	},
 	(table) => ({
-		projectIdx: index('idx_project_topics_project_id').on(table.projectId),
-		uniqueTopic: uniqueIndex('idx_project_topics_unique').on(table.projectId, table.topic)
+		projectIdx: index('idx_project_categories_project_id').on(table.projectId),
+		categoryIdx: index('idx_project_categories_category_id').on(table.categoryId),
+		uniquePair: uniqueIndex('idx_project_categories_unique').on(table.projectId, table.categoryId)
 	})
 );
 

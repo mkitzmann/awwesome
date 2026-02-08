@@ -166,28 +166,7 @@ function readAllTags(): Map<string, TagYaml> {
 // e.g. "communication---email---complete-solutions.yml" → /communication/email/complete-solutions
 // Simple tags like "dns.yml" → /dns
 
-function tagNameToFullPath(tagName: string, tagDefinitions: Map<string, TagYaml>): string {
-	// Find the tag file that has this name to get its filename-based hierarchy
-	// Tag filenames use --- for hierarchy, but we match by the name field
-	const tagsDir = path.join(DATA_REPO_DIR, 'tags');
-	const files = fs.readdirSync(tagsDir).filter((f) => f.endsWith('.yml'));
-
-	for (const file of files) {
-		const data = tagDefinitions.get(tagName) ?? readYamlFile<TagYaml>(path.join(tagsDir, file));
-		// Check if this file's name field matches
-		if (data && data.name === tagName) {
-			// Use the filename (without .yml) to derive the path
-			const stem = file.replace('.yml', '');
-			const parts = stem.split('---');
-			return '/' + parts.map((p) => slugify(p)).join('/');
-		}
-	}
-
-	// Fallback: slugify the tag name directly
-	return '/' + slugify(tagName);
-}
-
-// Pre-build a tag name → full path map by reading filenames directly
+// Build a tag name → full path map by reading filenames directly
 function buildTagPathMap(): Map<string, string> {
 	const tagsDir = path.join(DATA_REPO_DIR, 'tags');
 	const files = fs.readdirSync(tagsDir).filter((f) => f.endsWith('.yml'));
@@ -242,13 +221,14 @@ function createTables() {
 		CREATE INDEX IF NOT EXISTS idx_projects_category_id ON projects(category_id);
 		CREATE INDEX IF NOT EXISTS idx_projects_stars ON projects(stars);
 
-		CREATE TABLE IF NOT EXISTS project_topics (
+		CREATE TABLE IF NOT EXISTS project_categories (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-			topic TEXT NOT NULL
+			category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE
 		);
-		CREATE INDEX IF NOT EXISTS idx_project_topics_project_id ON project_topics(project_id);
-		CREATE UNIQUE INDEX IF NOT EXISTS idx_project_topics_unique ON project_topics(project_id, topic);
+		CREATE INDEX IF NOT EXISTS idx_project_categories_project_id ON project_categories(project_id);
+		CREATE INDEX IF NOT EXISTS idx_project_categories_category_id ON project_categories(category_id);
+		CREATE UNIQUE INDEX IF NOT EXISTS idx_project_categories_unique ON project_categories(project_id, category_id);
 
 		CREATE TABLE IF NOT EXISTS commit_history (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -376,14 +356,21 @@ function replaceCommitHistory(projectId: number, history: Record<string, number>
 	}
 }
 
-function replaceTopics(projectId: number, topics: string[]): void {
-	db.delete(schema.projectTopics)
-		.where(sql`${schema.projectTopics.projectId} = ${projectId}`)
+function replaceProjectCategories(
+	projectId: number,
+	tagNames: string[],
+	categoryIdMap: Map<string, number>
+): void {
+	db.delete(schema.projectCategories)
+		.where(sql`${schema.projectCategories.projectId} = ${projectId}`)
 		.run();
 
-	if (topics.length > 0) {
-		const rows = topics.map((topic) => ({ projectId, topic }));
-		db.insert(schema.projectTopics).values(rows).run();
+	const rows = tagNames
+		.map((tag) => ({ projectId, categoryId: categoryIdMap.get(tag)! }))
+		.filter((row) => row.categoryId != null);
+
+	if (rows.length > 0) {
+		db.insert(schema.projectCategories).values(rows).run();
 	}
 }
 
@@ -508,9 +495,9 @@ async function seed() {
 				withHistory++;
 			}
 
-			// Insert all tags as topics (for multi-tag search/filtering)
+			// Insert all tags as project_categories (many-to-many)
 			if (data.tags && data.tags.length > 0) {
-				replaceTopics(projectId, data.tags);
+				replaceProjectCategories(projectId, data.tags, categoryIdMap);
 			}
 		}
 		console.log(`   Inserted ${inserted} projects (${skipped} skipped, ${withHistory} with commit history).`);
