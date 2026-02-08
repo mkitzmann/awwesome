@@ -145,7 +145,11 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 	}));
 }
 
+let categoryTreeCache: AllCategories | null = null;
+
 export function getCategoryTree(): AllCategories {
+	if (categoryTreeCache) return categoryTreeCache;
+
 	const rows = db.select().from(categories).all();
 
 	const urls = new Set<string>();
@@ -158,7 +162,8 @@ export function getCategoryTree(): AllCategories {
 
 	const tree = buildCategoryTree(rows);
 
-	return { tree, urls, names };
+	categoryTreeCache = { tree, urls, names };
+	return categoryTreeCache;
 }
 
 function buildCategoryTree(
