@@ -7,7 +7,7 @@ services:
     container_name: awwesome
     restart: unless-stopped
     ports:
-      - '3000:3000'
+      - '8080:3000'
     env_file:
       - .env
     working_dir: /usr/src/app
