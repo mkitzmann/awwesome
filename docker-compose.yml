@@ -1,36 +1,18 @@
 version: '3'
 services:
-  ofelia:
-    image: mcuadros/ofelia:latest
-    container_name: ofelia
-    depends_on:
-      - source
-    command: daemon --docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      ofelia.job-run.awwesome.schedule: '@daily'
-      ofelia.job-run.awwesome.container: 'awwesome'
-  source:
-    image: mkitzmann/awwesome:latest
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: awwesome
-    restart: no
-    environment:
-      - REQUEST_DELAY=0
-      - CHUNK_SIZE=20
-      - LOW_COMMIT_COUNT=2
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
     env_file:
       - .env
     working_dir: /usr/src/app
-    command: sh -c "npm run build && rm -r html/* && cp -r dist/* html && exit"
+    command: sh -c "npm run seed && npm run build && node build"
     volumes:
-      - shared_volume:/usr/src/app/html
-  web:
-    image: nginx
-    container_name: nginx
-    ports:
-      - '8080:80'
-    volumes:
-      - shared_volume:/usr/share/nginx/html:ro
+      - db_data:/usr/src/app/data
 volumes:
-  shared_volume:
+  db_data:
