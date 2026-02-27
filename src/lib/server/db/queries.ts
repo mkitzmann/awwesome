@@ -182,12 +182,11 @@ function buildCategoryTree(
 
 	function buildNode(row: (typeof rows)[0]): Category {
 		const children = childMap.get(row.id) || [];
-		const node: Category = { slug: row.slug, name: row.name };
-		if (children.length > 0) {
-			node.children = children
-				.map(buildNode)
-				.sort((a, b) => a.slug.localeCompare(b.slug));
-		}
+		const node: Category = {
+			slug: row.slug,
+			name: row.name,
+			children: children.map(buildNode).sort((a, b) => a.slug.localeCompare(b.slug))
+		};
 		return node;
 	}
 
