@@ -9,7 +9,7 @@
 		return `${prev} ${index * 10},${(current / max) * 10}`;
 	}, '');
 
-	$: totalCommits = commits ? Object.values(commits).reduce((prev, current) => prev + current) : 0;
+	$: totalCommits = commits ? Object.values(commits).reduce((prev, current) => prev + current, 0) : 0;
 
 	$: topColor = totalCommits < appConfig.lowCommitCount ? '#944' : '#216e39';
 	$: bottomColor = totalCommits < appConfig.lowCommitCount ? '#faa' : '#9be9a8';

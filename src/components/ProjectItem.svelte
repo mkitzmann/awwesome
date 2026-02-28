@@ -25,7 +25,7 @@
 	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license;
 
 	$: totalCommits = project?.commit_history
-		? Object.values(project.commit_history).reduce((prev, current) => prev + current)
+		? Object.values(project.commit_history).reduce((prev, current) => prev + current, 0)
 		: 0;
 </script>
 
