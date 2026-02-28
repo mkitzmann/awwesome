@@ -32,10 +32,8 @@
 		.filter((project) => JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase()))
 		.sort((projectA, projectB) => {
 			const getValue = (project) => {
-				const value = selectedSortTerm === 'createdAt'
-					? (project.createdAt ?? project.firstAdded)
-					: project[selectedSortTerm];
-				return selectedSortTerm === 'createdAt' ? (value ? value.getTime() : 0) : value;
+				const value = project[selectedSortTerm];
+				return selectedSortTerm === 'firstAdded' ? (value ? value.getTime() : 0) : value;
 			};
 
 			const valueA = getValue(projectA);
@@ -123,8 +121,8 @@
 						<SortButton bind:selectedSortTerm sortTerm="stars" rounded="left">
 							Most Stars
 						</SortButton>
-						<SortButton bind:selectedSortTerm sortTerm="createdAt" rounded="right">
-							Recently Created
+						<SortButton bind:selectedSortTerm sortTerm="firstAdded" rounded="right">
+							Recently Added
 						</SortButton>
 					</div>
 					<div class="text-sm text-right">

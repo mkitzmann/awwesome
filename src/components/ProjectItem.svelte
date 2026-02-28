@@ -96,9 +96,11 @@
 					<Star />{numeral(project.stars).format('0,0a')}
 				</div>
 			{/if}
-			<div class="text-sm text-gray-500">
-				created {getRelativeTime(project.createdAt ?? project.firstAdded)}
-			</div>
+			{#if project.firstAdded}
+				<div class="text-sm text-gray-500">
+					added {getRelativeTime(project.firstAdded)}
+				</div>
+			{/if}
 		</div>
 
 		{#if project.commit_history}
