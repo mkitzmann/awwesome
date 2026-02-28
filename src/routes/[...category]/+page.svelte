@@ -32,7 +32,9 @@
 		.filter((project) => JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase()))
 		.sort((projectA, projectB) => {
 			const getValue = (project) => {
-				const value = project[selectedSortTerm];
+				const value = selectedSortTerm === 'createdAt'
+					? (project.createdAt ?? project.firstAdded)
+					: project[selectedSortTerm];
 				return selectedSortTerm === 'createdAt' ? (value ? value.getTime() : 0) : value;
 			};
 

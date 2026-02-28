@@ -97,7 +97,7 @@
 				</div>
 			{/if}
 			<div class="text-sm text-gray-500">
-				created {getRelativeTime(project.createdAt)}
+				created {getRelativeTime(project.createdAt ?? project.firstAdded)}
 			</div>
 		</div>
 
