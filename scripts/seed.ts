@@ -16,8 +16,8 @@ import fs from 'fs';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
-import slugify from '@sindresorhus/slugify';
 import * as schema from '../src/lib/server/db/schema.js';
+import { parseFirstAddedOutput, tagFilenameToPath } from './seedUtils.js';
 
 // ── Config ──
 
@@ -83,40 +83,16 @@ function cloneOrPullDataRepo(): void {
  * For each file, the first occurrence gives us the first-added date.
  */
 function buildFirstAddedMap(): Map<string, string> {
-	const map = new Map<string, string>();
 	try {
 		const output = execSync(
 			'git log --reverse --diff-filter=A --format=%aI --name-only -- software/',
 			{ cwd: DATA_REPO_DIR, encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, stdio: ['pipe', 'pipe', 'pipe'] }
 		);
-
-		// Output format: alternating lines of date and filename(s), separated by blank lines
-		// Example:
-		//   2021-07-15T10:30:00+00:00
-		//   software/nextcloud.yml
-		//   software/bitwarden.yml
-		//
-		//   2021-07-16T12:00:00+00:00
-		//   software/gitea.yml
-		let currentDate = '';
-		for (const line of output.split('\n')) {
-			const trimmed = line.trim();
-			if (!trimmed) continue;
-
-			// ISO date lines start with a digit (year)
-			if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) {
-				currentDate = trimmed;
-			} else if (trimmed.startsWith('software/') && currentDate) {
-				// Only record the first occurrence (earliest date) for each file
-				if (!map.has(trimmed)) {
-					map.set(trimmed, currentDate);
-				}
-			}
-		}
+		return parseFirstAddedOutput(output);
 	} catch (err) {
 		console.warn('   Warning: could not read git history for firstAdded dates:', err);
 	}
-	return map;
+	return new Map();
 }
 
 // ── YAML reading ──
@@ -176,9 +152,7 @@ function buildTagPathMap(): Map<string, string> {
 		const data = readYamlFile<TagYaml>(path.join(tagsDir, file));
 		if (!data || !data.name) continue;
 
-		const stem = file.replace('.yml', '');
-		const parts = stem.split('---');
-		const fullPath = '/' + parts.map((p) => slugify(p)).join('/');
+		const fullPath = tagFilenameToPath(file);
 		map.set(data.name, fullPath);
 	}
 

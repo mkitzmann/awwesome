@@ -166,7 +166,7 @@ export function getCategoryTree(): AllCategories {
 	return categoryTreeCache;
 }
 
-function buildCategoryTree(
+export function buildCategoryTree(
 	rows: { id: number; slug: string; name: string; parentId: number | null; fullPath: string }[]
 ): Category[] {
 	const rootRows = rows.filter((r) => r.parentId === null);
