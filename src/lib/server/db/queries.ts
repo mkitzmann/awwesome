@@ -1,6 +1,6 @@
 import { eq, sql } from 'drizzle-orm';
 import { db, sqlite } from './index';
-import { categories, projectCategories, commitHistory } from './schema';
+import { categories, projectCategories, commitHistory, platforms as platformsTable } from './schema';
 import type {
 	AllCategories,
 	Category,
@@ -19,6 +19,12 @@ export interface ProjectQuery {
 	order?: SortOrder;
 	limit?: number;
 	offset?: number;
+	minStars?: number;
+	maxStars?: number;
+	minCommitsYear?: number;
+	platform?: string;
+	addedAfter?: string;
+	addedBefore?: string;
 }
 
 export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
@@ -28,7 +34,13 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		sort = 'stars',
 		order = 'desc',
 		limit = 20,
-		offset = 0
+		offset = 0,
+		minStars,
+		maxStars,
+		minCommitsYear,
+		platform,
+		addedAfter,
+		addedBefore
 	} = query;
 
 	const isRoot = !category || category === '/';
@@ -52,13 +64,62 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		params.push(`%${search}%`, `%${search}%`);
 	}
 
+	if (minStars != null) {
+		conditions.push(`p.stars >= ?`);
+		params.push(minStars);
+	}
+
+	if (maxStars != null) {
+		conditions.push(`p.stars <= ?`);
+		params.push(maxStars);
+	}
+
+	if (minCommitsYear != null) {
+		conditions.push(`p.id IN (
+			SELECT ch.project_id
+			FROM commit_history ch
+			GROUP BY ch.project_id
+			HAVING SUM(ch.commit_count) >= ?
+		)`);
+		params.push(minCommitsYear);
+	}
+
+	if (platform) {
+		conditions.push(`p.id IN (
+			SELECT pp.project_id
+			FROM project_platforms pp
+			JOIN platforms pl ON pp.platform_id = pl.id
+			WHERE pl.name = ?
+		)`);
+		params.push(platform);
+	}
+
+	if (addedAfter) {
+		conditions.push(`p.first_added >= ?`);
+		params.push(addedAfter);
+	}
+
+	if (addedBefore) {
+		conditions.push(`p.first_added <= ?`);
+		params.push(addedBefore);
+	}
+
 	const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : '';
 
-	// Sort column
-	const sortColumn = sort === 'firstAdded' ? 'p.first_added' : 'p.stars';
+	// Sort column — commitsYear uses a subquery to sum commit history
+	let sortExpression: string;
+	if (sort === 'commitsYear') {
+		sortExpression = `(SELECT COALESCE(SUM(ch.commit_count), 0) FROM commit_history ch WHERE ch.project_id = p.id)`;
+	} else if (sort === 'firstAdded') {
+		sortExpression = 'p.first_added';
+	} else {
+		sortExpression = 'p.stars';
+	}
 	const sortDir = order === 'asc' ? 'ASC' : 'DESC';
-	// Push NULLs to end regardless of sort direction
-	const orderClause = `ORDER BY ${sortColumn} IS NULL, ${sortColumn} ${sortDir}`;
+	// Push NULLs to end regardless of sort direction (commitsYear never null due to COALESCE)
+	const orderClause = sort === 'commitsYear'
+		? `ORDER BY ${sortExpression} ${sortDir}`
+		: `ORDER BY ${sortExpression} IS NULL, ${sortExpression} ${sortDir}`;
 
 	// Count total
 	const countRow = sqlite
@@ -218,4 +279,13 @@ export function buildCategoryTree(
 	}
 
 	return rootRows.map(buildNode).sort((a, b) => a.slug.localeCompare(b.slug));
+}
+
+let platformListCache: string[] | null = null;
+
+export function getPlatformList(): string[] {
+	if (platformListCache) return platformListCache;
+	const rows = db.select({ name: platformsTable.name }).from(platformsTable).all();
+	platformListCache = rows.map((r) => r.name).sort();
+	return platformListCache;
 }

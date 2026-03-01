@@ -25,7 +25,7 @@ export type CommitCount = {
 	[key: string]: number;
 };
 
-export type SortTerm = 'stars' | 'firstAdded';
+export type SortTerm = 'stars' | 'firstAdded' | 'commitsYear';
 export type SortOrder = 'asc' | 'desc';
 
 export interface AllCategories {
@@ -49,6 +49,7 @@ export interface ProjectCollection {
 	projects: Project[];
 	total: number;
 	categories: AllCategories;
+	platforms: string[];
 }
 
 export interface GithubQueryResult {

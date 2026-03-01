@@ -11,6 +11,7 @@
 	import { goto } from '$app/navigation';
 	import SearchInput from '../../components/SearchInput.svelte';
 	import SortButton from '../../components/SortButton.svelte';
+	import FilterPanel from '../../components/FilterPanel.svelte';
 	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
 	import StarOnGithub from '../../components/StarOnGithub.svelte';
 
@@ -33,6 +34,11 @@
 	let selectedSortOrder: SortOrder = 'desc';
 	let loading = false;
 
+	// Filter state
+	let filterMinStars = '';
+	let filterMinCommitsYear = '';
+	let filterPlatform = '';
+
 	// Reset when server data changes (category navigation)
 	$: {
 		data; // track dependency
@@ -41,6 +47,9 @@
 		searchTerm = '';
 		selectedSortTerm = 'stars';
 		selectedSortOrder = 'desc';
+		filterMinStars = '';
+		filterMinCommitsYear = '';
+		filterPlatform = '';
 	}
 
 	async function fetchProjects(opts: { append?: boolean; offset?: number } = {}) {
@@ -53,6 +62,9 @@
 			offset: String(opts.offset ?? 0)
 		});
 		if (searchTerm) params.set('search', searchTerm);
+		if (filterMinStars) params.set('minStars', filterMinStars);
+		if (filterMinCommitsYear) params.set('minCommitsYear', filterMinCommitsYear);
+		if (filterPlatform) params.set('platform', filterPlatform);
 
 		loading = true;
 		try {
@@ -167,10 +179,20 @@
 						<SortButton bind:selectedSortTerm sortTerm="stars" rounded="left">
 							Most Stars
 						</SortButton>
+						<SortButton bind:selectedSortTerm sortTerm="commitsYear" rounded="none">
+							Most Active
+						</SortButton>
 						<SortButton bind:selectedSortTerm sortTerm="firstAdded" rounded="right">
 							Recently Added
 						</SortButton>
 					</div>
+					<FilterPanel
+						platforms={data.platforms}
+						bind:minStars={filterMinStars}
+						bind:minCommitsYear={filterMinCommitsYear}
+						bind:platform={filterPlatform}
+						on:filter={() => fetchProjects()}
+					/>
 					<div class="text-sm text-right">
 						{total} Projects
 					</div>

@@ -15,7 +15,7 @@ vi.mock('./index', () => ({
 }));
 
 // Import after mock so it picks up the test database
-const { getProjectsPaginated } = await import('./queries');
+const { getProjectsPaginated, getPlatformList } = await import('./queries');
 
 // ── Schema setup ──
 
@@ -64,6 +64,26 @@ function createTables() {
 			commit_count INTEGER NOT NULL DEFAULT 0
 		);
 		CREATE UNIQUE INDEX idx_ch_unique ON commit_history(project_id, month_key);
+
+		CREATE TABLE platforms (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL UNIQUE
+		);
+
+		CREATE TABLE project_platforms (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+			platform_id INTEGER NOT NULL REFERENCES platforms(id) ON DELETE CASCADE
+		);
+		CREATE UNIQUE INDEX idx_pp_unique ON project_platforms(project_id, platform_id);
+
+		CREATE TABLE star_history (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+			recorded_at TEXT NOT NULL,
+			stars INTEGER NOT NULL
+		);
+		CREATE UNIQUE INDEX idx_sh_unique ON star_history(project_id, recorded_at);
 	`);
 }
 
@@ -119,6 +139,24 @@ function seed() {
 			(1, '2024-01', 50),
 			(1, '2024-02', 30),
 			(3, '2024-01', 100);
+	`);
+
+	// Platforms
+	testSqlite.exec(`
+		INSERT INTO platforms (id, name) VALUES
+			(1, 'PHP'),
+			(2, 'C#'),
+			(3, 'Docker');
+	`);
+
+	// Project-platform associations
+	testSqlite.exec(`
+		INSERT INTO project_platforms (project_id, platform_id) VALUES
+			(1, 1),
+			(1, 3),
+			(2, 1),
+			(3, 2),
+			(3, 3);
 	`);
 }
 
@@ -305,5 +343,134 @@ describe('getProjectsPaginated', () => {
 	it('returns empty commit history when none exists', () => {
 		const result = getProjectsPaginated({ search: 'OldProject' });
 		expect(result.projects[0].commit_history).toEqual({});
+	});
+
+	// ── Star range filter ──
+
+	it('filters by minStars', () => {
+		const result = getProjectsPaginated({ minStars: 10000 });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Jellyfin');
+		expect(names).toContain('Nextcloud');
+	});
+
+	it('filters by maxStars', () => {
+		const result = getProjectsPaginated({ maxStars: 5000 });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Roundcube');
+		expect(names).toContain('OldProject');
+	});
+
+	it('filters by minStars + maxStars range', () => {
+		const result = getProjectsPaginated({ minStars: 1000, maxStars: 21000 });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Nextcloud');
+		expect(names).toContain('Roundcube');
+	});
+
+	// ── Commit activity filter ──
+
+	it('filters by minCommitsYear', () => {
+		// Nextcloud: 50+30=80, Jellyfin: 100, others: 0
+		const result = getProjectsPaginated({ minCommitsYear: 90 });
+		expect(result.total).toBe(1);
+		expect(result.projects[0].name).toBe('Jellyfin');
+	});
+
+	it('minCommitsYear=1 excludes projects with no commits', () => {
+		const result = getProjectsPaginated({ minCommitsYear: 1 });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Nextcloud');
+		expect(names).toContain('Jellyfin');
+	});
+
+	// ── Sort by commitsYear ──
+
+	it('sorts by commitsYear descending', () => {
+		const result = getProjectsPaginated({ sort: 'commitsYear', order: 'desc' });
+		const names = result.projects.map((p) => p.name);
+		// Jellyfin: 100, Nextcloud: 80, others: 0
+		expect(names[0]).toBe('Jellyfin');
+		expect(names[1]).toBe('Nextcloud');
+	});
+
+	it('sorts by commitsYear ascending', () => {
+		const result = getProjectsPaginated({ sort: 'commitsYear', order: 'asc' });
+		const names = result.projects.map((p) => p.name);
+		// 0-commit projects first, then Nextcloud (80), then Jellyfin (100)
+		expect(names[names.length - 1]).toBe('Jellyfin');
+		expect(names[names.length - 2]).toBe('Nextcloud');
+	});
+
+	// ── Platform filter ──
+
+	it('filters by platform', () => {
+		const result = getProjectsPaginated({ platform: 'PHP' });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Nextcloud');
+		expect(names).toContain('Roundcube');
+	});
+
+	it('filters by platform with exact match', () => {
+		const result = getProjectsPaginated({ platform: 'C#' });
+		expect(result.total).toBe(1);
+		expect(result.projects[0].name).toBe('Jellyfin');
+	});
+
+	it('returns empty for non-existent platform', () => {
+		const result = getProjectsPaginated({ platform: 'Rust' });
+		expect(result.total).toBe(0);
+	});
+
+	// ── Date added filter ──
+
+	it('filters by addedAfter', () => {
+		const result = getProjectsPaginated({ addedAfter: '2023-03-01' });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Jellyfin');
+		expect(names).toContain('Roundcube');
+	});
+
+	it('filters by addedBefore', () => {
+		const result = getProjectsPaginated({ addedBefore: '2023-01-01' });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Nextcloud');
+		expect(names).toContain('OldProject');
+	});
+
+	it('filters by addedAfter + addedBefore range', () => {
+		const result = getProjectsPaginated({ addedAfter: '2023-02-01', addedBefore: '2023-04-01' });
+		expect(result.total).toBe(1);
+		expect(result.projects[0].name).toBe('Jellyfin');
+	});
+
+	// ── Combined new filters ──
+
+	it('combines minStars + platform', () => {
+		const result = getProjectsPaginated({ minStars: 10000, platform: 'Docker' });
+		expect(result.total).toBe(2);
+		const names = result.projects.map((p) => p.name);
+		expect(names).toContain('Nextcloud');
+		expect(names).toContain('Jellyfin');
+	});
+
+	it('combines minCommitsYear + category', () => {
+		const result = getProjectsPaginated({ minCommitsYear: 50, category: '/communication' });
+		expect(result.total).toBe(1);
+		expect(result.projects[0].name).toBe('Nextcloud');
+	});
+});
+
+describe('getPlatformList', () => {
+	it('returns sorted platform names', () => {
+		const platforms = getPlatformList();
+		expect(platforms).toEqual(['C#', 'Docker', 'PHP']);
 	});
 });

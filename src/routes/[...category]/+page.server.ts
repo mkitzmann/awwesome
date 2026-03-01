@@ -3,7 +3,7 @@ import { getProjectsPaginated } from '$lib/server/db/queries';
 import { removeTrailingSlashes } from '$lib';
 
 export async function load({ params, parent }): Promise<ProjectCollection> {
-	const { categories } = await parent();
+	const { categories, platforms } = await parent();
 	const requestedCategory = '/' + (removeTrailingSlashes(params.category) ?? '');
 
 	const category = requestedCategory === '/' ? '/' : requestedCategory;
@@ -12,6 +12,7 @@ export async function load({ params, parent }): Promise<ProjectCollection> {
 	return {
 		projects,
 		total,
-		categories
+		categories,
+		platforms
 	};
 }
