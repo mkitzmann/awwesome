@@ -4,12 +4,13 @@
 
 	export let commits: CommitCount;
 	export let id: string;
-	$: max = Math.max(...Object.values(commits));
-	$: points = Object.values(commits).reduce((prev, current, index) => {
+	$: vals = Object.values(commits);
+	$: max = vals.length > 0 ? Math.max(...vals) : 0;
+	$: points = vals.reduce((prev, current, index) => {
 		return `${prev} ${index * 10},${(current / max) * 10}`;
 	}, '');
 
-	$: totalCommits = commits ? Object.values(commits).reduce((prev, current) => prev + current, 0) : 0;
+	$: totalCommits = vals.length > 0 ? vals.reduce((prev, current) => prev + current, 0) : 0;
 
 	$: topColor = totalCommits < appConfig.lowCommitCount ? '#944' : '#216e39';
 	$: bottomColor = totalCommits < appConfig.lowCommitCount ? '#faa' : '#9be9a8';

@@ -24,9 +24,8 @@
 	$: license = project.license?.nickname ?? project.license?.name;
 	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license;
 
-	$: totalCommits = project?.commit_history
-		? Object.values(project.commit_history).reduce((prev, current) => prev + current, 0)
-		: 0;
+	$: commitVals = project?.commit_history ? Object.values(project.commit_history) : [];
+	$: totalCommits = commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0;
 </script>
 
 <article
@@ -119,7 +118,7 @@
 			{/if}
 		</div>
 
-		{#if project.commit_history}
+		{#if project.commit_history && Object.keys(project.commit_history).length > 0}
 			<div class="flex flex-col items-end w-full min-[460px]:w-64">
 				<div class="-mb-3">
 					<span
