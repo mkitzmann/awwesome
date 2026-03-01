@@ -17,7 +17,7 @@
 	});
 
 	const setQueryParams = () => {
-		const url = new URL(window.location);
+		const url = new URL(window.location.href);
 		if (searchTerm !== '') {
 			url.searchParams.set('search', searchTerm);
 		} else {

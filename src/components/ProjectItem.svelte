@@ -15,7 +15,7 @@
 
 	$: categories = project.category?.split('/').slice(1) ?? [];
 
-	let categoryNames;
+	let categoryNames: Record<string, string> = {};
 
 	categoryStore.subscribe((value) => {
 		categoryNames = value.names;
@@ -42,7 +42,7 @@
 		{#if categories.length > 0}
 			{#each categories as category, index}
 				<a
-					href={project.category
+					href={(project.category ?? '')
 						.split('/')
 						.slice(0, index + 2)
 						.join('/')}
@@ -135,7 +135,7 @@
 						commits past year
 					</span>
 				</div>
-				<CommitGraph commits={project.commit_history} id={project.primary_url} />
+				<CommitGraph commits={project.commit_history} id={project.primary_url ?? ''} />
 			</div>
 		{/if}
 	</div>

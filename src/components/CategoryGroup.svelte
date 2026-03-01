@@ -3,7 +3,7 @@
 	import { navigating } from '$app/stores';
 	import type { Category } from '../lib/types/types';
 	export let category: Category;
-	export let selectedCategory;
+	export let selectedCategory: string = '';
 	export let indent = 0;
 
 	export let href = '/' + category.slug;
@@ -14,7 +14,7 @@
 </script>
 
 <div class="flex items-center justify-between w-full" style="padding-left: {indent}px">
-	{#if category.children.length > 0}
+	{#if (category.children ?? []).length > 0}
 		<details bind:open={isOpen} class="w-full group">
 			<summary class="flex justify-between w-full items-center">
 				<a
@@ -29,7 +29,7 @@
 					<ChevronRight />
 				</div>
 			</summary>
-			{#each category.children as category2}
+			{#each category.children ?? [] as category2}
 				<svelte:self
 					category={category2}
 					{selectedCategory}

@@ -50,8 +50,8 @@ describe('buildCategoryTree', () => {
 		const tree = buildCategoryTree(rows);
 		expect(tree).toHaveLength(1);
 		expect(tree[0].children).toHaveLength(2);
-		expect(tree[0].children[0].slug).toBe('chat');
-		expect(tree[0].children[1].slug).toBe('email');
+		expect(tree[0].children![0].slug).toBe('chat');
+		expect(tree[0].children![1].slug).toBe('email');
 	});
 
 	it('handles deeply nested categories', () => {
@@ -63,8 +63,8 @@ describe('buildCategoryTree', () => {
 		const tree = buildCategoryTree(rows);
 		expect(tree).toHaveLength(1);
 		expect(tree[0].children).toHaveLength(1);
-		expect(tree[0].children[0].children).toHaveLength(1);
-		expect(tree[0].children[0].children[0].slug).toBe('complete-solutions');
+		expect(tree[0].children![0].children).toHaveLength(1);
+		expect(tree[0].children![0].children![0].slug).toBe('complete-solutions');
 	});
 
 	it('sorts siblings alphabetically by slug', () => {
