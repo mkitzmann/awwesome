@@ -18,7 +18,6 @@ export type Project = {
 	commit_history?: CommitCount;
 	pushedAt?: Date;
 	firstAdded?: Date;
-	createdAt?: Date;
 	archived?: boolean;
 };
 
@@ -41,8 +40,14 @@ export type Category = {
 	children?: Category[];
 };
 
+export interface PaginatedResult {
+	projects: Project[];
+	total: number;
+}
+
 export interface ProjectCollection {
 	projects: Project[];
+	total: number;
 	categories: AllCategories;
 }
 

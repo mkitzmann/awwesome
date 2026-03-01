@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ProjectCollection, SortOrder, SortTerm } from '../../lib/types/types';
+	import type { ProjectCollection, Project, SortOrder, SortTerm } from '../../lib/types/types';
 	import ProjectItem from '../../components/ProjectItem.svelte';
 	import { page } from '$app/stores';
 	import { removeTrailingSlashes } from '../../lib';
@@ -23,35 +23,81 @@
 	beforeUpdate(() => {
 		selectedCategory = category;
 	});
-	// $: projects = data.projects;
-	let searchTerm = '';
 
+	// ── Local state for API-driven loading ──
+
+	let projects: Project[] = data.projects;
+	let total: number = data.total;
+	let searchTerm = '';
 	let selectedSortTerm: SortTerm = 'stars';
 	let selectedSortOrder: SortOrder = 'desc';
-	$: searchedProjects = data.projects
-		.filter((project) => JSON.stringify(project).toLowerCase().includes(searchTerm.toLowerCase()))
-		.sort((projectA, projectB) => {
-			const getValue = (project) => {
-				const value = project[selectedSortTerm];
-				return selectedSortTerm === 'firstAdded' ? (value ? value.getTime() : 0) : value;
-			};
+	let loading = false;
 
-			const valueA = getValue(projectA);
-			const valueB = getValue(projectB);
+	// Reset when server data changes (category navigation)
+	$: {
+		data; // track dependency
+		projects = data.projects;
+		total = data.total;
+		searchTerm = '';
+		selectedSortTerm = 'stars';
+		selectedSortOrder = 'desc';
+	}
 
-			return selectedSortOrder === 'desc' ? valueB - valueA : valueA - valueB;
+	async function fetchProjects(opts: { append?: boolean; offset?: number } = {}) {
+		const categoryPath = '/' + (category || '');
+		const params = new URLSearchParams({
+			category: categoryPath,
+			sort: selectedSortTerm,
+			order: selectedSortOrder,
+			limit: '20',
+			offset: String(opts.offset ?? 0)
 		});
+		if (searchTerm) params.set('search', searchTerm);
 
-	let displayLimit = 20;
-	$: limitedProjects = searchedProjects.slice(0, displayLimit);
+		loading = true;
+		try {
+			const res = await fetch(`/api/projects?${params}`);
+			const result = await res.json();
 
-	let categoryNames;
+			// Rehydrate date strings from JSON
+			for (const p of result.projects) {
+				if (p.firstAdded) p.firstAdded = new Date(p.firstAdded);
+				if (p.pushedAt) p.pushedAt = new Date(p.pushedAt);
+			}
+
+			if (opts.append) {
+				projects = [...projects, ...result.projects];
+			} else {
+				projects = result.projects;
+			}
+			total = result.total;
+		} finally {
+			loading = false;
+		}
+	}
+
+	function handleSearch(event: CustomEvent<string>) {
+		searchTerm = event.detail;
+		fetchProjects();
+	}
+
+	let prevSortTerm: SortTerm = selectedSortTerm;
+	$: if (selectedSortTerm !== prevSortTerm) {
+		prevSortTerm = selectedSortTerm;
+		fetchProjects();
+	}
+
+	function loadMore() {
+		fetchProjects({ append: true, offset: projects.length });
+	}
+
+	let categoryNames: Record<string, string>;
 
 	categoryStore.subscribe((value) => {
 		categoryNames = value.names;
 	});
 
-	const setSelectedCategory = (event) => {
+	const setSelectedCategory = (event: CustomEvent<string>) => {
 		selectedCategory = event.detail;
 		goto(`/${event.detail}`);
 	};
@@ -82,7 +128,7 @@
 	</div>
 	<div class="flex flex-col xl:flex-row gap-6 xl:gap-12">
 		<div class="xl:hidden flex flex-wrap gap-4">
-			<SearchInput bind:searchTerm />
+			<SearchInput bind:searchTerm on:search={handleSearch} />
 			<CategorySelect
 				categories={data.categories.tree}
 				{selectedCategory}
@@ -90,7 +136,7 @@
 			/>
 		</div>
 		<aside class="max-w-[20%] hidden xl:block">
-			<SearchInput bind:searchTerm />
+			<SearchInput bind:searchTerm on:search={handleSearch} />
 			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-4">
 				<a
 					href="/"
@@ -126,22 +172,23 @@
 						</SortButton>
 					</div>
 					<div class="text-sm text-right">
-						{searchedProjects.length} Projects
+						{total} Projects
 					</div>
 				</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
-				{#each limitedProjects as project}
+				{#each projects as project}
 					<ProjectItem {project} />
 				{/each}
 			</div>
 			<div class="flex mt-8">
-				{#if searchedProjects.length > displayLimit}
+				{#if projects.length < total}
 					<button
-						on:click={() => (displayLimit += 20)}
-						class="mx-auto bg-blue-100 dark:bg-blue-700 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full px-4 py-2"
+						on:click={loadMore}
+						disabled={loading}
+						class="mx-auto bg-blue-100 dark:bg-blue-700 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full px-4 py-2 disabled:opacity-50"
 					>
-						Show more
+						{loading ? 'Loading...' : 'Show more'}
 					</button>
 				{/if}
 			</div>
