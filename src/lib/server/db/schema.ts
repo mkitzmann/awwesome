@@ -37,6 +37,7 @@ export const projects = sqliteTable(
 		pushedAt: text('pushed_at'),
 		createdAt: text('created_at'),
 		firstAdded: text('first_added'),
+		archived: integer('archived', { mode: 'boolean' }).default(false),
 		updatedAt: text('updated_at')
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`)

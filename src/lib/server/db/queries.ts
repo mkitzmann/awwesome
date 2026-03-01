@@ -38,6 +38,7 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 					pushedAt: projects.pushedAt,
 					createdAt: projects.createdAt,
 					firstAdded: projects.firstAdded,
+					archived: projects.archived,
 					categoryFullPath: categories.fullPath
 				})
 				.from(projects)
@@ -61,6 +62,7 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 					pushedAt: projects.pushedAt,
 					createdAt: projects.createdAt,
 					firstAdded: projects.firstAdded,
+					archived: projects.archived,
 					categoryFullPath: categories.fullPath
 				})
 				.from(projectCategories)
@@ -141,7 +143,8 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 		commit_history: historyByProject.get(row.id) || {},
 		pushedAt: row.pushedAt ? new Date(row.pushedAt) : undefined,
 		firstAdded: row.firstAdded ? new Date(row.firstAdded) : undefined,
-		createdAt: row.createdAt ? new Date(row.createdAt) : undefined
+		createdAt: row.createdAt ? new Date(row.createdAt) : undefined,
+		archived: row.archived ?? false
 	}));
 }
 

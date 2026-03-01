@@ -19,6 +19,7 @@ export type Project = {
 	pushedAt?: Date;
 	firstAdded?: Date;
 	createdAt?: Date;
+	archived?: boolean;
 };
 
 export type CommitCount = {

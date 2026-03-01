@@ -31,7 +31,13 @@
 
 <article
 	class="max-w-full bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg"
+	class:opacity-60={project.archived}
 >
+	{#if project.archived}
+		<div class="text-sm font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 rounded-lg px-3 py-2">
+			This project is archived and no longer maintained.
+		</div>
+	{/if}
 	<div class="flex gap-2 flex-wrap -mb-1 items-center">
 		{#if categories.length > 0}
 			{#each categories as category, index}
@@ -68,6 +74,16 @@
 			<a href={project.license.url} class=" inline">
 				{licenseWithSuffix}
 			</a>
+		{/if}
+		{#if project.demo_url}
+			<span class="mx-1">·</span>
+			<a href={project.demo_url} target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline inline">
+				Demo
+			</a>
+		{/if}
+		{#if project.stack}
+			<span class="mx-1">·</span>
+			<span>{project.stack}</span>
 		{/if}
 	</div>
 	{#if project.description}

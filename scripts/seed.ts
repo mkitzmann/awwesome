@@ -190,6 +190,7 @@ function createTables() {
 			pushed_at TEXT,
 			created_at TEXT,
 			first_added TEXT,
+			archived INTEGER DEFAULT 0,
 			updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 		);
 		CREATE INDEX IF NOT EXISTS idx_projects_category_id ON projects(category_id);
@@ -260,7 +261,8 @@ function upsertCategoryPath(fullPath: string, slugToName: Record<string, string>
 function upsertProject(
 	data: SoftwareYaml,
 	categoryId: number,
-	firstAdded: string | null
+	firstAdded: string | null,
+	archived: boolean
 ): number {
 	// Use website_url as primary, falling back to source_code_url
 	const primaryUrl = data.website_url || data.source_code_url || null;
@@ -287,6 +289,7 @@ function upsertProject(
 		avatarUrl: null as string | null,
 		pushedAt: null as string | null,
 		createdAt: null as string | null,
+		archived,
 		updatedAt: data.updated_at ?? new Date().toISOString()
 	};
 
@@ -433,12 +436,6 @@ async function seed() {
 		let withHistory = 0;
 
 		for (const { filename, data } of softwareEntries) {
-			// Skip archived projects
-			if (data.archived) {
-				skipped++;
-				continue;
-			}
-
 			// Get the primary tag (first tag) for category assignment
 			const primaryTag = data.tags?.[0];
 			if (!primaryTag) {
@@ -456,7 +453,7 @@ async function seed() {
 			// Get firstAdded date from pre-built map
 			const firstAdded = firstAddedMap.get(`software/${filename}`) ?? null;
 
-			const projectId = upsertProject(data, categoryId, firstAdded);
+			const projectId = upsertProject(data, categoryId, firstAdded, !!data.archived);
 			if (projectId === -1) {
 				skipped++;
 				continue;
