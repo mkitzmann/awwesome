@@ -246,6 +246,16 @@ function createTables() {
 			status TEXT DEFAULT 'running'
 		);
 	`);
+
+	// Migrate existing tables: add columns that may not exist yet
+	const projectCols = sqlite
+		.prepare(`PRAGMA table_info(projects)`)
+		.all() as { name: string }[];
+	const colNames = new Set(projectCols.map((c) => c.name));
+
+	if (!colNames.has('archived')) {
+		sqlite.exec(`ALTER TABLE projects ADD COLUMN archived INTEGER DEFAULT 0`);
+	}
 }
 
 function upsertCategoryPath(fullPath: string, slugToName: Record<string, string>): number {
