@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: awwesome
     restart: unless-stopped
-    ports:
-      - '8080:3000'
+    expose:
+      - '3000'
     env_file:
       - .env
     working_dir: /usr/src/app
