@@ -1,0 +1,15 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [beta]
+  workflow_dispatch:
+    
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
+    uses: mkitzmann/infrastructure/.github/workflows/deploy.yml@main
+    secrets: inherit

@@ -1,36 +1,28 @@
-version: '3'
+version: '3.8'
+
 services:
-  ofelia:
-    image: mcuadros/ofelia:latest
-    container_name: ofelia
-    depends_on:
-      - source
-    command: daemon --docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      ofelia.job-run.awwesome.schedule: '@daily'
-      ofelia.job-run.awwesome.container: 'awwesome'
-  source:
-    image: mkitzmann/awwesome:latest
-    container_name: awwesome
-    restart: no
-    environment:
-      - REQUEST_DELAY=0
-      - CHUNK_SIZE=20
-      - LOW_COMMIT_COUNT=2
-    env_file:
-      - .env
-    working_dir: /usr/src/app
-    command: sh -c "npm run build && rm -r html/* && cp -r dist/* html && exit"
-    volumes:
-      - shared_volume:/usr/src/app/html
-  web:
-    image: nginx
-    container_name: nginx
-    ports:
-      - '8080:80'
-    volumes:
-      - shared_volume:/usr/share/nginx/html:ro
-volumes:
-  shared_volume:
+  awwesome:
+    image: ghcr.io/mkitzmann/awwesome:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.awwesome.rule=Host(`beta.awweso.me`)"
+        - "traefik.http.routers.awwesome.entrypoints=websecure"
+        - "traefik.http.routers.awwesome.tls=true"
+        - "traefik.http.services.awwesome.loadbalancer.server.port=80"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+    name: traefik_traefik

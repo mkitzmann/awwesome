@@ -14,6 +14,12 @@
 	export let project: Project;
 
 	$: categories = project.category?.split('/').slice(1) ?? [];
+	$: iconUrl = project.avatar_url ?? deriveOwnerIcon(project.source_url);
+
+	function deriveOwnerIcon(url: string | null | undefined): string | null {
+		const match = url?.match(/github\.com\/([^/]+)/);
+		return match ? `https://github.com/${match[1]}.png?size=64` : null;
+	}
 
 	let categoryNames;
 
@@ -25,7 +31,7 @@
 	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license;
 
 	$: totalCommits = project?.commit_history
-		? Object.values(project.commit_history).reduce((prev, current) => prev + current)
+		? Object.values(project.commit_history).reduce((prev, current) => prev + current, 0)
 		: 0;
 </script>
 
@@ -55,8 +61,8 @@
 		target="_blank"
 		class="flex gap-4 items-center"
 	>
-		{#if project.avatar_url}
-			<img src={project.avatar_url} alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
+		{#if iconUrl}
+			<img src={iconUrl} alt="{project.name} Avatar" class="h-8 w-8 rounded-full" />
 		{/if}
 		<h2 class="text-3xl font-bold break-all">{project.name}</h2>
 	</a>

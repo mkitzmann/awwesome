@@ -14,7 +14,7 @@
 </script>
 
 <div class="flex items-center justify-between w-full" style="padding-left: {indent}px">
-	{#if category.children.length > 0}
+	{#if category.children?.length > 0}
 		<details bind:open={isOpen} class="w-full group">
 			<summary class="flex justify-between w-full items-center">
 				<a
