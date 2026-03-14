@@ -4,12 +4,64 @@ on:
   push:
     branches: [beta]
   workflow_dispatch:
-    
+
 permissions:
   contents: read
   packages: write
 
 jobs:
-  build-and-deploy:
-    uses: mkitzmann/infrastructure/.github/workflows/deploy.yml@main
-    secrets: inherit
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: ${{ github.event.repository.name }}
+      SERVER_HOST: kserver
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Create app directory
+        run: ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "mkdir -p /opt/${APP_NAME}"
+
+      - name: Copy compose file
+        run: scp -o StrictHostKeyChecking=no "docker-compose.yml" "admin@${SERVER_HOST}:/opt/${APP_NAME}/docker-compose.yml"
+
+      - name: Deploy stack
+        run: |
+          ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "\
+            cd /opt/${APP_NAME} && \
+            docker compose config | grep -v '^name:' | docker stack deploy --with-registry-auth --resolve-image always -c - ${APP_NAME}"
