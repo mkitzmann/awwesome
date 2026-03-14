@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "mcp__acp__Edit"
+      "mcp__acp__Edit",
+      "Bash(yarn rebuild:*)",
+      "Bash(npm rebuild:*)"
     ]
   }
 }
