@@ -5,7 +5,10 @@
       "Bash(yarn rebuild:*)",
       "Bash(npm rebuild:*)",
       "WebSearch",
-      "Bash(yarn build:*)"
+      "Bash(yarn build:*)",
+      "Bash(gh issue:*)",
+      "WebFetch(domain:oxc.rs)",
+      "Bash(gh pr:*)"
     ]
   }
 }

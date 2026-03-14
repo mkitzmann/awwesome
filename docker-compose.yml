@@ -3,6 +3,8 @@ version: '3.8'
 services:
   awwesome:
     image: ghcr.io/mkitzmann/awwesome:latest
+    volumes:
+      - data:/usr/src/app/data
     deploy:
       replicas: 1
       restart_policy:
@@ -21,6 +23,9 @@ services:
       start_period: 15s
     networks:
       - traefik
+
+volumes:
+  data:
 
 networks:
   traefik:
