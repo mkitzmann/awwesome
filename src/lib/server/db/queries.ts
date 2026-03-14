@@ -1,89 +1,175 @@
-import { eq, like, desc, sql } from 'drizzle-orm';
-import { db } from './index';
-import { categories, projects, projectCategories, commitHistory } from './schema';
+import { eq, sql } from 'drizzle-orm';
+import { db, sqlite } from './index';
+import { categories, projectCategories, commitHistory, platforms as platformsTable } from './schema';
 import type {
-	Project,
 	AllCategories,
 	Category,
-	CommitCount
+	CommitCount,
+	PaginatedResult,
+	SortTerm,
+	SortOrder
 } from '../../types/types';
 
-// ── Read queries ──
+// ── Paginated query ──
 
-/**
- * Get projects by category path. Uses the project_categories join table
- * so a project tagged with multiple categories appears in all of them.
- */
-export function getProjectsByCategory(categoryPath: string): Project[] {
-	const isRoot = !categoryPath || categoryPath === '/';
+export interface ProjectQuery {
+	category?: string;
+	search?: string;
+	sort?: SortTerm;
+	order?: SortOrder;
+	limit?: number;
+	offset?: number;
+	minStars?: number;
+	maxStars?: number;
+	minCommitsYear?: number;
+	platform?: string;
+	addedAfter?: string;
+	addedBefore?: string;
+}
 
-	// Find projects via the many-to-many project_categories join.
-	// For the root page, return all projects with their primary category.
-	// For a specific category, find all projects that have a matching category.
-	const projectRows = isRoot
-		? db
-				.select({
-					id: projects.id,
-					name: projects.name,
-					primaryUrl: projects.primaryUrl,
-					sourceUrl: projects.sourceUrl,
-					demoUrl: projects.demoUrl,
-					description: projects.description,
-					licenseName: projects.licenseName,
-					licenseUrl: projects.licenseUrl,
-					licenseNickname: projects.licenseNickname,
-					stack: projects.stack,
-					stars: projects.stars,
-					avatarUrl: projects.avatarUrl,
-					pushedAt: projects.pushedAt,
-					createdAt: projects.createdAt,
-					firstAdded: projects.firstAdded,
-					categoryFullPath: categories.fullPath
-				})
-				.from(projects)
-				.innerJoin(categories, eq(projects.categoryId, categories.id))
-				.orderBy(desc(projects.stars))
-				.all()
-		: db
-				.select({
-					id: projects.id,
-					name: projects.name,
-					primaryUrl: projects.primaryUrl,
-					sourceUrl: projects.sourceUrl,
-					demoUrl: projects.demoUrl,
-					description: projects.description,
-					licenseName: projects.licenseName,
-					licenseUrl: projects.licenseUrl,
-					licenseNickname: projects.licenseNickname,
-					stack: projects.stack,
-					stars: projects.stars,
-					avatarUrl: projects.avatarUrl,
-					pushedAt: projects.pushedAt,
-					createdAt: projects.createdAt,
-					firstAdded: projects.firstAdded,
-					categoryFullPath: categories.fullPath
-				})
-				.from(projectCategories)
-				.innerJoin(projects, eq(projectCategories.projectId, projects.id))
-				.innerJoin(categories, eq(projectCategories.categoryId, categories.id))
-				.where(like(categories.fullPath, categoryPath + '%'))
-				.orderBy(desc(projects.stars))
-				.all();
+export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
+	const {
+		category = '/',
+		search = '',
+		sort = 'stars',
+		order = 'desc',
+		limit = 20,
+		offset = 0,
+		minStars,
+		maxStars,
+		minCommitsYear,
+		platform,
+		addedAfter,
+		addedBefore
+	} = query;
 
-	if (projectRows.length === 0) return [];
+	const isRoot = !category || category === '/';
 
-	// Deduplicate (a project may match multiple sub-categories)
-	const seen = new Set<number>();
-	const rows = projectRows.filter((r) => {
-		if (seen.has(r.id)) return false;
-		seen.add(r.id);
-		return true;
-	});
+	// Build WHERE conditions and params for raw SQL
+	const conditions: string[] = [];
+	const params: (string | number)[] = [];
+
+	if (!isRoot) {
+		conditions.push(`p.id IN (
+			SELECT DISTINCT pc.project_id
+			FROM project_categories pc
+			JOIN categories c ON pc.category_id = c.id
+			WHERE c.full_path LIKE ?
+		)`);
+		params.push(category + '%');
+	}
+
+	if (search) {
+		conditions.push(`(p.name LIKE ? OR p.description LIKE ?)`);
+		params.push(`%${search}%`, `%${search}%`);
+	}
+
+	if (minStars != null) {
+		conditions.push(`p.stars >= ?`);
+		params.push(minStars);
+	}
+
+	if (maxStars != null) {
+		conditions.push(`p.stars <= ?`);
+		params.push(maxStars);
+	}
+
+	if (minCommitsYear != null) {
+		conditions.push(`p.id IN (
+			SELECT ch.project_id
+			FROM commit_history ch
+			GROUP BY ch.project_id
+			HAVING SUM(ch.commit_count) >= ?
+		)`);
+		params.push(minCommitsYear);
+	}
+
+	if (platform) {
+		conditions.push(`p.id IN (
+			SELECT pp.project_id
+			FROM project_platforms pp
+			JOIN platforms pl ON pp.platform_id = pl.id
+			WHERE pl.name = ?
+		)`);
+		params.push(platform);
+	}
+
+	if (addedAfter) {
+		conditions.push(`p.first_added >= ?`);
+		params.push(addedAfter);
+	}
+
+	if (addedBefore) {
+		conditions.push(`p.first_added <= ?`);
+		params.push(addedBefore);
+	}
+
+	const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : '';
+
+	// Sort column — commitsYear uses a subquery to sum commit history
+	let sortExpression: string;
+	if (sort === 'commitsYear') {
+		sortExpression = `(SELECT COALESCE(SUM(ch.commit_count), 0) FROM commit_history ch WHERE ch.project_id = p.id)`;
+	} else if (sort === 'firstAdded') {
+		sortExpression = 'p.first_added';
+	} else {
+		sortExpression = 'p.stars';
+	}
+	const sortDir = order === 'asc' ? 'ASC' : 'DESC';
+	// Push NULLs to end regardless of sort direction (commitsYear never null due to COALESCE)
+	const orderClause = sort === 'commitsYear'
+		? `ORDER BY ${sortExpression} ${sortDir}`
+		: `ORDER BY ${sortExpression} IS NULL, ${sortExpression} ${sortDir}`;
+
+	// Count total
+	const countRow = sqlite
+		.prepare(`SELECT COUNT(*) as count FROM projects p ${whereClause}`)
+		.get(...params) as { count: number };
+	const total = countRow?.count ?? 0;
+
+	if (total === 0) return { projects: [], total: 0 };
+
+	// Fetch paginated rows
+	const rows = sqlite
+		.prepare(
+			`SELECT p.id, p.name, p.primary_url, p.source_url, p.demo_url,
+				p.description, p.license_name, p.license_url, p.license_nickname,
+				p.stack, p.stars, p.avatar_url, p.pushed_at, p.first_added,
+				p.archived, cat.full_path as category_full_path
+			FROM projects p
+			JOIN categories cat ON p.category_id = cat.id
+			${whereClause}
+			${orderClause}
+			LIMIT ? OFFSET ?`
+		)
+		.all(...params, limit, offset) as {
+		id: number;
+		name: string | null;
+		primary_url: string | null;
+		source_url: string | null;
+		demo_url: string | null;
+		description: string | null;
+		license_name: string | null;
+		license_url: string | null;
+		license_nickname: string | null;
+		stack: string | null;
+		stars: number | null;
+		avatar_url: string | null;
+		pushed_at: string | null;
+		first_added: string | null;
+		archived: number | null;
+		category_full_path: string;
+	}[];
+
+	if (rows.length === 0) return { projects: [], total };
 
 	const projectIds = rows.map((r) => r.id);
-	const idPlaceholders = sql.join(projectIds.map((id) => sql`${id}`), sql`, `);
+	const idPlaceholders = sql.join(
+		projectIds.map((id) => sql`${id}`),
+		sql`, `
+	);
 
-	// Batch-load category tag names for each project (shown as topic badges in UI)
+	// Batch-load tags
 	const tagRows = db
 		.select({
 			projectId: projectCategories.projectId,
@@ -119,30 +205,32 @@ export function getProjectsByCategory(categoryPath: string): Project[] {
 		historyByProject.set(row.projectId, hist);
 	}
 
-	// Assemble into Project[] matching the existing type
-	return rows.map((row) => ({
-		name: row.name,
-		primary_url: row.primaryUrl,
-		source_url: row.sourceUrl,
-		demo_url: row.demoUrl,
-		description: row.description,
-		license: row.licenseName
-			? {
-					name: row.licenseName,
-					url: row.licenseUrl ?? undefined,
-					nickname: row.licenseNickname ?? undefined
-				}
-			: undefined,
-		stack: row.stack,
-		category: row.categoryFullPath,
-		stars: row.stars,
-		avatar_url: row.avatarUrl,
-		topics: tagsByProject.get(row.id) || [],
-		commit_history: historyByProject.get(row.id) || {},
-		pushedAt: row.pushedAt ? new Date(row.pushedAt) : undefined,
-		firstAdded: row.firstAdded ? new Date(row.firstAdded) : undefined,
-		createdAt: row.createdAt ? new Date(row.createdAt) : undefined
-	}));
+	return {
+		total,
+		projects: rows.map((row) => ({
+			name: row.name,
+			primary_url: row.primary_url,
+			source_url: row.source_url,
+			demo_url: row.demo_url,
+			description: row.description,
+			license: row.license_name
+				? {
+						name: row.license_name,
+						url: row.license_url ?? undefined,
+						nickname: row.license_nickname ?? undefined
+					}
+				: undefined,
+			stack: row.stack,
+			category: row.category_full_path,
+			stars: row.stars,
+			avatar_url: row.avatar_url,
+			topics: tagsByProject.get(row.id) || [],
+			commit_history: historyByProject.get(row.id) || {},
+			pushedAt: row.pushed_at ? new Date(row.pushed_at) : undefined,
+			firstAdded: row.first_added ? new Date(row.first_added) : undefined,
+			archived: !!row.archived
+		}))
+	};
 }
 
 let categoryTreeCache: AllCategories | null = null;
@@ -166,7 +254,7 @@ export function getCategoryTree(): AllCategories {
 	return categoryTreeCache;
 }
 
-function buildCategoryTree(
+export function buildCategoryTree(
 	rows: { id: number; slug: string; name: string; parentId: number | null; fullPath: string }[]
 ): Category[] {
 	const rootRows = rows.filter((r) => r.parentId === null);
@@ -182,14 +270,22 @@ function buildCategoryTree(
 
 	function buildNode(row: (typeof rows)[0]): Category {
 		const children = childMap.get(row.id) || [];
-		const node: Category = { slug: row.slug, name: row.name };
-		if (children.length > 0) {
-			node.children = children
-				.map(buildNode)
-				.sort((a, b) => a.slug.localeCompare(b.slug));
-		}
+		const node: Category = {
+			slug: row.slug,
+			name: row.name,
+			children: children.map(buildNode).sort((a, b) => a.slug.localeCompare(b.slug))
+		};
 		return node;
 	}
 
 	return rootRows.map(buildNode).sort((a, b) => a.slug.localeCompare(b.slug));
+}
+
+let platformListCache: string[] | null = null;
+
+export function getPlatformList(): string[] {
+	if (platformListCache) return platformListCache;
+	const rows = db.select({ name: platformsTable.name }).from(platformsTable).all();
+	platformListCache = rows.map((r) => r.name).sort();
+	return platformListCache;
 }

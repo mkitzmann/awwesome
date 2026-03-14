@@ -18,14 +18,14 @@ export type Project = {
 	commit_history?: CommitCount;
 	pushedAt?: Date;
 	firstAdded?: Date;
-	createdAt?: Date;
+	archived?: boolean;
 };
 
 export type CommitCount = {
 	[key: string]: number;
 };
 
-export type SortTerm = 'stars' | 'firstAdded';
+export type SortTerm = 'stars' | 'firstAdded' | 'commitsYear';
 export type SortOrder = 'asc' | 'desc';
 
 export interface AllCategories {
@@ -40,9 +40,16 @@ export type Category = {
 	children?: Category[];
 };
 
+export interface PaginatedResult {
+	projects: Project[];
+	total: number;
+}
+
 export interface ProjectCollection {
 	projects: Project[];
+	total: number;
 	categories: AllCategories;
+	platforms: string[];
 }
 
 export interface GithubQueryResult {

@@ -21,7 +21,7 @@
 		return match ? `https://github.com/${match[1]}.png?size=64` : null;
 	}
 
-	let categoryNames;
+	let categoryNames: Record<string, string> = {};
 
 	categoryStore.subscribe((value) => {
 		categoryNames = value.names;
@@ -30,19 +30,24 @@
 	$: license = project.license?.nickname ?? project.license?.name;
 	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license;
 
-	$: totalCommits = project?.commit_history
-		? Object.values(project.commit_history).reduce((prev, current) => prev + current, 0)
-		: 0;
+	$: commitVals = project?.commit_history ? Object.values(project.commit_history) : [];
+	$: totalCommits = commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0;
 </script>
 
 <article
 	class="max-w-full bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg"
+	class:opacity-60={project.archived}
 >
+	{#if project.archived}
+		<div class="text-sm font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 rounded-lg px-3 py-2">
+			This project is archived and no longer maintained.
+		</div>
+	{/if}
 	<div class="flex gap-2 flex-wrap -mb-1 items-center">
 		{#if categories.length > 0}
 			{#each categories as category, index}
 				<a
-					href={project.category
+					href={(project.category ?? '')
 						.split('/')
 						.slice(0, index + 2)
 						.join('/')}
@@ -74,6 +79,16 @@
 			<a href={project.license.url} class=" inline">
 				{licenseWithSuffix}
 			</a>
+		{/if}
+		{#if project.demo_url}
+			<span class="mx-1">·</span>
+			<a href={project.demo_url} target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline inline">
+				Demo
+			</a>
+		{/if}
+		{#if project.stack}
+			<span class="mx-1">·</span>
+			<span>{project.stack}</span>
 		{/if}
 	</div>
 	{#if project.description}
@@ -109,7 +124,7 @@
 			{/if}
 		</div>
 
-		{#if project.commit_history}
+		{#if project.commit_history && Object.keys(project.commit_history).length > 0}
 			<div class="flex flex-col items-end w-full min-[460px]:w-64">
 				<div class="-mb-3">
 					<span
@@ -125,7 +140,7 @@
 						commits past year
 					</span>
 				</div>
-				<CommitGraph commits={project.commit_history} id={project.primary_url} />
+				<CommitGraph commits={project.commit_history} id={project.primary_url ?? ''} />
 			</div>
 		{/if}
 	</div>

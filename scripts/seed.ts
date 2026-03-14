@@ -16,8 +16,8 @@ import fs from 'fs';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
-import slugify from '@sindresorhus/slugify';
 import * as schema from '../src/lib/server/db/schema.js';
+import { parseFirstAddedOutput, tagFilenameToPath } from './seedUtils.js';
 
 // ── Config ──
 
@@ -83,40 +83,16 @@ function cloneOrPullDataRepo(): void {
  * For each file, the first occurrence gives us the first-added date.
  */
 function buildFirstAddedMap(): Map<string, string> {
-	const map = new Map<string, string>();
 	try {
 		const output = execSync(
 			'git log --reverse --diff-filter=A --format=%aI --name-only -- software/',
 			{ cwd: DATA_REPO_DIR, encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, stdio: ['pipe', 'pipe', 'pipe'] }
 		);
-
-		// Output format: alternating lines of date and filename(s), separated by blank lines
-		// Example:
-		//   2021-07-15T10:30:00+00:00
-		//   software/nextcloud.yml
-		//   software/bitwarden.yml
-		//
-		//   2021-07-16T12:00:00+00:00
-		//   software/gitea.yml
-		let currentDate = '';
-		for (const line of output.split('\n')) {
-			const trimmed = line.trim();
-			if (!trimmed) continue;
-
-			// ISO date lines start with a digit (year)
-			if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) {
-				currentDate = trimmed;
-			} else if (trimmed.startsWith('software/') && currentDate) {
-				// Only record the first occurrence (earliest date) for each file
-				if (!map.has(trimmed)) {
-					map.set(trimmed, currentDate);
-				}
-			}
-		}
+		return parseFirstAddedOutput(output);
 	} catch (err) {
 		console.warn('   Warning: could not read git history for firstAdded dates:', err);
 	}
-	return map;
+	return new Map();
 }
 
 // ── YAML reading ──
@@ -176,9 +152,7 @@ function buildTagPathMap(): Map<string, string> {
 		const data = readYamlFile<TagYaml>(path.join(tagsDir, file));
 		if (!data || !data.name) continue;
 
-		const stem = file.replace('.yml', '');
-		const parts = stem.split('---');
-		const fullPath = '/' + parts.map((p) => slugify(p)).join('/');
+		const fullPath = tagFilenameToPath(file);
 		map.set(data.name, fullPath);
 	}
 
@@ -216,6 +190,7 @@ function createTables() {
 			pushed_at TEXT,
 			created_at TEXT,
 			first_added TEXT,
+			archived INTEGER DEFAULT 0,
 			updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 		);
 		CREATE INDEX IF NOT EXISTS idx_projects_category_id ON projects(category_id);
@@ -239,6 +214,29 @@ function createTables() {
 		CREATE INDEX IF NOT EXISTS idx_commit_history_project_id ON commit_history(project_id);
 		CREATE UNIQUE INDEX IF NOT EXISTS idx_commit_history_unique ON commit_history(project_id, month_key);
 
+		CREATE TABLE IF NOT EXISTS platforms (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL UNIQUE
+		);
+
+		CREATE TABLE IF NOT EXISTS project_platforms (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+			platform_id INTEGER NOT NULL REFERENCES platforms(id) ON DELETE CASCADE
+		);
+		CREATE INDEX IF NOT EXISTS idx_project_platforms_project_id ON project_platforms(project_id);
+		CREATE INDEX IF NOT EXISTS idx_project_platforms_platform_id ON project_platforms(platform_id);
+		CREATE UNIQUE INDEX IF NOT EXISTS idx_project_platforms_unique ON project_platforms(project_id, platform_id);
+
+		CREATE TABLE IF NOT EXISTS star_history (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+			recorded_at TEXT NOT NULL,
+			stars INTEGER NOT NULL
+		);
+		CREATE INDEX IF NOT EXISTS idx_star_history_project_id ON star_history(project_id);
+		CREATE UNIQUE INDEX IF NOT EXISTS idx_star_history_unique ON star_history(project_id, recorded_at);
+
 		CREATE TABLE IF NOT EXISTS crawl_log (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			started_at TEXT NOT NULL,
@@ -248,6 +246,16 @@ function createTables() {
 			status TEXT DEFAULT 'running'
 		);
 	`);
+
+	// Migrate existing tables: add columns that may not exist yet
+	const projectCols = sqlite
+		.prepare(`PRAGMA table_info(projects)`)
+		.all() as { name: string }[];
+	const colNames = new Set(projectCols.map((c) => c.name));
+
+	if (!colNames.has('archived')) {
+		sqlite.exec(`ALTER TABLE projects ADD COLUMN archived INTEGER DEFAULT 0`);
+	}
 }
 
 function upsertCategoryPath(fullPath: string, slugToName: Record<string, string>): number {
@@ -286,7 +294,8 @@ function upsertCategoryPath(fullPath: string, slugToName: Record<string, string>
 function upsertProject(
 	data: SoftwareYaml,
 	categoryId: number,
-	firstAdded: string | null
+	firstAdded: string | null,
+	archived: boolean
 ): number {
 	// Use website_url as primary, falling back to source_code_url
 	const primaryUrl = data.website_url || data.source_code_url || null;
@@ -313,6 +322,7 @@ function upsertProject(
 		avatarUrl: null as string | null,
 		pushedAt: null as string | null,
 		createdAt: null as string | null,
+		archived,
 		updatedAt: data.updated_at ?? new Date().toISOString()
 	};
 
@@ -353,6 +363,52 @@ function replaceCommitHistory(projectId: number, history: Record<string, number>
 
 	if (rows.length > 0) {
 		db.insert(schema.commitHistory).values(rows).run();
+	}
+}
+
+function recordStarSnapshot(projectId: number, stars: number | null): void {
+	if (stars == null) return;
+	const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+	sqlite
+		.prepare(
+			`INSERT INTO star_history (project_id, recorded_at, stars)
+			 VALUES (?, ?, ?)
+			 ON CONFLICT(project_id, recorded_at) DO UPDATE SET stars = excluded.stars`
+		)
+		.run(projectId, today, stars);
+}
+
+const platformIdCache = new Map<string, number>();
+
+function getOrCreatePlatformId(name: string): number {
+	const cached = platformIdCache.get(name);
+	if (cached) return cached;
+
+	const existing = sqlite
+		.prepare(`SELECT id FROM platforms WHERE name = ?`)
+		.get(name) as { id: number } | undefined;
+
+	if (existing) {
+		platformIdCache.set(name, existing.id);
+		return existing.id;
+	}
+
+	const result = sqlite
+		.prepare(`INSERT INTO platforms (name) VALUES (?) RETURNING id`)
+		.get(name) as { id: number };
+	platformIdCache.set(name, result.id);
+	return result.id;
+}
+
+function replaceProjectPlatforms(projectId: number, platformNames: string[]): void {
+	sqlite.prepare(`DELETE FROM project_platforms WHERE project_id = ?`).run(projectId);
+
+	const insert = sqlite.prepare(
+		`INSERT OR IGNORE INTO project_platforms (project_id, platform_id) VALUES (?, ?)`
+	);
+	for (const name of platformNames) {
+		const platformId = getOrCreatePlatformId(name);
+		insert.run(projectId, platformId);
 	}
 }
 
@@ -459,12 +515,6 @@ async function seed() {
 		let withHistory = 0;
 
 		for (const { filename, data } of softwareEntries) {
-			// Skip archived projects
-			if (data.archived) {
-				skipped++;
-				continue;
-			}
-
 			// Get the primary tag (first tag) for category assignment
 			const primaryTag = data.tags?.[0];
 			if (!primaryTag) {
@@ -482,12 +532,20 @@ async function seed() {
 			// Get firstAdded date from pre-built map
 			const firstAdded = firstAddedMap.get(`software/${filename}`) ?? null;
 
-			const projectId = upsertProject(data, categoryId, firstAdded);
+			const projectId = upsertProject(data, categoryId, firstAdded, !!data.archived);
 			if (projectId === -1) {
 				skipped++;
 				continue;
 			}
 			inserted++;
+
+			// Record star snapshot for historical tracking
+			recordStarSnapshot(projectId, data.stargazers_count ?? null);
+
+			// Insert platforms (many-to-many)
+			if (data.platforms && data.platforms.length > 0) {
+				replaceProjectPlatforms(projectId, data.platforms);
+			}
 
 			// Insert commit history
 			if (data.commit_history && Object.keys(data.commit_history).length > 0) {

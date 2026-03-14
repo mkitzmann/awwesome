@@ -1,16 +1,18 @@
 import type { ProjectCollection } from '../../lib/types/types';
-import { getProjectsByCategory } from '$lib/server/db/queries';
+import { getProjectsPaginated } from '$lib/server/db/queries';
 import { removeTrailingSlashes } from '$lib';
 
 export async function load({ params, parent }): Promise<ProjectCollection> {
-	const { categories } = await parent();
+	const { categories, platforms } = await parent();
 	const requestedCategory = '/' + (removeTrailingSlashes(params.category) ?? '');
 
-	const isRoot = requestedCategory === '/';
-	const projects = getProjectsByCategory(isRoot ? '/' : requestedCategory);
+	const category = requestedCategory === '/' ? '/' : requestedCategory;
+	const { projects, total } = getProjectsPaginated({ category, limit: 20, offset: 0 });
 
 	return {
 		projects,
-		categories
+		total,
+		categories,
+		platforms
 	};
 }

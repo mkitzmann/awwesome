@@ -37,6 +37,7 @@ export const projects = sqliteTable(
 		pushedAt: text('pushed_at'),
 		createdAt: text('created_at'),
 		firstAdded: text('first_added'),
+		archived: integer('archived', { mode: 'boolean' }).default(false),
 		updatedAt: text('updated_at')
 			.notNull()
 			.default(sql`CURRENT_TIMESTAMP`)
@@ -78,6 +79,48 @@ export const commitHistory = sqliteTable(
 	(table) => ({
 		projectIdx: index('idx_commit_history_project_id').on(table.projectId),
 		uniqueMonth: uniqueIndex('idx_commit_history_unique').on(table.projectId, table.monthKey)
+	})
+);
+
+export const platforms = sqliteTable(
+	'platforms',
+	{
+		id: integer('id').primaryKey({ autoIncrement: true }),
+		name: text('name').notNull().unique()
+	}
+);
+
+export const projectPlatforms = sqliteTable(
+	'project_platforms',
+	{
+		id: integer('id').primaryKey({ autoIncrement: true }),
+		projectId: integer('project_id')
+			.notNull()
+			.references(() => projects.id, { onDelete: 'cascade' }),
+		platformId: integer('platform_id')
+			.notNull()
+			.references(() => platforms.id, { onDelete: 'cascade' })
+	},
+	(table) => ({
+		projectIdx: index('idx_project_platforms_project_id').on(table.projectId),
+		platformIdx: index('idx_project_platforms_platform_id').on(table.platformId),
+		uniquePair: uniqueIndex('idx_project_platforms_unique').on(table.projectId, table.platformId)
+	})
+);
+
+export const starHistory = sqliteTable(
+	'star_history',
+	{
+		id: integer('id').primaryKey({ autoIncrement: true }),
+		projectId: integer('project_id')
+			.notNull()
+			.references(() => projects.id, { onDelete: 'cascade' }),
+		recordedAt: text('recorded_at').notNull(),
+		stars: integer('stars').notNull()
+	},
+	(table) => ({
+		projectIdx: index('idx_star_history_project_id').on(table.projectId),
+		uniqueSnapshot: uniqueIndex('idx_star_history_unique').on(table.projectId, table.recordedAt)
 	})
 );
 

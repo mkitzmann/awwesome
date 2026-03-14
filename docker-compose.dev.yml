@@ -1,6 +1,6 @@
 version: '3'
 services:
-  source:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,4 +13,4 @@ services:
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
-    command: sh -c "npm run dev --host"
+    command: sh -c "npm run dev -- --host"
