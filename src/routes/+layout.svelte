@@ -1,6 +1,9 @@
-<script>
+<script lang="ts">
 	import '../app.postcss';
 	import SvelteSeo from 'svelte-seo';
+	import type { Snippet } from 'svelte';
+
+	let { children }: { children: Snippet } = $props();
 </script>
 
 <SvelteSeo
@@ -30,4 +33,4 @@
 		image: 'https://www.awweso.me/awwesome_og.png'
 	}}
 />
-<slot />
+{@render children()}

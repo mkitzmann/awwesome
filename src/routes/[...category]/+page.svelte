@@ -7,49 +7,95 @@
 	import CategoryGroup from '../../components/CategoryGroup.svelte';
 	import CategorySelect from '../../components/CategorySelect.svelte';
 	import { allCategory } from '$lib';
-	import { beforeUpdate } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import SearchInput from '../../components/SearchInput.svelte';
 	import SortButton from '../../components/SortButton.svelte';
 	import FilterPanel from '../../components/FilterPanel.svelte';
 	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
 	import StarOnGithub from '../../components/StarOnGithub.svelte';
 
-	export let data: ProjectCollection;
-	categoryStore.set(data.categories);
+	let { data }: { data: ProjectCollection } = $props();
 
-	$: category = removeTrailingSlashes($page.params?.category) ?? '';
+	let category = $derived(removeTrailingSlashes($page.params?.category) ?? '');
+	let selectedCategory = $state('');
 
-	let selectedCategory = '';
-	beforeUpdate(() => {
+	$effect(() => {
 		selectedCategory = category;
 	});
 
 	// ── Local state for API-driven loading ──
 
-	let projects: Project[] = data.projects;
-	let total: number = data.total;
-	let searchTerm = '';
-	let selectedSortTerm: SortTerm = 'stars';
-	let selectedSortOrder: SortOrder = 'desc';
-	let loading = false;
+	let projects: Project[] = $state([]);
+	let total: number = $state(0);
+	let searchTerm = $state('');
+	let selectedSortTerm: SortTerm = $state('stars');
+	let selectedSortOrder: SortOrder = $state('desc');
+	let loading = $state(false);
 
 	// Filter state
-	let filterMinStars = '';
-	let filterMinCommitsYear = '';
-	let filterPlatform = '';
+	let filterMinStars = $state('');
+	let filterMinCommitsYear = $state('');
+	let filterPlatform = $state('');
 
-	// Reset when server data changes (category navigation)
-	$: {
-		data; // track dependency
+	// ── Hydrate state from URL params on mount ──
+	let initialized = false;
+	onMount(() => {
+		const params = $page.url.searchParams;
+		searchTerm = params.get('search') ?? '';
+		const sort = params.get('sort') as SortTerm | null;
+		if (sort && ['stars', 'commitsYear', 'firstAdded'].includes(sort)) {
+			selectedSortTerm = sort;
+		}
+		const order = params.get('order') as SortOrder | null;
+		if (order && ['asc', 'desc'].includes(order)) {
+			selectedSortOrder = order;
+		}
+		filterMinStars = params.get('minStars') ?? '';
+		filterMinCommitsYear = params.get('minCommitsYear') ?? '';
+		filterPlatform = params.get('platform') ?? '';
+
+		initialized = true;
+
+		// If any filters are active from URL, re-fetch with them applied
+		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform
+			|| selectedSortTerm !== 'stars' || selectedSortOrder !== 'desc';
+		if (hasFilters) {
+			fetchProjects();
+		}
+	});
+
+	// Update projects when server data changes (category navigation)
+	$effect(() => {
+		categoryStore.set(data.categories);
 		projects = data.projects;
 		total = data.total;
-		searchTerm = '';
-		selectedSortTerm = 'stars';
-		selectedSortOrder = 'desc';
-		filterMinStars = '';
-		filterMinCommitsYear = '';
-		filterPlatform = '';
+		// Re-fetch with active filters when navigating categories
+		if (initialized) {
+			fetchProjects();
+		}
+	});
+
+	// ── Sync state to URL params ──
+	function syncUrlParams() {
+		const url = new URL(window.location.href);
+		const defaults: Record<string, string> = { sort: 'stars', order: 'desc' };
+		const state: Record<string, string> = {
+			search: searchTerm,
+			sort: selectedSortTerm,
+			order: selectedSortOrder,
+			minStars: filterMinStars,
+			minCommitsYear: filterMinCommitsYear,
+			platform: filterPlatform
+		};
+		for (const [key, value] of Object.entries(state)) {
+			if (value && value !== (defaults[key] ?? '')) {
+				url.searchParams.set(key, value);
+			} else {
+				url.searchParams.delete(key);
+			}
+		}
+		history.replaceState(null, '', url);
 	}
 
 	async function fetchProjects(opts: { append?: boolean; offset?: number } = {}) {
@@ -83,35 +129,38 @@
 				projects = result.projects;
 			}
 			total = result.total;
+			if (!opts.append) syncUrlParams();
 		} finally {
 			loading = false;
 		}
 	}
 
-	function handleSearch(event: CustomEvent<string>) {
-		searchTerm = event.detail;
+	function handleSearch(term: string) {
+		searchTerm = term;
 		fetchProjects();
 	}
 
-	let prevSortTerm: SortTerm = selectedSortTerm;
-	$: if (selectedSortTerm !== prevSortTerm) {
-		prevSortTerm = selectedSortTerm;
-		fetchProjects();
-	}
+	let prevSortTerm: SortTerm = $state('stars');
+	$effect(() => {
+		if (selectedSortTerm !== prevSortTerm) {
+			prevSortTerm = selectedSortTerm;
+			fetchProjects();
+		}
+	});
 
 	function loadMore() {
 		fetchProjects({ append: true, offset: projects.length });
 	}
 
-	let categoryNames: Record<string, string>;
+	let categoryNames: Record<string, string> = $state({});
 
 	categoryStore.subscribe((value) => {
 		categoryNames = value.names;
 	});
 
-	const setSelectedCategory = (event: CustomEvent<string>) => {
-		selectedCategory = event.detail;
-		goto(`/${event.detail}`);
+	const setSelectedCategory = (value: string) => {
+		selectedCategory = value;
+		goto(`/${value}`);
 	};
 </script>
 
@@ -140,15 +189,15 @@
 	</div>
 	<div class="flex flex-col xl:flex-row gap-6 xl:gap-12">
 		<div class="xl:hidden flex flex-wrap gap-4">
-			<SearchInput bind:searchTerm on:search={handleSearch} />
+			<SearchInput bind:searchTerm onsearch={handleSearch} />
 			<CategorySelect
 				categories={data.categories.tree}
 				{selectedCategory}
-				on:change={setSelectedCategory}
+				onchange={setSelectedCategory}
 			/>
 		</div>
 		<aside class="max-w-[20%] hidden xl:block">
-			<SearchInput bind:searchTerm on:search={handleSearch} />
+			<SearchInput bind:searchTerm onsearch={handleSearch} />
 			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-4">
 				<a
 					href="/"
@@ -191,7 +240,7 @@
 						bind:minStars={filterMinStars}
 						bind:minCommitsYear={filterMinCommitsYear}
 						bind:platform={filterPlatform}
-						on:filter={() => fetchProjects()}
+						onfilter={() => fetchProjects()}
 					/>
 					<div class="text-sm text-right">
 						{total} Projects
@@ -206,7 +255,7 @@
 			<div class="flex mt-8">
 				{#if projects.length < total}
 					<button
-						on:click={loadMore}
+						onclick={loadMore}
 						disabled={loading}
 						class="mx-auto bg-blue-100 dark:bg-blue-700 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full px-4 py-2 disabled:opacity-50"
 					>

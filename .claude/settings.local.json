@@ -3,7 +3,9 @@
     "allow": [
       "mcp__acp__Edit",
       "Bash(yarn rebuild:*)",
-      "Bash(npm rebuild:*)"
+      "Bash(npm rebuild:*)",
+      "WebSearch",
+      "Bash(yarn build:*)"
     ]
   }
 }

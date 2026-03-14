@@ -1,33 +1,50 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { onMount } from 'svelte';
 
-	export let platforms: string[] = [];
+	let {
+		platforms = [],
+		minStars = $bindable(''),
+		minCommitsYear = $bindable(''),
+		platform = $bindable(''),
+		onfilter
+	}: {
+		platforms?: string[];
+		minStars?: string;
+		minCommitsYear?: string;
+		platform?: string;
+		onfilter?: () => void;
+	} = $props();
 
-	const dispatch = createEventDispatcher<{ filter: void }>();
+	let expanded = $state(false);
+	let panelEl: HTMLDivElement;
 
-	export let minStars: string = '';
-	export let minCommitsYear: string = '';
-	export let platform: string = '';
-
-	let expanded = false;
+	onMount(() => {
+		const handleClickOutside = (e: MouseEvent) => {
+			if (expanded && panelEl && !panelEl.contains(e.target as Node)) {
+				expanded = false;
+			}
+		};
+		document.addEventListener('click', handleClickOutside, true);
+		return () => document.removeEventListener('click', handleClickOutside, true);
+	});
 
 	function applyFilters() {
-		dispatch('filter');
+		onfilter?.();
 	}
 
 	function clearFilters() {
 		minStars = '';
 		minCommitsYear = '';
 		platform = '';
-		dispatch('filter');
+		onfilter?.();
 	}
 
-	$: hasActiveFilters = minStars !== '' || minCommitsYear !== '' || platform !== '';
+	let hasActiveFilters = $derived(minStars !== '' || minCommitsYear !== '' || platform !== '');
 </script>
 
-<div class="relative">
+<div class="relative" bind:this={panelEl}>
 	<button
-		on:click={() => (expanded = !expanded)}
+		onclick={() => (expanded = !expanded)}
 		class="px-4 py-1 rounded-full text-sm
 			{hasActiveFilters ? 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-200' : 'bg-gray-200 dark:bg-gray-800'}
 			hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -43,7 +60,7 @@
 				<select
 					id="minStars"
 					bind:value={minStars}
-					on:change={applyFilters}
+					onchange={applyFilters}
 					class="w-full rounded-lg px-3 py-1.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
 				>
 					<option value="">Any</option>
@@ -60,7 +77,7 @@
 				<select
 					id="minCommitsYear"
 					bind:value={minCommitsYear}
-					on:change={applyFilters}
+					onchange={applyFilters}
 					class="w-full rounded-lg px-3 py-1.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
 				>
 					<option value="">Any</option>
@@ -76,7 +93,7 @@
 				<select
 					id="platform"
 					bind:value={platform}
-					on:change={applyFilters}
+					onchange={applyFilters}
 					class="w-full rounded-lg px-3 py-1.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
 				>
 					<option value="">Any</option>
@@ -88,7 +105,7 @@
 
 			{#if hasActiveFilters}
 				<button
-					on:click={clearFilters}
+					onclick={clearFilters}
 					class="text-xs text-blue-600 dark:text-blue-400 hover:underline self-end"
 				>
 					Clear all filters

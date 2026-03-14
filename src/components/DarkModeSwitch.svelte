@@ -1,14 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
 
-	let darkMode = false;
+	let darkMode = $state(false);
 
 	const toggleDarkMode = () => {
 		darkMode = !darkMode;
 		document.documentElement.classList.toggle('dark', darkMode);
 	};
 
-	// Run onMount to set initial dark mode based on system preference
 	onMount(() => {
 		darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		document.documentElement.classList.toggle('dark', darkMode);
@@ -16,7 +15,7 @@
 </script>
 
 <main>
-	<button class="flex h-10 items-center cursor-pointer select-none" on:click={toggleDarkMode}>
+	<button class="flex h-10 items-center cursor-pointer select-none" onclick={toggleDarkMode}>
 		{#if darkMode}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

@@ -2,15 +2,29 @@
 	import ChevronRight from './ChevronRight.svelte';
 	import { navigating } from '$app/stores';
 	import type { Category } from '../lib/types/types';
-	export let category: Category;
-	export let selectedCategory: string = '';
-	export let indent = 0;
+	import CategoryGroup from './CategoryGroup.svelte';
 
-	export let href = '/' + category.slug;
+	let {
+		category,
+		selectedCategory = '',
+		indent = 0,
+		href = '/' + category.slug
+	}: {
+		category: Category;
+		selectedCategory?: string;
+		indent?: number;
+		href?: string;
+	} = $props();
 
-	let isOpen = false;
-	$: if ($navigating) selectedCategory.includes(category.slug) ? (isOpen = true) : (isOpen = false);
-	$: isActive = selectedCategory === href.slice(1);
+	let isOpen = $state(false);
+
+	$effect(() => {
+		if ($navigating) {
+			isOpen = selectedCategory.includes(category.slug);
+		}
+	});
+
+	let isActive = $derived(selectedCategory === href.slice(1));
 </script>
 
 <div class="flex items-center justify-between w-full" style="padding-left: {indent}px">
@@ -30,7 +44,7 @@
 				</div>
 			</summary>
 			{#each category.children ?? [] as category2}
-				<svelte:self
+				<CategoryGroup
 					category={category2}
 					{selectedCategory}
 					href="{href}/{category2.slug}"
@@ -38,9 +52,6 @@
 				/>
 			{/each}
 		</details>
-		<!--		<button on:click={toggle} class="hover:text-blue-500 {isOpen ? 'rotate-90' : ''}">-->
-		<!--			<ChevronRight />-->
-		<!--		</button>-->
 	{:else}
 		<a
 			{href}

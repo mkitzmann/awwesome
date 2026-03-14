@@ -11,27 +11,27 @@
 	dayjs.extend(relativeTime);
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
-	export let project: Project;
+	let { project }: { project: Project } = $props();
 
-	$: categories = project.category?.split('/').slice(1) ?? [];
-	$: iconUrl = project.avatar_url ?? deriveOwnerIcon(project.source_url);
+	let categories = $derived(project.category?.split('/').slice(1) ?? []);
+	let iconUrl = $derived(project.avatar_url ?? deriveOwnerIcon(project.source_url));
 
 	function deriveOwnerIcon(url: string | null | undefined): string | null {
 		const match = url?.match(/github\.com\/([^/]+)/);
 		return match ? `https://github.com/${match[1]}.png?size=64` : null;
 	}
 
-	let categoryNames: Record<string, string> = {};
+	let categoryNames: Record<string, string> = $state({});
 
 	categoryStore.subscribe((value) => {
 		categoryNames = value.names;
 	});
 
-	$: license = project.license?.nickname ?? project.license?.name;
-	$: licenseWithSuffix = license === 'Other' ? `${license} License` : license;
+	let license = $derived(project.license?.nickname ?? project.license?.name);
+	let licenseWithSuffix = $derived(license === 'Other' ? `${license} License` : license);
 
-	$: commitVals = project?.commit_history ? Object.values(project.commit_history) : [];
-	$: totalCommits = commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0;
+	let commitVals = $derived(project?.commit_history ? Object.values(project.commit_history) : []);
+	let totalCommits = $derived(commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0);
 </script>
 
 <article

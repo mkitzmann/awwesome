@@ -2,18 +2,17 @@
 	import type { CommitCount } from '../lib/types/types';
 	import { appConfig } from '../lib/createConfig';
 
-	export let commits: CommitCount;
-	export let id: string;
-	$: vals = Object.values(commits);
-	$: max = vals.length > 0 ? Math.max(...vals) : 0;
-	$: points = vals.reduce((prev, current, index) => {
+	let { commits, id }: { commits: CommitCount; id: string } = $props();
+	let vals = $derived(Object.values(commits));
+	let max = $derived(vals.length > 0 ? Math.max(...vals) : 0);
+	let points = $derived(vals.reduce((prev, current, index) => {
 		return `${prev} ${index * 10},${(current / max) * 10}`;
-	}, '');
+	}, ''));
 
-	$: totalCommits = vals.length > 0 ? vals.reduce((prev, current) => prev + current, 0) : 0;
+	let totalCommits = $derived(vals.length > 0 ? vals.reduce((prev, current) => prev + current, 0) : 0);
 
-	$: topColor = totalCommits < appConfig.lowCommitCount ? '#944' : '#216e39';
-	$: bottomColor = totalCommits < appConfig.lowCommitCount ? '#faa' : '#9be9a8';
+	let topColor = $derived(totalCommits < appConfig.lowCommitCount ? '#944' : '#216e39');
+	let bottomColor = $derived(totalCommits < appConfig.lowCommitCount ? '#faa' : '#9be9a8');
 </script>
 
 <svg viewBox="0 0 110 20" xmlns="http://www.w3.org/2000/svg">
