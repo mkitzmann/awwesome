@@ -12,9 +12,9 @@ services:
         - "traefik.http.routers.awwesome.rule=Host(`beta.awweso.me`)"
         - "traefik.http.routers.awwesome.entrypoints=websecure"
         - "traefik.http.routers.awwesome.tls=true"
-        - "traefik.http.services.awwesome.loadbalancer.server.port=80"
+        - "traefik.http.services.awwesome.loadbalancer.server.port=3000"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
