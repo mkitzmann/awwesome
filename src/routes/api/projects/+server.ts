@@ -27,12 +27,13 @@ export function GET({ url }) {
 	const maxStars = intParam(url, 'maxStars');
 	const minCommitsYear = intParam(url, 'minCommitsYear');
 	const platform = url.searchParams.get('platform') || undefined;
+	const license = url.searchParams.get('license') || undefined;
 	const addedAfter = url.searchParams.get('addedAfter') || undefined;
 	const addedBefore = url.searchParams.get('addedBefore') || undefined;
 
 	const result = getProjectsPaginated({
 		category, search, sort, order, limit, offset,
-		minStars, maxStars, minCommitsYear, platform, addedAfter, addedBefore
+		minStars, maxStars, minCommitsYear, platform, license, addedAfter, addedBefore
 	});
 
 	return json(result);

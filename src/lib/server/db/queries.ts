@@ -23,6 +23,7 @@ export interface ProjectQuery {
 	maxStars?: number;
 	minCommitsYear?: number;
 	platform?: string;
+	license?: string;
 	addedAfter?: string;
 	addedBefore?: string;
 }
@@ -39,6 +40,7 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		maxStars,
 		minCommitsYear,
 		platform,
+		license,
 		addedAfter,
 		addedBefore
 	} = query;
@@ -92,6 +94,11 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 			WHERE pl.name = ?
 		)`);
 		params.push(platform);
+	}
+
+	if (license) {
+		conditions.push(`(p.license_nickname = ? OR p.license_name = ?)`);
+		params.push(license, license);
 	}
 
 	if (addedAfter) {
@@ -284,6 +291,18 @@ export function buildCategoryTree(
 export function invalidateCaches(): void {
 	categoryTreeCache = null;
 	platformListCache = null;
+	licenseListCache = null;
+}
+
+let licenseListCache: string[] | null = null;
+
+export function getLicenseList(): string[] {
+	if (licenseListCache) return licenseListCache;
+	const rows = sqlite
+		.prepare(`SELECT DISTINCT COALESCE(license_nickname, license_name) as label FROM projects WHERE license_name IS NOT NULL ORDER BY label`)
+		.all() as { label: string }[];
+	licenseListCache = rows.map((r) => r.label);
+	return licenseListCache;
 }
 
 let platformListCache: string[] | null = null;

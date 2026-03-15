@@ -39,6 +39,7 @@
 	let filterMinStars = $state('');
 	let filterMinCommitsYear = $state('');
 	let filterPlatform = $state('');
+	let filterLicense = $state('');
 
 	// ── Hydrate state from URL params on mount ──
 	let initialized = false;
@@ -56,11 +57,12 @@
 		filterMinStars = params.get('minStars') ?? '';
 		filterMinCommitsYear = params.get('minCommitsYear') ?? '';
 		filterPlatform = params.get('platform') ?? '';
+		filterLicense = params.get('license') ?? '';
 
 		initialized = true;
 
 		// If any filters are active from URL, re-fetch with them applied
-		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform
+		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform || filterLicense
 			|| selectedSortTerm !== 'stars' || selectedSortOrder !== 'desc';
 		if (hasFilters) {
 			fetchProjects();
@@ -90,7 +92,8 @@
 			order: selectedSortOrder,
 			minStars: filterMinStars,
 			minCommitsYear: filterMinCommitsYear,
-			platform: filterPlatform
+			platform: filterPlatform,
+			license: filterLicense
 		};
 		for (const [key, value] of Object.entries(state)) {
 			if (value && value !== (defaults[key] ?? '')) {
@@ -115,6 +118,7 @@
 		if (filterMinStars) params.set('minStars', filterMinStars);
 		if (filterMinCommitsYear) params.set('minCommitsYear', filterMinCommitsYear);
 		if (filterPlatform) params.set('platform', filterPlatform);
+		if (filterLicense) params.set('license', filterLicense);
 
 		loading = true;
 		try {
@@ -292,9 +296,11 @@
 					</ToggleGroup.Root>
 					<FilterPanel
 						platforms={data.platforms}
+						licenses={data.licenses}
 						bind:minStars={filterMinStars}
 						bind:minCommitsYear={filterMinCommitsYear}
 						bind:platform={filterPlatform}
+						bind:license={filterLicense}
 						onfilter={() => fetchProjects()}
 					/>
 					<div class="text-sm text-right">
