@@ -10,6 +10,11 @@ services:
       - data:/usr/src/app/data
     deploy:
       replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        order: stop-first
       restart_policy:
         condition: on-failure
       labels:
