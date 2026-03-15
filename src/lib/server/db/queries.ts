@@ -281,6 +281,11 @@ export function buildCategoryTree(
 	return rootRows.map(buildNode).sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
+export function invalidateCaches(): void {
+	categoryTreeCache = null;
+	platformListCache = null;
+}
+
 let platformListCache: string[] | null = null;
 
 export function getPlatformList(): string[] {

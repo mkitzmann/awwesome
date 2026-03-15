@@ -12,8 +12,14 @@ function intParam(url: URL, name: string): number | undefined {
 export function GET({ url }) {
 	const category = url.searchParams.get('category') || '/';
 	const search = url.searchParams.get('search') || '';
-	const sort = (url.searchParams.get('sort') || 'stars') as SortTerm;
-	const order = (url.searchParams.get('order') || 'desc') as SortOrder;
+	const VALID_SORTS: SortTerm[] = ['stars', 'commitsYear', 'firstAdded'];
+	const VALID_ORDERS: SortOrder[] = ['asc', 'desc'];
+	const sort: SortTerm = VALID_SORTS.includes(url.searchParams.get('sort') as SortTerm)
+		? (url.searchParams.get('sort') as SortTerm)
+		: 'stars';
+	const order: SortOrder = VALID_ORDERS.includes(url.searchParams.get('order') as SortOrder)
+		? (url.searchParams.get('order') as SortOrder)
+		: 'desc';
 	const limit = Math.min(parseInt(url.searchParams.get('limit') || '20', 10), 100);
 	const offset = Math.max(parseInt(url.searchParams.get('offset') || '0', 10), 0);
 

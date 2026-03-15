@@ -8,7 +8,7 @@
 	import CategorySelect from '../../components/CategorySelect.svelte';
 	import { allCategory } from '$lib';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import SearchInput from '../../components/SearchInput.svelte';
 	import SortButton from '../../components/SortButton.svelte';
 	import FilterPanel from '../../components/FilterPanel.svelte';
@@ -67,12 +67,14 @@
 	});
 
 	// Update projects when server data changes (category navigation)
+	let prevCategory = $state('');
 	$effect(() => {
 		categoryStore.set(data.categories);
 		projects = data.projects;
 		total = data.total;
-		// Re-fetch with active filters when navigating categories
-		if (initialized) {
+		// Re-fetch with active filters only when the category actually changes
+		if (initialized && category !== prevCategory) {
+			prevCategory = category;
 			fetchProjects();
 		}
 	});
@@ -155,9 +157,10 @@
 
 	let categoryNames: Record<string, string> = $state({});
 
-	categoryStore.subscribe((value) => {
+	const unsubscribeCategory = categoryStore.subscribe((value) => {
 		categoryNames = value.names;
 	});
+	onDestroy(unsubscribeCategory);
 
 	const setSelectedCategory = (value: string) => {
 		selectedCategory = value;

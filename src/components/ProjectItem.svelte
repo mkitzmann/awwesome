@@ -1,14 +1,14 @@
 <script lang="ts">
 	import numeral from 'numeral';
 	import Star from './Star.svelte';
-	import dayjs from 'dayjs';
-	import relativeTime from 'dayjs/plugin/relativeTime';
+	import dayjs from '$lib/dayjs';
 	import CommitGraph from './CommitGraph.svelte';
 	import { categoryStore } from '../stores/stores';
 	import type { Project } from '../lib/types/types';
 	import { appConfig } from '../lib/createConfig';
+	import { sanitize } from '$lib/sanitize';
+	import { onDestroy } from 'svelte';
 
-	dayjs.extend(relativeTime);
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
 	let { project }: { project: Project } = $props();
@@ -23,9 +23,10 @@
 
 	let categoryNames: Record<string, string> = $state({});
 
-	categoryStore.subscribe((value) => {
+	const unsubscribeCategory = categoryStore.subscribe((value) => {
 		categoryNames = value.names;
 	});
+	onDestroy(unsubscribeCategory);
 
 	let license = $derived(project.license?.nickname ?? project.license?.name);
 	let licenseWithSuffix = $derived(license === 'Other' ? `${license} License` : license);
@@ -92,7 +93,7 @@
 		{/if}
 	</div>
 	{#if project.description}
-		<div class="break-words">{@html project.description}</div>
+		<div class="break-words">{@html sanitize(project.description)}</div>
 	{/if}
 
 	<div class="mb-auto">

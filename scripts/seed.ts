@@ -161,101 +161,13 @@ function buildTagPathMap(): Map<string, string> {
 
 // ── Database operations ──
 
-function createTables() {
-	sqlite.exec(`
-		CREATE TABLE IF NOT EXISTS categories (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			slug TEXT NOT NULL,
-			name TEXT NOT NULL,
-			parent_id INTEGER REFERENCES categories(id),
-			full_path TEXT NOT NULL UNIQUE
-		);
-		CREATE INDEX IF NOT EXISTS idx_categories_parent_id ON categories(parent_id);
-		CREATE INDEX IF NOT EXISTS idx_categories_full_path ON categories(full_path);
-
-		CREATE TABLE IF NOT EXISTS projects (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT,
-			primary_url TEXT UNIQUE,
-			source_url TEXT,
-			demo_url TEXT,
-			description TEXT,
-			license_name TEXT,
-			license_url TEXT,
-			license_nickname TEXT,
-			stack TEXT,
-			category_id INTEGER NOT NULL REFERENCES categories(id),
-			stars INTEGER,
-			avatar_url TEXT,
-			pushed_at TEXT,
-			created_at TEXT,
-			first_added TEXT,
-			archived INTEGER DEFAULT 0,
-			updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-		);
-		CREATE INDEX IF NOT EXISTS idx_projects_category_id ON projects(category_id);
-		CREATE INDEX IF NOT EXISTS idx_projects_stars ON projects(stars);
-
-		CREATE TABLE IF NOT EXISTS project_categories (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-			category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE
-		);
-		CREATE INDEX IF NOT EXISTS idx_project_categories_project_id ON project_categories(project_id);
-		CREATE INDEX IF NOT EXISTS idx_project_categories_category_id ON project_categories(category_id);
-		CREATE UNIQUE INDEX IF NOT EXISTS idx_project_categories_unique ON project_categories(project_id, category_id);
-
-		CREATE TABLE IF NOT EXISTS commit_history (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-			month_key TEXT NOT NULL,
-			commit_count INTEGER NOT NULL DEFAULT 0
-		);
-		CREATE INDEX IF NOT EXISTS idx_commit_history_project_id ON commit_history(project_id);
-		CREATE UNIQUE INDEX IF NOT EXISTS idx_commit_history_unique ON commit_history(project_id, month_key);
-
-		CREATE TABLE IF NOT EXISTS platforms (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL UNIQUE
-		);
-
-		CREATE TABLE IF NOT EXISTS project_platforms (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-			platform_id INTEGER NOT NULL REFERENCES platforms(id) ON DELETE CASCADE
-		);
-		CREATE INDEX IF NOT EXISTS idx_project_platforms_project_id ON project_platforms(project_id);
-		CREATE INDEX IF NOT EXISTS idx_project_platforms_platform_id ON project_platforms(platform_id);
-		CREATE UNIQUE INDEX IF NOT EXISTS idx_project_platforms_unique ON project_platforms(project_id, platform_id);
-
-		CREATE TABLE IF NOT EXISTS star_history (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-			recorded_at TEXT NOT NULL,
-			stars INTEGER NOT NULL
-		);
-		CREATE INDEX IF NOT EXISTS idx_star_history_project_id ON star_history(project_id);
-		CREATE UNIQUE INDEX IF NOT EXISTS idx_star_history_unique ON star_history(project_id, recorded_at);
-
-		CREATE TABLE IF NOT EXISTS crawl_log (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			started_at TEXT NOT NULL,
-			finished_at TEXT,
-			projects_found INTEGER DEFAULT 0,
-			projects_enriched INTEGER DEFAULT 0,
-			status TEXT DEFAULT 'running'
-		);
-	`);
-
-	// Migrate existing tables: add columns that may not exist yet
-	const projectCols = sqlite
-		.prepare(`PRAGMA table_info(projects)`)
-		.all() as { name: string }[];
-	const colNames = new Set(projectCols.map((c) => c.name));
-
-	if (!colNames.has('archived')) {
-		sqlite.exec(`ALTER TABLE projects ADD COLUMN archived INTEGER DEFAULT 0`);
-	}
+function pushSchema() {
+	console.log('   Pushing schema via drizzle-kit...');
+	execSync('npx drizzle-kit push --force', {
+		cwd: PROJECT_ROOT,
+		stdio: 'inherit',
+		env: { ...process.env, DATABASE_URL: DB_PATH }
+	});
 }
 
 function upsertCategoryPath(fullPath: string, slugToName: Record<string, string>): number {
@@ -437,10 +349,10 @@ async function seed() {
 	console.log(`Database: ${DB_PATH}`);
 	const startTime = performance.now();
 
-	// 1. Create tables
-	console.log('\n1. Creating tables...');
-	createTables();
-	console.log('   Tables ready.');
+	// 1. Push schema (uses Drizzle schema as single source of truth)
+	console.log('\n1. Pushing schema...');
+	pushSchema();
+	console.log('   Schema ready.');
 
 	// 2. Create crawl log entry
 	const crawlLogResult = db
@@ -508,56 +420,59 @@ async function seed() {
 		const firstAddedMap = buildFirstAddedMap();
 		console.log(`   Found firstAdded dates for ${firstAddedMap.size} files.`);
 
-		// 6. Insert projects
+		// 6. Insert projects (wrapped in transaction for 10-50x SQLite speedup)
 		console.log('\n5. Inserting projects...');
 		let inserted = 0;
 		let skipped = 0;
 		let withHistory = 0;
 
-		for (const { filename, data } of softwareEntries) {
-			// Get the primary tag (first tag) for category assignment
-			const primaryTag = data.tags?.[0];
-			if (!primaryTag) {
-				skipped++;
-				continue;
+		const insertAll = sqlite.transaction(() => {
+			for (const { filename, data } of softwareEntries) {
+				// Get the primary tag (first tag) for category assignment
+				const primaryTag = data.tags?.[0];
+				if (!primaryTag) {
+					skipped++;
+					continue;
+				}
+
+				const categoryId = categoryIdMap.get(primaryTag);
+				if (!categoryId) {
+					// Tag might be a redirect or unknown
+					skipped++;
+					continue;
+				}
+
+				// Get firstAdded date from pre-built map
+				const firstAdded = firstAddedMap.get(`software/${filename}`) ?? null;
+
+				const projectId = upsertProject(data, categoryId, firstAdded, !!data.archived);
+				if (projectId === -1) {
+					skipped++;
+					continue;
+				}
+				inserted++;
+
+				// Record star snapshot for historical tracking
+				recordStarSnapshot(projectId, data.stargazers_count ?? null);
+
+				// Insert platforms (many-to-many)
+				if (data.platforms && data.platforms.length > 0) {
+					replaceProjectPlatforms(projectId, data.platforms);
+				}
+
+				// Insert commit history
+				if (data.commit_history && Object.keys(data.commit_history).length > 0) {
+					replaceCommitHistory(projectId, data.commit_history);
+					withHistory++;
+				}
+
+				// Insert all tags as project_categories (many-to-many)
+				if (data.tags && data.tags.length > 0) {
+					replaceProjectCategories(projectId, data.tags, categoryIdMap);
+				}
 			}
-
-			const categoryId = categoryIdMap.get(primaryTag);
-			if (!categoryId) {
-				// Tag might be a redirect or unknown
-				skipped++;
-				continue;
-			}
-
-			// Get firstAdded date from pre-built map
-			const firstAdded = firstAddedMap.get(`software/${filename}`) ?? null;
-
-			const projectId = upsertProject(data, categoryId, firstAdded, !!data.archived);
-			if (projectId === -1) {
-				skipped++;
-				continue;
-			}
-			inserted++;
-
-			// Record star snapshot for historical tracking
-			recordStarSnapshot(projectId, data.stargazers_count ?? null);
-
-			// Insert platforms (many-to-many)
-			if (data.platforms && data.platforms.length > 0) {
-				replaceProjectPlatforms(projectId, data.platforms);
-			}
-
-			// Insert commit history
-			if (data.commit_history && Object.keys(data.commit_history).length > 0) {
-				replaceCommitHistory(projectId, data.commit_history);
-				withHistory++;
-			}
-
-			// Insert all tags as project_categories (many-to-many)
-			if (data.tags && data.tags.length > 0) {
-				replaceProjectCategories(projectId, data.tags, categoryIdMap);
-			}
-		}
+		});
+		insertAll();
 		console.log(`   Inserted ${inserted} projects (${skipped} skipped, ${withHistory} with commit history).`);
 
 		// 7. Update crawl log
