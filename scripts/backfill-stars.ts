@@ -1,20 +1,20 @@
 /**
- * One-time backfill: fetch ~12 months of star history for all GitHub-hosted projects
- * using the page-sampling technique (inspired by star-history / starcharts).
+ * Backfill star_history with daily data points for the last 30 days.
+ * Uses the GitHub GraphQL API to count recent stargazers efficiently.
+ * Runs 10 workers in parallel for speed.
  *
- * Usage: TOKEN_GITHUB=ghp_xxx npm run backfill-stars
+ * Usage: yarn run backfill-stars
  *
  * How it works:
- *   1. Fetches page 1 of /repos/{owner}/{repo}/stargazers with the star+json accept header
- *   2. Parses the Link header to find the total number of pages
- *   3. Picks ~12 evenly-spaced pages across the range
- *   4. Fetches only the first stargazer from each sampled page
- *   5. Each sample gives (starred_at date, approximate cumulative star count)
- *   6. Stores monthly data points in star_history
+ *   1. Queries stargazers ordered by STARRED_AT DESC (most recent first)
+ *   2. Pages through until finding a starredAt older than 30 days
+ *   3. Computes the star count at end-of-day for each of the last 30 days
+ *   4. Stores all 31 daily data points (today + 30 prior days) in star_history
  *
  * Idempotent: skips projects that already have >= 2 star_history records.
  */
 
+import 'dotenv/config';
 import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -24,10 +24,9 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const DB_PATH = process.env.DATABASE_URL || path.resolve(PROJECT_ROOT, 'data/awwesome.db');
 
 const GITHUB_TOKEN = process.env.TOKEN_GITHUB || '';
-const PER_PAGE = 100;
-const MAX_SAMPLES = 12;
 const RATE_LIMIT_PAUSE_MS = 60_000;
-const REQUEST_DELAY_MS = 50; // small delay between requests to be polite
+const CONCURRENCY = 10;
+const THIRTY_DAYS_AGO_ISO = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
 if (!GITHUB_TOKEN) {
 	console.error('Error: TOKEN_GITHUB environment variable is required.');
@@ -46,38 +45,61 @@ const insertStarHistory = sqlite.prepare(`
 	ON CONFLICT(project_id, recorded_at) DO UPDATE SET stars = excluded.stars
 `);
 
-// ── GitHub API helpers ──
+// ── GitHub GraphQL helpers ──
 
-interface StargazerEntry {
-	starred_at: string;
-	user: { login: string };
+interface StargazerEdge {
+	starredAt: string;
 }
 
-async function githubFetch(url: string): Promise<Response> {
-	const res = await fetch(url, {
-		headers: {
-			Accept: 'application/vnd.github.v3.star+json',
-			Authorization: `token ${GITHUB_TOKEN}`,
-			'User-Agent': 'awwesome-backfill'
-		}
-	});
-
-	if (res.status === 403 || res.status === 429) {
-		const resetHeader = res.headers.get('x-ratelimit-reset');
-		const resetMs = resetHeader
-			? (Number(resetHeader) * 1000 - Date.now())
-			: RATE_LIMIT_PAUSE_MS;
-		const waitMs = Math.max(resetMs, 10_000);
-		console.warn(`   Rate limited. Waiting ${Math.ceil(waitMs / 1000)}s...`);
-		await sleep(waitMs);
-		return githubFetch(url); // retry once after waiting
-	}
-
-	return res;
+interface GraphQLResponse {
+	data?: {
+		repository?: {
+			stargazers: {
+				totalCount: number;
+				pageInfo: { hasNextPage: boolean; endCursor: string | null };
+				edges: StargazerEdge[];
+			};
+		};
+		rateLimit?: { remaining: number; limit: number; cost: number };
+	};
+	errors?: { message: string }[];
 }
 
 function sleep(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+let apiPointsUsed = 0;
+let apiLimit = 5000;
+
+async function graphqlFetch(query: string, variables: Record<string, string | null>): Promise<GraphQLResponse> {
+	const res = await fetch('https://api.github.com/graphql', {
+		method: 'POST',
+		headers: {
+			Authorization: `bearer ${GITHUB_TOKEN}`,
+			'Content-Type': 'application/json',
+			'User-Agent': 'awwesome-backfill'
+		},
+		body: JSON.stringify({ query, variables })
+	});
+
+	if (res.status === 403 || res.status === 429) {
+		const resetHeader = res.headers.get('x-ratelimit-reset');
+		const resetMs = resetHeader ? Number(resetHeader) * 1000 - Date.now() : RATE_LIMIT_PAUSE_MS;
+		const waitMs = Math.max(resetMs, 10_000);
+		console.warn(`   Rate limited. Waiting ${Math.ceil(waitMs / 1000)}s...`);
+		await sleep(waitMs);
+		return graphqlFetch(query, variables);
+	}
+
+	const json = (await res.json()) as GraphQLResponse;
+
+	if (json.data?.rateLimit) {
+		apiPointsUsed += json.data.rateLimit.cost;
+		apiLimit = json.data.rateLimit.limit;
+	}
+
+	return json;
 }
 
 function extractOwnerRepo(url: string): { owner: string; repo: string } | null {
@@ -86,94 +108,89 @@ function extractOwnerRepo(url: string): { owner: string; repo: string } | null {
 	return { owner: match[1], repo: match[2].replace(/\.git$/, '') };
 }
 
-function parseTotalPages(linkHeader: string | null): number {
-	if (!linkHeader) return 1;
-	const match = /[&?]page=(\d+)[^>]*>;\s*rel="last"/.exec(linkHeader);
-	return match ? Number(match[1]) : 1;
-}
+// ── Core logic ──
 
-function calculateSamplePages(totalPages: number, maxSamples: number): number[] {
-	if (totalPages <= maxSamples) {
-		return Array.from({ length: totalPages }, (_, i) => i + 1);
+const STARGAZERS_QUERY = `
+	query($owner: String!, $repo: String!, $cursor: String) {
+		repository(owner: $owner, name: $repo) {
+			stargazers(first: 100, orderBy: {field: STARRED_AT, direction: DESC}, after: $cursor) {
+				totalCount
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+				edges {
+					starredAt
+				}
+			}
+		}
+		rateLimit {
+			remaining
+			limit
+			cost
+		}
 	}
+`;
 
-	const pages: number[] = [];
-	for (let i = 1; i <= maxSamples; i++) {
-		const page = Math.max(1, Math.round((i * totalPages) / maxSamples));
-		pages.push(page);
-	}
-	// Always include page 1
-	if (pages[0] !== 1) pages[0] = 1;
-
-	// Deduplicate
-	return [...new Set(pages)];
-}
-
-// ── Core backfill logic ──
-
-async function fetchStarHistory(
+async function fetchDailyStarCounts(
 	owner: string,
-	repo: string,
-	currentStars: number
-): Promise<{ date: string; stars: number }[]> {
-	const baseUrl = `https://api.github.com/repos/${owner}/${repo}/stargazers?per_page=${PER_PAGE}`;
+	repo: string
+): Promise<{ totalStars: number; dailyCounts: Map<string, number>; requests: number } | null> {
+	let cursor: string | null = null;
+	const starsPerDay = new Map<string, number>();
+	let requests = 0;
 
-	// Step 1: Fetch page 1 to discover total pages
-	const firstRes = await githubFetch(`${baseUrl}&page=1`);
-	if (!firstRes.ok) {
-		if (firstRes.status === 404) return []; // repo not found / private
-		throw new Error(`GitHub API error ${firstRes.status} for ${owner}/${repo}`);
-	}
+	// eslint-disable-next-line no-constant-condition
+	while (true) {
+		requests++;
+		const result = await graphqlFetch(STARGAZERS_QUERY, { owner, repo, cursor });
 
-	const totalPages = parseTotalPages(firstRes.headers.get('link'));
-	const firstPageData = (await firstRes.json()) as StargazerEntry[];
-
-	if (firstPageData.length === 0) return [];
-
-	// Step 2: Pick sample pages
-	const samplePages = calculateSamplePages(totalPages, MAX_SAMPLES);
-
-	// Step 3: Fetch sampled pages (page 1 already fetched)
-	const dataPoints: { date: string; stars: number }[] = [];
-
-	for (const page of samplePages) {
-		let entry: StargazerEntry | undefined;
-
-		if (page === 1) {
-			entry = firstPageData[0];
-		} else {
-			await sleep(REQUEST_DELAY_MS);
-			const res = await githubFetch(`${baseUrl}&page=${page}`);
-			if (!res.ok) continue;
-			const data = (await res.json()) as StargazerEntry[];
-			if (data.length === 0) continue;
-			entry = data[0];
+		if (result.errors?.length) {
+			throw new Error(result.errors[0].message);
 		}
 
-		if (entry) {
-			const starCount = PER_PAGE * (page - 1) + 1;
-			const date = entry.starred_at.slice(0, 10); // YYYY-MM-DD
-			dataPoints.push({ date, stars: starCount });
+		const repoData = result.data?.repository;
+		if (!repoData) return null;
+
+		const { totalCount, pageInfo, edges } = repoData.stargazers;
+
+		let foundBoundary = false;
+		for (const edge of edges) {
+			if (edge.starredAt < THIRTY_DAYS_AGO_ISO) {
+				foundBoundary = true;
+				break;
+			}
+			const day = edge.starredAt.slice(0, 10);
+			starsPerDay.set(day, (starsPerDay.get(day) || 0) + 1);
 		}
+
+		if (foundBoundary || !pageInfo.hasNextPage) {
+			const dailyCounts = new Map<string, number>();
+			let starsAfter = 0;
+
+			for (let i = 0; i <= 30; i++) {
+				const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+				dailyCounts.set(date, totalCount - starsAfter);
+				starsAfter += starsPerDay.get(date) || 0;
+			}
+
+			return { totalStars: totalCount, dailyCounts, requests };
+		}
+
+		cursor = pageInfo.endCursor;
 	}
-
-	// Step 4: Append current star count as today's data point
-	const today = new Date().toISOString().slice(0, 10);
-	dataPoints.push({ date: today, stars: currentStars });
-
-	return dataPoints;
 }
 
 // ── Main ──
 
 async function main() {
-	console.log('=== Star history backfill ===');
+	console.log('=== Star history backfill (GraphQL, last 30 days) ===');
 	console.log(`Database: ${DB_PATH}`);
-	console.log(`Samples per repo: ${MAX_SAMPLES}\n`);
+	console.log(`Concurrency: ${CONCURRENCY} workers\n`);
 
-	// Find all projects with a GitHub source_url that don't have star history yet
 	const projects = sqlite
-		.prepare(`
+		.prepare(
+			`
 			SELECT p.id, p.name, p.source_url, p.stars
 			FROM projects p
 			WHERE p.source_url LIKE '%github.com/%'
@@ -181,60 +198,88 @@ async function main() {
 			  AND p.stars > 0
 			  AND (SELECT COUNT(*) FROM star_history sh WHERE sh.project_id = p.id) < 2
 			ORDER BY p.stars DESC
-		`)
+		`
+		)
 		.all() as { id: number; name: string; source_url: string; stars: number }[];
 
 	console.log(`Found ${projects.length} projects to backfill.\n`);
-
-	// Check rate limit before starting
-	const rateLimitRes = await githubFetch('https://api.github.com/rate_limit');
-	if (rateLimitRes.ok) {
-		const rl = (await rateLimitRes.json()) as { resources: { core: { remaining: number; limit: number } } };
-		console.log(`GitHub API rate limit: ${rl.resources.core.remaining}/${rl.resources.core.limit} remaining\n`);
-	}
 
 	let completed = 0;
 	let failed = 0;
 	let skipped = 0;
 
 	const insertBatch = sqlite.transaction(
-		(rows: { projectId: number; date: string; stars: number }[]) => {
-			for (const row of rows) {
-				insertStarHistory.run(row.projectId, row.date, row.stars);
+		(projectId: number, dailyCounts: Map<string, number>) => {
+			for (const [date, stars] of dailyCounts) {
+				insertStarHistory.run(projectId, date, stars);
 			}
 		}
 	);
 
-	for (const project of projects) {
+	function updateStatus() {
+		const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+		process.stdout.write(
+			`\r   ${completed}/${projects.length} done | ${failed} failed | ${skipped} skipped | ${apiPointsUsed}/${apiLimit} API points | ${elapsed}s`
+		);
+	}
+
+	const startTime = Date.now();
+	const statusInterval = setInterval(updateStatus, 200);
+
+	async function processProject(project: { id: number; name: string; source_url: string; stars: number }) {
 		const parsed = extractOwnerRepo(project.source_url);
 		if (!parsed) {
 			skipped++;
-			continue;
+			return;
 		}
 
 		try {
-			const history = await fetchStarHistory(parsed.owner, parsed.repo, project.stars);
-			if (history.length === 0) {
+			const result = await fetchDailyStarCounts(parsed.owner, parsed.repo);
+			if (!result) {
 				skipped++;
-				continue;
+				return;
 			}
 
-			insertBatch(history.map((h) => ({ projectId: project.id, date: h.date, stars: h.stars })));
+			insertBatch(project.id, result.dailyCounts);
 			completed++;
 
-			if (completed % 50 === 0) {
-				console.log(`   Progress: ${completed}/${projects.length} (${failed} failed, ${skipped} skipped)`);
+			const today = new Date().toISOString().slice(0, 10);
+			const oldest = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+			const delta = (result.dailyCounts.get(today) || 0) - (result.dailyCounts.get(oldest) || 0);
+
+			if (completed <= 5) {
+				process.stdout.write('\n');
+				console.log(
+					`   ${project.name}: ${result.totalStars} stars (+${delta} in 30d) ${result.requests} req`
+				);
 			}
 		} catch (err) {
 			failed++;
+			process.stdout.write('\n');
 			console.warn(`   Failed: ${project.name} (${parsed.owner}/${parsed.repo}): ${err}`);
 		}
 	}
 
-	console.log(`\n=== Backfill complete ===`);
+	// Process projects with N concurrent workers
+	let index = 0;
+	async function worker() {
+		while (index < projects.length) {
+			const project = projects[index++];
+			await processProject(project);
+		}
+	}
+
+	const workers = Array.from({ length: CONCURRENCY }, () => worker());
+	await Promise.all(workers);
+
+	clearInterval(statusInterval);
+	const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+
+	console.log(`\n\n=== Backfill complete in ${totalElapsed}s ===`);
 	console.log(`   Completed: ${completed}`);
 	console.log(`   Failed: ${failed}`);
 	console.log(`   Skipped: ${skipped}`);
+	console.log(`   API points used: ${apiPointsUsed}/${apiLimit}`);
 
 	sqlite.close();
 }

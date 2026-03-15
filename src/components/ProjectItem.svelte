@@ -117,6 +117,9 @@
 			{#if project.stars}
 				<div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 -mb-2">
 					<Star />{numeral(project.stars).format('0,0a')}
+					{#if project.trendingDelta != null && project.trendingDelta > 0}
+						<span class="text-sm text-green-600 dark:text-green-400">+{numeral(project.trendingDelta).format('0,0')}</span>
+					{/if}
 				</div>
 			{/if}
 			{#if project.firstAdded}

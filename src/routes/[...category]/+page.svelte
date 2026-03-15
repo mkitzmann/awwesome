@@ -49,7 +49,7 @@
 		const params = $page.url.searchParams;
 		searchTerm = params.get('search') ?? '';
 		const sort = params.get('sort') as SortTerm | null;
-		if (sort && ['stars', 'commitsYear', 'firstAdded'].includes(sort)) {
+		if (sort && ['stars', 'commitsYear', 'firstAdded', 'trending'].includes(sort)) {
 			selectedSortTerm = sort;
 		}
 		const order = params.get('order') as SortOrder | null;
@@ -289,6 +289,9 @@
 					<ToggleGroup.Root type="single" bind:value={selectedSortTerm} class="text-sm flex">
 						<SortButton value="stars" rounded="left">
 							Most Stars
+						</SortButton>
+						<SortButton value="trending" rounded="none">
+							Trending
 						</SortButton>
 						<SortButton value="commitsYear" rounded="none">
 							Most Active
