@@ -27,9 +27,11 @@
 	});
 
 	// ── Local state for API-driven loading ──
-
-	let projects: Project[] = $state(data.projects);
-	let total: number = $state(data.total);
+	// Client-fetched overrides; null means "use server data"
+	let clientProjects: Project[] | null = $state(null);
+	let clientTotal: number | null = $state(null);
+	let projects = $derived(clientProjects ?? data.projects);
+	let total = $derived(clientTotal ?? data.total);
 	let searchTerm = $state('');
 	let selectedSortTerm: SortTerm = $state('stars');
 	let selectedSortOrder: SortOrder = $state('desc');
@@ -73,8 +75,9 @@
 	let prevCategory = $state('');
 	$effect(() => {
 		categoryStore.set(data.categories);
-		projects = data.projects;
-		total = data.total;
+		// Reset client overrides so $derived falls back to fresh server data
+		clientProjects = null;
+		clientTotal = null;
 		// Re-fetch with active filters only when the category actually changes
 		if (initialized && category !== prevCategory) {
 			prevCategory = category;
@@ -132,11 +135,11 @@
 			}
 
 			if (opts.append) {
-				projects = [...projects, ...result.projects];
+				clientProjects = [...projects, ...result.projects];
 			} else {
-				projects = result.projects;
+				clientProjects = result.projects;
 			}
-			total = result.total;
+			clientTotal = result.total;
 			if (!opts.append) syncUrlParams();
 		} finally {
 			loading = false;
