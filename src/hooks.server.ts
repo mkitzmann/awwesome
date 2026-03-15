@@ -13,39 +13,51 @@ export const handle: Handle = async ({ event, resolve }) => {
 	return response;
 };
 
-let seeding = false;
+let running = false;
 
-function runSeed() {
-	if (seeding) {
-		console.log(`[seed] Already running, skipping`);
-		return;
-	}
-	seeding = true;
+function runScript(label: string, script: string): Promise<number | null> {
+	return new Promise((resolve) => {
+		const tsxBin = path.resolve('node_modules/.bin/tsx');
+		console.log(`[${label}] Starting at ${new Date().toISOString()}`);
 
-	const seedScript = path.resolve('scripts/seed.ts');
-	const tsxBin = path.resolve('node_modules/.bin/tsx');
-	console.log(`[seed] Starting seed at ${new Date().toISOString()}`);
+		const child = spawn(tsxBin, [path.resolve(script)], {
+			cwd: path.resolve('.'),
+			stdio: 'inherit'
+		});
 
-	const child = spawn(tsxBin, [seedScript], {
-		cwd: path.resolve('.'),
-		stdio: 'inherit'
-	});
-
-	child.on('close', (code) => {
-		seeding = false;
-		if (code === 0) {
-			console.log(`[seed] Completed successfully at ${new Date().toISOString()}`);
-			invalidateCaches();
-		} else {
-			console.error(`[seed] Failed with exit code ${code}`);
-		}
+		child.on('close', (code) => {
+			if (code === 0) {
+				console.log(`[${label}] Completed successfully at ${new Date().toISOString()}`);
+			} else {
+				console.error(`[${label}] Failed with exit code ${code}`);
+			}
+			resolve(code);
+		});
 	});
 }
 
-export async function init() {
-	// Seed on first startup
-	runSeed();
+async function runDaily() {
+	if (running) {
+		console.log(`[daily] Already running, skipping`);
+		return;
+	}
+	running = true;
 
-	// Re-seed daily at 4am UTC
-	cron.schedule('0 4 * * *', runSeed, { timezone: 'UTC' });
+	try {
+		const seedCode = await runScript('seed', 'scripts/seed.ts');
+		if (seedCode === 0) {
+			invalidateCaches();
+			await runScript('backfill-stars', 'scripts/backfill-stars.ts');
+		}
+	} finally {
+		running = false;
+	}
+}
+
+export async function init() {
+	// Seed + backfill on first startup
+	runDaily();
+
+	// Re-seed + backfill daily at 4am UTC
+	cron.schedule('0 4 * * *', runDaily, { timezone: 'UTC' });
 }

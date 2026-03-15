@@ -286,11 +286,11 @@ function upsertProject(
 	categoryId: number,
 	firstAdded: string | null,
 	archived: boolean
-): number {
+): { id: number; isNew: boolean } | null {
 	// Use website_url as primary, falling back to source_code_url
 	const primaryUrl = data.website_url || data.source_code_url || null;
 
-	if (!primaryUrl) return -1;
+	if (!primaryUrl) return null;
 
 	const existing = db
 		.select({ id: schema.projects.id, firstAdded: schema.projects.firstAdded })
@@ -324,7 +324,7 @@ function upsertProject(
 			})
 			.where(sql`${schema.projects.id} = ${existing.id}`)
 			.run();
-		return existing.id;
+		return { id: existing.id, isNew: false };
 	}
 
 	const result = db
@@ -337,7 +337,7 @@ function upsertProject(
 		.returning({ id: schema.projects.id })
 		.get();
 
-	return result.id;
+	return { id: result.id, isNew: true };
 }
 
 function replaceCommitHistory(projectId: number, history: Record<string, number>): void {
@@ -456,8 +456,10 @@ async function seed() {
 		for (const [tagName, fullPath] of tagPathMap) {
 			const parts = fullPath.split('/').filter(Boolean);
 			// The last slug in the path corresponds to this tag's name
+			// Strip parent prefixes (e.g. "Communication - Email - Complete Solutions" → "Complete Solutions")
 			if (parts.length > 0) {
-				slugToName[parts[parts.length - 1]] = tagName;
+				const nameParts = tagName.split(' - ');
+				slugToName[parts[parts.length - 1]] = nameParts[nameParts.length - 1];
 			}
 			// For parent parts derived from filename segments, use the segment as-is if no better name
 			for (const part of parts.slice(0, -1)) {
@@ -465,12 +467,17 @@ async function seed() {
 					// Try to find a tag whose path matches this parent
 					for (const [name, fp] of tagPathMap) {
 						if (fp === '/' + part) {
-							slugToName[part] = name;
+							const parentNameParts = name.split(' - ');
+							slugToName[part] = parentNameParts[parentNameParts.length - 1];
 							break;
 						}
 					}
 					if (!slugToName[part]) {
-						slugToName[part] = part; // fallback to slug itself
+						// Fallback: title-case the slug
+						slugToName[part] = part
+							.split('-')
+							.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+							.join(' ');
 					}
 				}
 			}
@@ -501,6 +508,7 @@ async function seed() {
 		// 6. Insert projects (wrapped in transaction for 10-50x SQLite speedup)
 		console.log('\n5. Inserting projects...');
 		let inserted = 0;
+		let updated = 0;
 		let skipped = 0;
 		let withHistory = 0;
 
@@ -523,12 +531,17 @@ async function seed() {
 				// Get firstAdded date from pre-built map
 				const firstAdded = firstAddedMap.get(`software/${filename}`) ?? null;
 
-				const projectId = upsertProject(data, categoryId, firstAdded, !!data.archived);
-				if (projectId === -1) {
+				const result = upsertProject(data, categoryId, firstAdded, !!data.archived);
+				if (!result) {
 					skipped++;
 					continue;
 				}
-				inserted++;
+				const projectId = result.id;
+				if (result.isNew) {
+					inserted++;
+				} else {
+					updated++;
+				}
 
 				// Record star snapshot for historical tracking
 				recordStarSnapshot(projectId, data.stargazers_count ?? null);
@@ -551,7 +564,7 @@ async function seed() {
 			}
 		});
 		insertAll();
-		console.log(`   Inserted ${inserted} projects (${skipped} skipped, ${withHistory} with commit history).`);
+		console.log(`   ${inserted} new, ${updated} updated, ${skipped} skipped, ${withHistory} with commit history.`);
 
 		// 7. Update crawl log
 		db.update(schema.crawlLog)
@@ -566,10 +579,12 @@ async function seed() {
 
 		const duration = ((performance.now() - startTime) / 1000).toFixed(1);
 		console.log(`\n=== Seed completed in ${duration}s ===`);
-		console.log(`   Projects: ${inserted}`);
+		console.log(`   New projects: ${inserted}`);
+		console.log(`   Updated projects: ${updated}`);
 		console.log(`   With commit history: ${withHistory}`);
 		console.log(`   Categories: ${categoryIdMap.size}`);
 		console.log(`   Skipped: ${skipped}`);
+
 	} catch (error) {
 		db.update(schema.crawlLog)
 			.set({
