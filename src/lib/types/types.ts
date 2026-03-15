@@ -50,6 +50,7 @@ export interface ProjectCollection {
 	total: number;
 	categories: AllCategories;
 	platforms: string[];
+	licenses: string[];
 }
 
 export interface GithubQueryResult {

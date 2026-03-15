@@ -3,15 +3,19 @@
 
 	let {
 		platforms = [],
+		licenses = [],
 		minStars = $bindable(''),
 		minCommitsYear = $bindable(''),
 		platform = $bindable(''),
+		license = $bindable(''),
 		onfilter
 	}: {
 		platforms?: string[];
+		licenses?: string[];
 		minStars?: string;
 		minCommitsYear?: string;
 		platform?: string;
+		license?: string;
 		onfilter?: () => void;
 	} = $props();
 
@@ -25,10 +29,11 @@
 		minStars = '';
 		minCommitsYear = '';
 		platform = '';
+		license = '';
 		onfilter?.();
 	}
 
-	let hasActiveFilters = $derived(minStars !== '' || minCommitsYear !== '' || platform !== '');
+	let hasActiveFilters = $derived(minStars !== '' || minCommitsYear !== '' || platform !== '' || license !== '');
 </script>
 
 <Popover.Root bind:open>
@@ -97,6 +102,21 @@
 					<option value="">Any</option>
 					{#each platforms as p}
 						<option value={p}>{p}</option>
+					{/each}
+				</select>
+			</div>
+
+			<div>
+				<label for="license" class="block text-xs text-gray-500 mb-1">License</label>
+				<select
+					id="license"
+					bind:value={license}
+					onchange={applyFilters}
+					class="w-full rounded-lg px-3 py-1.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
+				>
+					<option value="">Any</option>
+					{#each licenses as l}
+						<option value={l}>{l}</option>
 					{/each}
 				</select>
 			</div>

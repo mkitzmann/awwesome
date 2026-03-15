@@ -15,6 +15,7 @@
 	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
 	import StarOnGithub from '../../components/StarOnGithub.svelte';
 	import { ToggleGroup } from 'bits-ui';
+	import SvelteSeo from 'svelte-seo';
 
 	let { data }: { data: ProjectCollection } = $props();
 
@@ -27,8 +28,8 @@
 
 	// ── Local state for API-driven loading ──
 
-	let projects: Project[] = $state([]);
-	let total: number = $state(0);
+	let projects: Project[] = $state(data.projects);
+	let total: number = $state(data.total);
 	let searchTerm = $state('');
 	let selectedSortTerm: SortTerm = $state('stars');
 	let selectedSortOrder: SortOrder = $state('desc');
@@ -38,6 +39,7 @@
 	let filterMinStars = $state('');
 	let filterMinCommitsYear = $state('');
 	let filterPlatform = $state('');
+	let filterLicense = $state('');
 
 	// ── Hydrate state from URL params on mount ──
 	let initialized = false;
@@ -55,11 +57,12 @@
 		filterMinStars = params.get('minStars') ?? '';
 		filterMinCommitsYear = params.get('minCommitsYear') ?? '';
 		filterPlatform = params.get('platform') ?? '';
+		filterLicense = params.get('license') ?? '';
 
 		initialized = true;
 
 		// If any filters are active from URL, re-fetch with them applied
-		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform
+		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform || filterLicense
 			|| selectedSortTerm !== 'stars' || selectedSortOrder !== 'desc';
 		if (hasFilters) {
 			fetchProjects();
@@ -89,7 +92,8 @@
 			order: selectedSortOrder,
 			minStars: filterMinStars,
 			minCommitsYear: filterMinCommitsYear,
-			platform: filterPlatform
+			platform: filterPlatform,
+			license: filterLicense
 		};
 		for (const [key, value] of Object.entries(state)) {
 			if (value && value !== (defaults[key] ?? '')) {
@@ -114,6 +118,7 @@
 		if (filterMinStars) params.set('minStars', filterMinStars);
 		if (filterMinCommitsYear) params.set('minCommitsYear', filterMinCommitsYear);
 		if (filterPlatform) params.set('platform', filterPlatform);
+		if (filterLicense) params.set('license', filterLicense);
 
 		loading = true;
 		try {
@@ -166,7 +171,57 @@
 		selectedCategory = value;
 		goto(`/${value}`);
 	};
+
+	const baseTitle = 'awwesome selfhosted';
+	const baseDescription =
+		'Find the most awesome open-source, self-hostable projects on the web. Original data by the awesome-selfhosted community, licensed under CC-BY-SA 3.0.';
+
+	let categoryLabel = $derived(
+		category
+			? category
+					.split('/')
+					.map((c) => data.categories.names[c])
+					.filter(Boolean)
+					.join(' - ')
+			: ''
+	);
+	let pageTitle = $derived(categoryLabel ? `${categoryLabel} - ${baseTitle}` : baseTitle);
+	let pageDescription = $derived(
+		categoryLabel
+			? `Discover the best self-hosted ${categoryLabel} projects. ${baseDescription}`
+			: baseDescription
+	);
+	let pageUrl = $derived(
+		category ? `https://www.awweso.me/${category}` : 'https://www.awweso.me'
+	);
 </script>
+
+<SvelteSeo
+	title={pageTitle}
+	description={pageDescription}
+	canonical={pageUrl}
+	openGraph={{
+		title: pageTitle,
+		description: pageDescription,
+		url: pageUrl,
+		type: 'website',
+		images: [
+			{
+				url: 'https://www.awweso.me/awwesome_og.png',
+				width: 1200,
+				height: 630,
+				alt: 'awwesome selfhosted'
+			}
+		],
+		site_name: 'awwesome selfhosted'
+	}}
+	twitter={{
+		card: 'summary_large_image',
+		title: pageTitle,
+		description: pageDescription,
+		image: 'https://www.awweso.me/awwesome_og.png'
+	}}
+/>
 
 <div class="flex flex-col gap-4 mx-auto my-4 p-4">
 	<div class="flex justify-between flex-wrap gap-2">
@@ -241,9 +296,11 @@
 					</ToggleGroup.Root>
 					<FilterPanel
 						platforms={data.platforms}
+						licenses={data.licenses}
 						bind:minStars={filterMinStars}
 						bind:minCommitsYear={filterMinCommitsYear}
 						bind:platform={filterPlatform}
+						bind:license={filterLicense}
 						onfilter={() => fetchProjects()}
 					/>
 					<div class="text-sm text-right">
