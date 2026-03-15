@@ -3,6 +3,9 @@ version: '3.8'
 services:
   awwesome:
     image: ghcr.io/mkitzmann/awwesome:latest
+    environment:
+      - PUBLIC_ANALYTICS_URL=${PUBLIC_ANALYTICS_URL}
+      - PUBLIC_ANALYTICS_WEBSITE_ID=${PUBLIC_ANALYTICS_WEBSITE_ID}
     volumes:
       - data:/usr/src/app/data
     deploy:

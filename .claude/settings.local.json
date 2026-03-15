@@ -8,7 +8,16 @@
       "Bash(yarn build:*)",
       "Bash(gh issue:*)",
       "WebFetch(domain:oxc.rs)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(yarn add:*)",
+      "WebFetch(domain:www.reddit.com)",
+      "WebFetch(domain:svelte.dev)",
+      "Bash(git add package.json yarn.lock docker-entrypoint.sh src/hooks.server.ts)",
+      "WebFetch(domain:bits-ui.com)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(yarn test:*)",
+      "Bash(git add:*)",
+      "Bash(yarn lint:*)"
     ]
   }
 }
