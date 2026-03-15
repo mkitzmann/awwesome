@@ -28,8 +28,8 @@
 
 	// ── Local state for API-driven loading ──
 
-	let projects: Project[] = $state([]);
-	let total: number = $state(0);
+	let projects: Project[] = $state(data.projects);
+	let total: number = $state(data.total);
 	let searchTerm = $state('');
 	let selectedSortTerm: SortTerm = $state('stars');
 	let selectedSortOrder: SortOrder = $state('desc');
