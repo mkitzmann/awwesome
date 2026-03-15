@@ -30,7 +30,6 @@
 
 	let license = $derived(project.license?.nickname ?? project.license?.name);
 	let licenseWithSuffix = $derived(license === 'Other' ? `${license} License` : license);
-
 	let commitVals = $derived(project?.commit_history ? Object.values(project.commit_history) : []);
 	let totalCommits = $derived(commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0);
 </script>
@@ -87,10 +86,6 @@
 				Demo
 			</a>
 		{/if}
-		{#if project.stack}
-			<span class="mx-1">·</span>
-			<span>{project.stack}</span>
-		{/if}
 	</div>
 	{#if project.description}
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -- sanitized with DOMPurify -->
@@ -98,19 +93,25 @@
 	{/if}
 
 	<div class="mb-auto">
-		{#if project.topics}
-			<div class="flex gap-2 flex-wrap">
-				{#each project.topics as topic}
-					<a
-						href="?search={topic}"
-						target="_self"
-						class="text-xs rounded-full px-2 py-1 bg-gray-100 dark:bg-gray-900 max-w-full"
-					>
-						{topic}
-					</a>
-				{/each}
-			</div>
-		{/if}
+		<div class="flex gap-2 flex-wrap">
+			{#each project.platforms ?? [] as platform}
+				<a
+					href="?platform={platform}"
+					target="_self"
+					class="text-xs rounded-full px-2 py-1 bg-blue-100 dark:bg-blue-900 max-w-full"
+				>
+					{platform}
+				</a>
+			{/each}
+			{#each project.topics ?? [] as topic}
+				<a
+					href={topic.path}
+					class="text-xs rounded-full px-2 py-1 bg-gray-100 dark:bg-gray-900 max-w-full"
+				>
+					{topic.name}
+				</a>
+			{/each}
+		</div>
 	</div>
 	<div class="flex flex-col min-[460px]:flex-row sm:gap-6 w-full justify-between sm:items-end">
 		<div class="flex flex-col gap-2">

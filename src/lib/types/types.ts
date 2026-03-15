@@ -10,11 +10,11 @@ export type Project = {
 		url?: string;
 		nickname?: string;
 	};
-	stack?: string | null;
+	platforms?: string[];
 	category?: string;
 	stars?: number | null;
 	avatar_url?: string | null;
-	topics?: string[];
+	topics?: { name: string; path: string }[];
 	commit_history?: CommitCount;
 	trendingDelta?: number | null;
 	pushedAt?: Date;

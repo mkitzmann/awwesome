@@ -289,7 +289,7 @@
 				onchange={setSelectedCategory}
 			/>
 		</div>
-		<aside class="max-w-[20%] hidden xl:block">
+		<aside class="w-80 shrink-0 hidden xl:block">
 			<SearchInput bind:searchTerm onsearch={handleSearch} />
 			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-4">
 				<a

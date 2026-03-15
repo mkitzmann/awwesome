@@ -1,6 +1,6 @@
 import { eq, sql } from 'drizzle-orm';
 import { db, sqlite } from './index';
-import { categories, projectCategories, commitHistory, platforms as platformsTable } from './schema';
+import { categories, projectCategories, commitHistory, platforms as platformsTable, projectPlatforms } from './schema';
 import type {
 	AllCategories,
 	Category,
@@ -154,7 +154,7 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		.prepare(
 			`SELECT p.id, p.name, p.primary_url, p.source_url, p.demo_url,
 				p.description, p.license_name, p.license_url, p.license_nickname,
-				p.stack, p.stars, p.avatar_url, p.pushed_at, p.first_added,
+				p.stars, p.avatar_url, p.pushed_at, p.first_added,
 				p.archived, cat.full_path as category_full_path${trendingCol}
 			FROM projects p
 			JOIN categories cat ON p.category_id = cat.id
@@ -172,7 +172,6 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		license_name: string | null;
 		license_url: string | null;
 		license_nickname: string | null;
-		stack: string | null;
 		stars: number | null;
 		avatar_url: string | null;
 		pushed_at: string | null;
@@ -194,18 +193,37 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 	const tagRows = db
 		.select({
 			projectId: projectCategories.projectId,
-			tagName: categories.name
+			tagName: categories.name,
+			fullPath: categories.fullPath
 		})
 		.from(projectCategories)
 		.innerJoin(categories, eq(projectCategories.categoryId, categories.id))
 		.where(sql`${projectCategories.projectId} IN (${idPlaceholders})`)
 		.all();
 
-	const tagsByProject = new Map<number, string[]>();
+	const tagsByProject = new Map<number, { name: string; path: string }[]>();
 	for (const row of tagRows) {
 		const list = tagsByProject.get(row.projectId) || [];
-		list.push(row.tagName);
+		list.push({ name: row.tagName, path: row.fullPath });
 		tagsByProject.set(row.projectId, list);
+	}
+
+	// Batch-load platforms
+	const platformRows = db
+		.select({
+			projectId: projectPlatforms.projectId,
+			name: platformsTable.name
+		})
+		.from(projectPlatforms)
+		.innerJoin(platformsTable, eq(projectPlatforms.platformId, platformsTable.id))
+		.where(sql`${projectPlatforms.projectId} IN (${idPlaceholders})`)
+		.all();
+
+	const platformsByProject = new Map<number, string[]>();
+	for (const row of platformRows) {
+		const list = platformsByProject.get(row.projectId) || [];
+		list.push(row.name);
+		platformsByProject.set(row.projectId, list);
 	}
 
 	// Batch-load commit history
@@ -241,7 +259,7 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 						nickname: row.license_nickname ?? undefined
 					}
 				: undefined,
-			stack: row.stack,
+			platforms: platformsByProject.get(row.id) || [],
 			category: row.category_full_path,
 			stars: row.stars,
 			avatar_url: row.avatar_url,

@@ -306,7 +306,7 @@ describe('getProjectsPaginated', () => {
 			url: 'https://license.example/agpl',
 			nickname: 'AGPL'
 		});
-		expect(p.stack).toBe('PHP');
+		expect(p.platforms).toContain('PHP');
 		expect(p.category).toBe('/communication');
 		expect(p.stars).toBe(20000);
 		expect(p.avatar_url).toBe('https://avatars.example/nc.png');
@@ -330,8 +330,9 @@ describe('getProjectsPaginated', () => {
 		const result = getProjectsPaginated({ search: 'Roundcube' });
 		const topics = result.projects[0].topics;
 		expect(topics).toHaveLength(2);
-		expect(topics).toContain('Communication');
-		expect(topics).toContain('Email');
+		const names = topics!.map((t) => t.name);
+		expect(names).toContain('Communication');
+		expect(names).toContain('Email');
 	});
 
 	it('loads commit history', () => {
