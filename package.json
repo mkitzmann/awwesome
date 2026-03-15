@@ -33,7 +33,7 @@
 		"drizzle-kit": "^0.31.8",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte": "^3.15.2",
+		"eslint-plugin-svelte": "^2",
 		"numeral": "^2.0.6",
 		"postcss": "^8.4.24",
 		"postcss-load-config": "^4.0.1",
