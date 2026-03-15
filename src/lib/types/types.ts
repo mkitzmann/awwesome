@@ -52,6 +52,7 @@ export interface ProjectCollection {
 	categories: AllCategories;
 	platforms: string[];
 	licenses: string[];
+	sort: SortTerm;
 }
 
 export interface GithubQueryResult {

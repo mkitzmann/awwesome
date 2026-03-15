@@ -7,7 +7,7 @@
 	import CategoryGroup from '../../components/CategoryGroup.svelte';
 	import CategorySelect from '../../components/CategorySelect.svelte';
 	import { allCategory } from '$lib';
-	import { goto } from '$app/navigation';
+	import { goto, replaceState } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
 	import SearchInput from '../../components/SearchInput.svelte';
 	import SortButton from '../../components/SortButton.svelte';
@@ -16,10 +16,24 @@
 	import StarOnGithub from '../../components/StarOnGithub.svelte';
 	import { ToggleGroup } from 'bits-ui';
 	import SvelteSeo from 'svelte-seo';
+	import { SORT_SLUGS, sortTermToSlug } from '$lib/sort';
 
 	let { data }: { data: ProjectCollection } = $props();
 
-	let category = $derived(removeTrailingSlashes($page.params?.category) ?? '');
+	let sortSuffix = $derived.by(() => {
+		const slug = sortTermToSlug(selectedSortTerm);
+		return slug ? `/${slug}` : '';
+	});
+
+	// Derive category by stripping any sort slug from the URL path
+	let category = $derived.by(() => {
+		const raw = removeTrailingSlashes($page.params?.category) ?? '';
+		const segments = raw ? raw.split('/') : [];
+		if (segments.length && SORT_SLUGS.has(segments[segments.length - 1])) {
+			segments.pop();
+		}
+		return segments.join('/');
+	});
 	let selectedCategory = $state('');
 
 	$effect(() => {
@@ -43,15 +57,15 @@
 	let filterPlatform = $state('');
 	let filterLicense = $state('');
 
-	// ── Hydrate state from URL params on mount ──
+	// ── Hydrate state from URL on mount ──
 	let initialized = false;
 	onMount(() => {
 		const params = $page.url.searchParams;
 		searchTerm = params.get('search') ?? '';
-		const sort = params.get('sort') as SortTerm | null;
-		if (sort && ['stars', 'commitsYear', 'firstAdded', 'trending'].includes(sort)) {
-			selectedSortTerm = sort;
-		}
+
+		// Read sort from server-parsed data
+		selectedSortTerm = data.sort;
+
 		const order = params.get('order') as SortOrder | null;
 		if (order && ['asc', 'desc'].includes(order)) {
 			selectedSortOrder = order;
@@ -65,7 +79,7 @@
 
 		// If any filters are active from URL, re-fetch with them applied
 		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform || filterLicense
-			|| selectedSortTerm !== 'stars' || selectedSortOrder !== 'desc';
+			|| selectedSortOrder !== 'desc';
 		if (hasFilters) {
 			fetchProjects();
 		}
@@ -78,6 +92,8 @@
 		// Reset client overrides so $derived falls back to fresh server data
 		clientProjects = null;
 		clientTotal = null;
+		// Sync sort from server data on navigation
+		selectedSortTerm = data.sort;
 		// Re-fetch with active filters only when the category actually changes
 		if (initialized && category !== prevCategory) {
 			prevCategory = category;
@@ -85,14 +101,24 @@
 		}
 	});
 
+	// ── Build path with sort slug ──
+	function buildSortPath(cat: string, sort: SortTerm): string {
+		const slug = sortTermToSlug(sort);
+		const base = cat ? `/${cat}` : '';
+		return slug ? `${base}/${slug}` : base || '/';
+	}
+
 	// ── Sync state to URL params ──
 	function syncUrlParams() {
+		const path = buildSortPath(category, selectedSortTerm);
 		const url = new URL(window.location.href);
-		const defaults: Record<string, string> = { sort: 'stars', order: 'desc' };
+		url.pathname = path;
+		// Clear sort/order from query params — sort is now in the path
+		url.searchParams.delete('sort');
+		url.searchParams.delete('order');
+		const defaults: Record<string, string> = {};
 		const state: Record<string, string> = {
 			search: searchTerm,
-			sort: selectedSortTerm,
-			order: selectedSortOrder,
 			minStars: filterMinStars,
 			minCommitsYear: filterMinCommitsYear,
 			platform: filterPlatform,
@@ -105,7 +131,7 @@
 				url.searchParams.delete(key);
 			}
 		}
-		history.replaceState(null, '', url);
+		replaceState(url, {});
 	}
 
 	async function fetchProjects(opts: { append?: boolean; offset?: number } = {}) {
@@ -155,7 +181,10 @@
 	$effect(() => {
 		if (selectedSortTerm !== prevSortTerm) {
 			prevSortTerm = selectedSortTerm;
-			fetchProjects();
+			if (initialized) {
+				const path = buildSortPath(category, selectedSortTerm);
+				goto(path);
+			}
 		}
 	});
 
@@ -172,7 +201,9 @@
 
 	const setSelectedCategory = (value: string) => {
 		selectedCategory = value;
-		goto(`/${value}`);
+		const slug = sortTermToSlug(selectedSortTerm);
+		const path = slug ? `/${value}/${slug}` : `/${value}`;
+		goto(path);
 	};
 
 	const baseTitle = 'awwesome selfhosted';
@@ -262,7 +293,7 @@
 			<SearchInput bind:searchTerm onsearch={handleSearch} />
 			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-4">
 				<a
-					href="/"
+					href={sortSuffix ? sortSuffix : '/'}
 					class="truncate max-w-full xl:max-w-full text-left text-sm px-3 py-1 rounded-full {selectedCategory ===
 					''
 						? 'bg-gray-200 dark:bg-gray-950'
@@ -272,7 +303,7 @@
 				</a>
 				{#each data.categories.tree as category}
 					{#if category}
-						<CategoryGroup {category} {selectedCategory} />
+						<CategoryGroup {category} {selectedCategory} {sortSuffix} />
 					{/if}
 				{/each}
 			</nav>

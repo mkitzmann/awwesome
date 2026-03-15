@@ -144,14 +144,12 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 	if (total === 0) return { projects: [], total: 0 };
 
 	// Fetch paginated rows
-	const trendingCol = sort === 'trending'
-		? `, COALESCE(p.stars - (
+	const trendingCol = `, COALESCE(p.stars - (
 			SELECT sh.stars FROM star_history sh
 			WHERE sh.project_id = p.id
 				AND sh.recorded_at <= date('now', '-30 days')
 			ORDER BY sh.recorded_at DESC LIMIT 1
-		), 0) as trending_delta`
-		: '';
+		), 0) as trending_delta`;
 	const rows = sqlite
 		.prepare(
 			`SELECT p.id, p.name, p.primary_url, p.source_url, p.demo_url,

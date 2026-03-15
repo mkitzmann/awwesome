@@ -9,13 +9,17 @@
 		category,
 		selectedCategory = '',
 		indent = 0,
-		href = '/' + category.slug
+		sortSuffix = '',
+		basePath = '/' + category.slug
 	}: {
 		category: Category;
 		selectedCategory?: string;
 		indent?: number;
-		href?: string;
+		sortSuffix?: string;
+		basePath?: string;
 	} = $props();
+
+	let href = $derived(basePath + sortSuffix);
 
 	let isOpen = $state(false);
 
@@ -25,7 +29,7 @@
 		}
 	});
 
-	let isActive = $derived(selectedCategory === href.slice(1));
+	let isActive = $derived(selectedCategory === basePath.slice(1));
 	let hasChildren = $derived((category.children ?? []).length > 0);
 </script>
 
@@ -50,7 +54,8 @@
 					<CategoryGroup
 						category={category2}
 						{selectedCategory}
-						href="{href}/{category2.slug}"
+						{sortSuffix}
+						basePath="{basePath}/{category2.slug}"
 						indent={indent + 10}
 					/>
 				{/each}

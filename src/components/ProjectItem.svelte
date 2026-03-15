@@ -117,8 +117,8 @@
 			{#if project.stars}
 				<div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 -mb-2">
 					<Star />{numeral(project.stars).format('0,0a')}
-					{#if project.trendingDelta != null && project.trendingDelta > 0}
-						<span class="text-sm text-green-600 dark:text-green-400">+{numeral(project.trendingDelta).format('0,0')}</span>
+					{#if project.trendingDelta != null}
+						<span class="text-sm {project.trendingDelta > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}">{project.trendingDelta > 0 ? '+' : ''}{numeral(project.trendingDelta).format('0,0')}</span>
 					{/if}
 				</div>
 			{/if}
