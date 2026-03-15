@@ -14,6 +14,7 @@
 	import FilterPanel from '../../components/FilterPanel.svelte';
 	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
 	import StarOnGithub from '../../components/StarOnGithub.svelte';
+	import { ToggleGroup } from 'bits-ui';
 
 	let { data }: { data: ProjectCollection } = $props();
 
@@ -224,17 +225,17 @@
 						.join(' - ')}
 				</h2>
 				<div class="flex items-center gap-4 flex-wrap">
-					<div class="text-sm">
-						<SortButton bind:selectedSortTerm sortTerm="stars" rounded="left">
+					<ToggleGroup.Root type="single" bind:value={selectedSortTerm} class="text-sm flex">
+						<SortButton value="stars" rounded="left">
 							Most Stars
 						</SortButton>
-						<SortButton bind:selectedSortTerm sortTerm="commitsYear" rounded="none">
+						<SortButton value="commitsYear" rounded="none">
 							Most Active
 						</SortButton>
-						<SortButton bind:selectedSortTerm sortTerm="firstAdded" rounded="right">
+						<SortButton value="firstAdded" rounded="right">
 							Recently Added
 						</SortButton>
-					</div>
+					</ToggleGroup.Root>
 					<FilterPanel
 						platforms={data.platforms}
 						bind:minStars={filterMinStars}

@@ -2,6 +2,7 @@
 	import ChevronRight from './ChevronRight.svelte';
 	import { navigating } from '$app/stores';
 	import type { Category } from '../lib/types/types';
+	import { Collapsible } from 'bits-ui';
 	import CategoryGroup from './CategoryGroup.svelte';
 
 	let {
@@ -25,12 +26,13 @@
 	});
 
 	let isActive = $derived(selectedCategory === href.slice(1));
+	let hasChildren = $derived((category.children ?? []).length > 0);
 </script>
 
 <div class="flex items-center justify-between w-full" style="padding-left: {indent}px">
-	{#if (category.children ?? []).length > 0}
-		<details bind:open={isOpen} class="w-full group">
-			<summary class="flex justify-between w-full items-center">
+	{#if hasChildren}
+		<Collapsible.Root bind:open={isOpen} class="w-full">
+			<div class="flex justify-between w-full items-center">
 				<a
 					{href}
 					class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
@@ -39,19 +41,21 @@
 				>
 					{category.name}
 				</a>
-				<div class="hover:text-blue-500 cursor-pointer group-open:rotate-90">
+				<Collapsible.Trigger class="hover:text-blue-500 cursor-pointer transition-transform duration-150 {isOpen ? 'rotate-90' : ''}">
 					<ChevronRight />
-				</div>
-			</summary>
-			{#each category.children ?? [] as category2}
-				<CategoryGroup
-					category={category2}
-					{selectedCategory}
-					href="{href}/{category2.slug}"
-					indent={indent + 10}
-				/>
-			{/each}
-		</details>
+				</Collapsible.Trigger>
+			</div>
+			<Collapsible.Content>
+				{#each category.children ?? [] as category2}
+					<CategoryGroup
+						category={category2}
+						{selectedCategory}
+						href="{href}/{category2.slug}"
+						indent={indent + 10}
+					/>
+				{/each}
+			</Collapsible.Content>
+		</Collapsible.Root>
 	{:else}
 		<a
 			{href}
