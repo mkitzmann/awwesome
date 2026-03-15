@@ -6,6 +6,7 @@ services:
     environment:
       - PUBLIC_ANALYTICS_URL=${PUBLIC_ANALYTICS_URL}
       - PUBLIC_ANALYTICS_WEBSITE_ID=${PUBLIC_ANALYTICS_WEBSITE_ID}
+      - TOKEN_GITHUB=${TOKEN_GITHUB}
     volumes:
       - data:/usr/src/app/data
     deploy:
