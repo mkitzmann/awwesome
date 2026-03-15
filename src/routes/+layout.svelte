@@ -7,12 +7,12 @@
 	let { children }: { children: Snippet } = $props();
 </script>
 
-{#if env.PUBLIC_UMAMI_URL && env.PUBLIC_UMAMI_WEBSITE_ID}
+{#if env.PUBLIC_ANALYTICS_URL && env.PUBLIC_ANALYTICS_WEBSITE_ID}
 	<svelte:head>
 		<script
 			defer
-			src="{env.PUBLIC_UMAMI_URL}/script.js"
-			data-website-id={env.PUBLIC_UMAMI_WEBSITE_ID}
+			src="{env.PUBLIC_ANALYTICS_URL}/script.js"
+			data-website-id={env.PUBLIC_ANALYTICS_WEBSITE_ID}
 		></script>
 	</svelte:head>
 {/if}
