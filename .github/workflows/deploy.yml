@@ -86,7 +86,7 @@ jobs:
         env:
           PUBLIC_ANALYTICS_URL: ${{ secrets.PUBLIC_ANALYTICS_URL }}
           PUBLIC_ANALYTICS_WEBSITE_ID: ${{ secrets.PUBLIC_ANALYTICS_WEBSITE_ID }}
-        run: printf '%s' "PUBLIC_ANALYTICS_URL=${PUBLIC_ANALYTICS_URL}\nPUBLIC_ANALYTICS_WEBSITE_ID=${PUBLIC_ANALYTICS_WEBSITE_ID}" | ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "cat > /opt/${APP_NAME}/.env"
+        run: printf 'PUBLIC_ANALYTICS_URL=%s\nPUBLIC_ANALYTICS_WEBSITE_ID=%s\n' "$PUBLIC_ANALYTICS_URL" "$PUBLIC_ANALYTICS_WEBSITE_ID" | ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "cat > /opt/${APP_NAME}/.env"
 
       - name: Copy compose file
         run: scp -o StrictHostKeyChecking=no "docker-compose.yml" "admin@${SERVER_HOST}:/opt/${APP_NAME}/docker-compose.yml"

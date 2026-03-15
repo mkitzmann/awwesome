@@ -10,7 +10,7 @@
 	{#if env.PUBLIC_ANALYTICS_URL && env.PUBLIC_ANALYTICS_WEBSITE_ID}
 		<script
 			defer
-			src="{env.PUBLIC_ANALYTICS_URL}/script.js"
+			src={env.PUBLIC_ANALYTICS_URL}
 			data-website-id={env.PUBLIC_ANALYTICS_WEBSITE_ID}
 		></script>
 	{/if}
