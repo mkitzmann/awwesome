@@ -1,7 +1,17 @@
+import type { Handle } from '@sveltejs/kit';
 import cron from 'node-cron';
 import { spawn } from 'child_process';
 import path from 'path';
 import { invalidateCaches } from '$lib/server/db/queries';
+
+export const handle: Handle = async ({ event, resolve }) => {
+	const response = await resolve(event);
+	// Prevent CDN from serving stale HTML; static assets are fingerprinted and cached separately
+	if (response.headers.get('content-type')?.includes('text/html')) {
+		response.headers.set('Cache-Control', 'no-cache');
+	}
+	return response;
+};
 
 let seeding = false;
 
