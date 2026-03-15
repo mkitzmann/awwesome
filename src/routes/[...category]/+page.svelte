@@ -195,6 +195,7 @@
 <SvelteSeo
 	title={pageTitle}
 	description={pageDescription}
+	canonical={pageUrl}
 	openGraph={{
 		title: pageTitle,
 		description: pageDescription,
