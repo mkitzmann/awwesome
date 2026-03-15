@@ -176,7 +176,7 @@
 		category
 			? category
 					.split('/')
-					.map((c) => categoryNames[c])
+					.map((c) => data.categories.names[c])
 					.filter(Boolean)
 					.join(' - ')
 			: ''
