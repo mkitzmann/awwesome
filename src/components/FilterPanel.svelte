@@ -41,7 +41,7 @@
 
 <Popover.Root bind:open>
 	<Popover.Trigger
-		class="px-4 h-10 flex items-center rounded-full text-sm
+		class="px-4 h-10 flex items-center rounded-full text-sm border border-gray-200 dark:border-gray-700
 			{hasActiveFilters
 			? 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-200'
 			: 'bg-gray-200 dark:bg-gray-800'}

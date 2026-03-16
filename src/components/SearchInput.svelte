@@ -39,7 +39,7 @@
 		name="search"
 		bind:value={searchTerm}
 		oninput={debounceSearch}
-		class="rounded-full pr-8 pl-12 py-2 w-full font-light placeholder-gray-400 dark:bg-gray-800"
+		class="rounded-full pr-8 pl-12 py-2 w-full font-light placeholder-gray-400 dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
 		placeholder="Search in Category"
 	/>
 </div>

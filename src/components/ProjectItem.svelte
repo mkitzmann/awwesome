@@ -59,7 +59,7 @@
 </script>
 
 <article
-	class="max-w-full bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl flex flex-col gap-4 hover:shadow-lg"
+	class="max-w-full bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl flex flex-col gap-4 border border-gray-200 dark:border-gray-700 hover:shadow-lg"
 	class:opacity-60={project.archived}
 >
 	{#if project.archived}

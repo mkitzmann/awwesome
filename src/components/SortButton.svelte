@@ -16,7 +16,7 @@
 
 <ToggleGroup.Item
 	value={value}
-	class="px-4 h-10 flex items-center hover:bg-gray-100 dark:hover:bg-gray-700
+	class="px-4 h-10 flex items-center border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700
 		data-[state=on]:bg-gray-100 data-[state=on]:dark:bg-gray-700
 		data-[state=off]:bg-gray-200 data-[state=off]:dark:bg-gray-800
 		{rounded === 'left' ? 'rounded-l-full' : ''}
