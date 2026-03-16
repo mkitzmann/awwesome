@@ -191,7 +191,7 @@
 		</div>
 
 		{#if project.commit_history && Object.keys(project.commit_history).length > 0}
-			<div class="flex flex-col items-end w-full min-[460px]:w-64">
+			<div class="flex flex-col items-end w-full min-[460px]:w-48">
 				<div class="-mb-3">
 					<span
 						class="font-bold text-lg text-green-600"

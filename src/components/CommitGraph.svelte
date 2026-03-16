@@ -8,11 +8,13 @@
 		Object.entries(commits)
 			.filter(([key]) => key !== currentMonth)
 			.sort(([a], [b]) => a.localeCompare(b))
+			.slice(-11)
 			.map(([, v]) => v)
 	);
 	let max = $derived(vals.length > 0 ? Math.max(...vals) : 0);
+	let step = $derived(vals.length > 1 ? 110 / (vals.length - 1) : 0);
 	let points = $derived(vals.reduce((prev, current, index) => {
-		return `${prev} ${index * 10},${max > 0 ? (current / max) * 10 : 0}`;
+		return `${prev} ${index * step},${max > 0 ? (current / max) * 10 : 0}`;
 	}, ''));
 
 	let totalCommits = $derived(vals.length > 0 ? vals.reduce((prev, current) => prev + current, 0) : 0);
