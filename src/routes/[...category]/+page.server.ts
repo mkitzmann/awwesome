@@ -17,7 +17,7 @@ export async function load({ params, parent }): Promise<ProjectCollection> {
 
 	const categoryPath = '/' + segments.join('/');
 	const category = categoryPath === '/' ? '/' : categoryPath;
-	const { projects, total } = getProjectsPaginated({ category, limit: 20, offset: 0, sort });
+	const { projects, total } = getProjectsPaginated({ category, limit: 50, offset: 0, sort });
 
 	return {
 		projects,

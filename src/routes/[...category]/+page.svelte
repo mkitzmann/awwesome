@@ -142,7 +142,7 @@
 			category: categoryPath,
 			sort: selectedSortTerm,
 			order: selectedSortOrder,
-			limit: '20',
+			limit: '50',
 			offset: String(opts.offset ?? 0)
 		});
 		if (searchTerm) params.set('search', searchTerm);
@@ -193,6 +193,31 @@
 	function loadMore() {
 		fetchProjects({ append: true, offset: projects.length });
 	}
+
+	// ── Infinite scroll via IntersectionObserver ──
+	let sentinel: HTMLDivElement | undefined = $state();
+	let observer: IntersectionObserver | undefined;
+
+	onMount(() => {
+		observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0]?.isIntersecting && projects.length < total && !loading) {
+					loadMore();
+				}
+			},
+			{ rootMargin: '200px' }
+		);
+	});
+
+	$effect(() => {
+		const el = sentinel;
+		if (el && observer) {
+			observer.observe(el);
+			return () => observer!.unobserve(el);
+		}
+	});
+
+	onDestroy(() => observer?.disconnect());
 
 	let categoryNames: Record<string, string> = $state({});
 
@@ -418,17 +443,13 @@
 					<ProjectItem {project} />
 				{/each}
 			</div>
-			<div class="flex mt-8">
-				{#if projects.length < total}
-					<button
-						onclick={loadMore}
-						disabled={loading}
-						class="mx-auto bg-blue-100 dark:bg-blue-700 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full px-4 py-2 disabled:opacity-50"
-					>
-						{loading ? 'Loading...' : 'Show more'}
-					</button>
-				{/if}
-			</div>
+			{#if projects.length < total}
+				<div bind:this={sentinel} class="flex justify-center mt-8 py-4">
+					{#if loading}
+						<span class="text-gray-400 text-sm">Loading...</span>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	</div>
 	<footer class="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 flex flex-wrap gap-x-6 gap-y-2">
