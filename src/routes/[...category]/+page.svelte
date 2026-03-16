@@ -13,6 +13,7 @@
 	import SortButton from '../../components/SortButton.svelte';
 	import FilterPanel from '../../components/FilterPanel.svelte';
 	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
+	import { env } from '$env/dynamic/public';
 	import StarOnGithub from '../../components/StarOnGithub.svelte';
 	import { ToggleGroup, Select } from 'bits-ui';
 	import SvelteSeo from 'svelte-seo';
@@ -552,6 +553,8 @@
 				>CC-BY-SA 3.0</a
 			>
 		</span>
-		<a href="/privacy" class="hover:underline">Privacy Policy</a>
+		{#if env.PUBLIC_ANALYTICS_URL && env.PUBLIC_ANALYTICS_WEBSITE_ID}
+			<a href="/privacy" class="hover:underline">Privacy Policy</a>
+		{/if}
 	</footer>
 </div>
