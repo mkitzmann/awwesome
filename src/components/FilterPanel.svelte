@@ -48,7 +48,7 @@
 			: 'bg-gray-200 dark:bg-gray-800'}
 			hover:bg-gray-100 dark:hover:bg-gray-700"
 	>
-		<Funnel class="w-4 h-4" />{hasActiveFilters ? ' Filters *' : ' Filters'}
+		<Funnel class="w-4 h-4 mr-1.5" />{hasActiveFilters ? 'Filters *' : 'Filters'}
 	</Popover.Trigger>
 
 	<Popover.Portal>

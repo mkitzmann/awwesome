@@ -451,7 +451,7 @@
 							</Select.Portal>
 						</Select.Root>
 					</div>
-					<ToggleGroup.Root type="single" bind:value={selectedSortTerm} class="text-sm hidden md:flex">
+					<ToggleGroup.Root type="single" bind:value={selectedSortTerm} class="text-sm hidden md:flex rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden">
 						<SortButton value="stars" rounded="left">
 							Most Stars
 						</SortButton>
@@ -497,7 +497,7 @@
 						class="h-10 px-4 flex items-center rounded-full text-sm bg-gray-200 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
 							{isDefaultView ? 'opacity-40 cursor-default' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
 					>
-						<X class="w-4 h-4" />
+						<X class="w-4 h-4 mr-1" /> Clear
 					</button>
 					</div>
 			</div>
