@@ -14,7 +14,7 @@
 	import FilterPanel from '../../components/FilterPanel.svelte';
 	import DarkModeSwitch from '../../components/DarkModeSwitch.svelte';
 	import StarOnGithub from '../../components/StarOnGithub.svelte';
-	import { ToggleGroup } from 'bits-ui';
+	import { ToggleGroup, Select } from 'bits-ui';
 	import SvelteSeo from 'svelte-seo';
 	import { SORT_SLUGS, sortTermToSlug } from '$lib/sort';
 
@@ -56,6 +56,8 @@
 	let filterMinCommitsYear = $state('');
 	let filterPlatform = $state('');
 	let filterLicense = $state('');
+
+	let isDefaultView = $derived(!category && !searchTerm && selectedSortTerm === 'stars' && !filterMinStars && !filterMinCommitsYear && !filterPlatform && !filterLicense);
 
 	// ── Hydrate state from URL on mount ──
 	let initialized = false;
@@ -210,6 +212,14 @@
 	const baseDescription =
 		'Find the most awesome open-source, self-hostable projects on the web. Original data by the awesome-selfhosted community, licensed under CC-BY-SA 3.0.';
 
+	const sortItems: { value: string; label: string }[] = [
+		{ value: 'stars', label: 'Most Stars' },
+		{ value: 'trendingAbsolute', label: 'Trending' },
+		{ value: 'trending', label: 'Trending %' },
+		{ value: 'commitsYear', label: 'Most Active' },
+		{ value: 'firstAdded', label: 'Recently Added' }
+	];
+
 	const sortLabels: Record<SortTerm, string> = {
 		stars: '',
 		trending: 'Trending %',
@@ -344,7 +354,37 @@
 						.join(' - ')}
 				</h2>
 				<div class="flex items-center gap-4 flex-wrap">
-					<ToggleGroup.Root type="single" bind:value={selectedSortTerm} class="text-sm flex">
+					<div class="md:hidden">
+						<Select.Root type="single" value={selectedSortTerm} onValueChange={(v) => { selectedSortTerm = v as SortTerm; }} items={sortItems}>
+							<Select.Trigger
+								class="rounded-full px-4 h-10 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 text-sm flex items-center justify-between gap-2"
+							>
+								{sortItems.find((i) => i.value === selectedSortTerm)?.label ?? 'Sort'}
+								<svg class="w-4 h-4 shrink-0 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M6 9l6 6 6-6" />
+								</svg>
+							</Select.Trigger>
+							<Select.Portal>
+								<Select.Content
+									class="z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-1 max-h-[300px] overflow-y-auto"
+									sideOffset={4}
+								>
+									<Select.Viewport>
+										{#each sortItems as item}
+											<Select.Item
+												value={item.value}
+												label={item.label}
+												class="px-3 py-1.5 text-sm rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 data-[highlighted]:bg-gray-100 data-[highlighted]:dark:bg-gray-700 data-[state=checked]:font-semibold"
+											>
+												{item.label}
+											</Select.Item>
+										{/each}
+									</Select.Viewport>
+								</Select.Content>
+							</Select.Portal>
+						</Select.Root>
+					</div>
+					<ToggleGroup.Root type="single" bind:value={selectedSortTerm} class="text-sm hidden md:flex">
 						<SortButton value="stars" rounded="left">
 							Most Stars
 						</SortButton>
@@ -370,6 +410,14 @@
 						bind:license={filterLicense}
 						onfilter={() => fetchProjects()}
 					/>
+					<a
+						href={isDefaultView ? undefined : '/'}
+						class="h-10 px-4 flex items-center rounded-full text-sm bg-gray-200 dark:bg-gray-800
+							{isDefaultView ? 'opacity-40 cursor-default' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
+						aria-disabled={isDefaultView}
+					>
+						Clear
+					</a>
 					<div class="text-sm text-right">
 						{total} Projects
 					</div>

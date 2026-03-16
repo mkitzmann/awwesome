@@ -1,15 +1,15 @@
 import type { SortTerm } from './types/types';
 
 const slugToTerm: Record<string, SortTerm> = {
-	trending: 'trending',
-	'trending-absolute': 'trendingAbsolute',
+	trending: 'trendingAbsolute',
+	'trending-relative': 'trending',
 	active: 'commitsYear',
 	recent: 'firstAdded'
 };
 
 const termToSlug: Record<string, string> = {
-	trending: 'trending',
-	trendingAbsolute: 'trending-absolute',
+	trendingAbsolute: 'trending',
+	trending: 'trending-relative',
 	commitsYear: 'active',
 	firstAdded: 'recent'
 };
