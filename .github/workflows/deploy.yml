@@ -96,7 +96,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "\
             cd /opt/${APP_NAME} && \
-            docker compose config | grep -v '^name:' | docker stack deploy --with-registry-auth --resolve-image always -c - ${APP_NAME}"
+            docker compose config | grep -v '^name:' | docker stack deploy --with-registry-auth --resolve-image always -c - ${APP_NAME} && \
+            docker service update --force ${APP_NAME}_${APP_NAME}"
 
       - name: Purge Cloudflare cache
         uses: jakejarvis/cloudflare-purge-action@master

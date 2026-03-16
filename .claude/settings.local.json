@@ -21,7 +21,9 @@
       "Bash(git commit:*)",
       "Bash(yarn run:*)",
       "Bash(npx svelte-check:*)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Skill(commit-commands:commit)",
+      "Skill(commit-commands:commit:*)"
     ]
   }
 }
