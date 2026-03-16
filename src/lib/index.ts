@@ -1,4 +1,4 @@
-export const allCategory = { name: 'All', slug: '' };
+export const allCategory = { name: 'All Projects', slug: '' };
 
 export const removeTrailingSlashes = (input?: string | unknown): string | undefined => {
 	if (!input || typeof input !== 'string') {

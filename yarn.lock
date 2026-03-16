@@ -2489,6 +2489,11 @@ lru-cache@^11.2.6:
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-11.2.7.tgz#9127402617f34cd6767b96daee98c28e74458d35"
   integrity sha512-aY/R+aEsRelme17KGQa/1ZSIpLpNYYrhcrepKTZgE+W3WM16YMCaPwOHLHsmopZHELU0Ojin1lPVxKR0MihncA==
 
+lucide-svelte@^0.577.0:
+  version "0.577.0"
+  resolved "https://registry.npmjs.org/lucide-svelte/-/lucide-svelte-0.577.0.tgz#171be0916936a81fcf22c30a5d2ba2d1edc0fd9d"
+  integrity sha512-0i88o57KsaHWnc80J57fY99CWzlZsSdtH5kKjLUJa7z8dum/9/AbINNLzJ7NiRFUdOgMnfAmJt8jFbW2zeC5qQ==
+
 lz-string@^1.5.0:
   version "1.5.0"
   resolved "https://registry.npmjs.org/lz-string/-/lz-string-1.5.0.tgz#c1ab50f77887b712621201ba9fd4e3a6ed099941"

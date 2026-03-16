@@ -108,10 +108,10 @@
 			<span class="mx-1">·</span>
 			{#if releaseUrl}
 				<a href={releaseUrl} target="_blank" class="hover:underline inline">
-					{project.releaseVersion}{#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}
+					{project.releaseVersion} {#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}
 				</a>
 			{:else}
-				<span>{project.releaseVersion}{#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}</span>
+				<span>{project.releaseVersion} {#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}</span>
 			{/if}
 		{/if}
 		{#if project.demo_url}
