@@ -37,7 +37,13 @@
 		onfilter?.();
 	}
 
-	let hasActiveFilters = $derived(minStars !== '' || minCommitsYear !== '' || platform !== '' || license !== '' || releasedAfter !== '');
+	let hasActiveFilters = $derived(
+		minStars !== '' ||
+			minCommitsYear !== '' ||
+			platform !== '' ||
+			license !== '' ||
+			releasedAfter !== ''
+	);
 </script>
 
 <Popover.Root bind:open>
@@ -94,9 +100,7 @@
 			</div>
 
 			<div>
-				<label for="platform" class="block text-xs text-gray-500 mb-1"
-					>Platform / Language</label
-				>
+				<label for="platform" class="block text-xs text-gray-500 mb-1">Platform / Language</label>
 				<select
 					id="platform"
 					bind:value={platform}
@@ -134,10 +138,18 @@
 					class="w-full rounded-lg px-3 py-1.5 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
 				>
 					<option value="">Any</option>
-					<option value={new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10)}>Last 30 days</option>
-					<option value={new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10)}>Last 3 months</option>
-					<option value={new Date(Date.now() - 180 * 86400000).toISOString().slice(0, 10)}>Last 6 months</option>
-					<option value={new Date(Date.now() - 365 * 86400000).toISOString().slice(0, 10)}>Last year</option>
+					<option value={new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10)}
+						>Last 30 days</option
+					>
+					<option value={new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10)}
+						>Last 3 months</option
+					>
+					<option value={new Date(Date.now() - 180 * 86400000).toISOString().slice(0, 10)}
+						>Last 6 months</option
+					>
+					<option value={new Date(Date.now() - 365 * 86400000).toISOString().slice(0, 10)}
+						>Last year</option
+					>
 				</select>
 			</div>
 

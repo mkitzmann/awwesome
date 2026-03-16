@@ -13,11 +13,15 @@
 	);
 	let max = $derived(vals.length > 0 ? Math.max(...vals) : 0);
 	let step = $derived(vals.length > 1 ? 110 / (vals.length - 1) : 0);
-	let points = $derived(vals.reduce((prev, current, index) => {
-		return `${prev} ${index * step},${max > 0 ? (current / max) * 10 : 0}`;
-	}, ''));
+	let points = $derived(
+		vals.reduce((prev, current, index) => {
+			return `${prev} ${index * step},${max > 0 ? (current / max) * 10 : 0}`;
+		}, '')
+	);
 
-	let totalCommits = $derived(vals.length > 0 ? vals.reduce((prev, current) => prev + current, 0) : 0);
+	let totalCommits = $derived(
+		vals.length > 0 ? vals.reduce((prev, current) => prev + current, 0) : 0
+	);
 
 	let topColor = $derived(totalCommits < appConfig.lowCommitCount ? '#944' : '#216e39');
 	let bottomColor = $derived(totalCommits < appConfig.lowCommitCount ? '#faa' : '#9be9a8');

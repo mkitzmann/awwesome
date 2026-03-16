@@ -15,7 +15,7 @@
 </script>
 
 <ToggleGroup.Item
-	value={value}
+	{value}
 	class="px-4 h-10 flex items-center hover:bg-gray-100 dark:hover:bg-gray-700
 		data-[state=on]:bg-gray-100 data-[state=on]:dark:bg-gray-700
 		data-[state=off]:bg-gray-200 data-[state=off]:dark:bg-gray-800

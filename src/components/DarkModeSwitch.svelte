@@ -15,7 +15,11 @@
 	}
 </script>
 
-<Toggle.Root pressed={darkMode} onPressedChange={handleToggle} class="flex h-10 items-center cursor-pointer select-none">
+<Toggle.Root
+	pressed={darkMode}
+	onPressedChange={handleToggle}
+	class="flex h-10 items-center cursor-pointer select-none"
+>
 	{#if darkMode}
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

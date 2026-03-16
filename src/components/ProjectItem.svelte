@@ -9,14 +9,15 @@
 	import { sanitize } from '$lib/sanitize';
 	import { onDestroy } from 'svelte';
 
-
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
 	let { project }: { project: Project } = $props();
 
 	let categories = $derived(project.category?.split('/').slice(1) ?? []);
 	let categorySet = $derived(new Set(categories));
-	let filteredTopics = $derived((project.topics ?? []).filter((t) => !categorySet.has(t.path.split('/').pop() ?? '')));
+	let filteredTopics = $derived(
+		(project.topics ?? []).filter((t) => !categorySet.has(t.path.split('/').pop() ?? ''))
+	);
 	let iconUrl = $derived(project.avatar_url ?? deriveOwnerIcon(project.source_url));
 
 	function deriveOwnerIcon(url: string | null | undefined): string | null {
@@ -41,20 +42,30 @@
 	let currentMonth = new Date().toISOString().slice(0, 7);
 	let commitVals = $derived(
 		project?.commit_history
-			? Object.entries(project.commit_history).filter(([key]) => key !== currentMonth).map(([, v]) => v)
+			? Object.entries(project.commit_history)
+					.filter(([key]) => key !== currentMonth)
+					.map(([, v]) => v)
 			: []
 	);
-	let totalCommits = $derived(commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0);
+	let totalCommits = $derived(
+		commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0
+	);
 
 	let absoluteTooltipOpen = $state(false);
 	let deltaTooltipOpen = $state(false);
 
 	$effect(() => {
 		if (!absoluteTooltipOpen && !deltaTooltipOpen) return;
-		const close = () => { absoluteTooltipOpen = false; deltaTooltipOpen = false; };
+		const close = () => {
+			absoluteTooltipOpen = false;
+			deltaTooltipOpen = false;
+		};
 		// Delay so the opening click doesn't immediately close
 		const id = setTimeout(() => document.addEventListener('click', close, { once: true }), 0);
-		return () => { clearTimeout(id); document.removeEventListener('click', close); };
+		return () => {
+			clearTimeout(id);
+			document.removeEventListener('click', close);
+		};
 	});
 </script>
 
@@ -63,7 +74,9 @@
 	class:opacity-60={project.archived}
 >
 	{#if project.archived}
-		<div class="text-sm font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 rounded-lg px-3 py-2">
+		<div
+			class="text-sm font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 rounded-lg px-3 py-2"
+		>
 			This project is archived and no longer maintained.
 		</div>
 	{/if}
@@ -108,15 +121,25 @@
 			<span class="mx-1">·</span>
 			{#if releaseUrl}
 				<a href={releaseUrl} target="_blank" class="hover:underline inline">
-					{project.releaseVersion} {#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}
+					{project.releaseVersion}
+					{#if project.releaseDate}
+						({dayjs(project.releaseDate).fromNow()}){/if}
 				</a>
 			{:else}
-				<span>{project.releaseVersion} {#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}</span>
+				<span
+					>{project.releaseVersion}
+					{#if project.releaseDate}
+						({dayjs(project.releaseDate).fromNow()}){/if}</span
+				>
 			{/if}
 		{/if}
 		{#if project.demo_url}
 			<span class="mx-1">·</span>
-			<a href={project.demo_url} target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline inline">
+			<a
+				href={project.demo_url}
+				target="_blank"
+				class="text-blue-600 dark:text-blue-400 hover:underline inline"
+			>
 				Demo
 			</a>
 		{/if}
@@ -154,10 +177,16 @@
 					<Star />{numeral(project.stars).format('0,0a')}
 					{#if project.trendingAbsolute != null}
 						<button
-							onclick={() => { absoluteTooltipOpen = !absoluteTooltipOpen; }}
-							class="relative group text-sm {project.trendingAbsolute > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}"
+							onclick={() => {
+								absoluteTooltipOpen = !absoluteTooltipOpen;
+							}}
+							class="relative group text-sm {project.trendingAbsolute > 0
+								? 'text-green-600 dark:text-green-400'
+								: 'text-gray-400 dark:text-gray-500'}"
 						>
-							{project.trendingAbsolute > 0 ? '+' : ''}{numeral(project.trendingAbsolute).format('0,0')}
+							{project.trendingAbsolute > 0 ? '+' : ''}{numeral(project.trendingAbsolute).format(
+								'0,0'
+							)}
 							<span
 								class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50 whitespace-nowrap pointer-events-none
 								{absoluteTooltipOpen ? 'block' : 'hidden group-hover:block'}"
@@ -166,9 +195,12 @@
 							</span>
 						</button>
 						{#if project.trendingDelta != null}
-							{@const pct = project.trendingDelta > 0 && project.trendingDelta < 1 ? 1 : project.trendingDelta}
+							{@const pct =
+								project.trendingDelta > 0 && project.trendingDelta < 1 ? 1 : project.trendingDelta}
 							<button
-								onclick={() => { deltaTooltipOpen = !deltaTooltipOpen; }}
+								onclick={() => {
+									deltaTooltipOpen = !deltaTooltipOpen;
+								}}
 								class="relative group text-xs rounded-full px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
 							>
 								{pct > 0 ? '+' : ''}{numeral(pct / 100).format('0%')}
