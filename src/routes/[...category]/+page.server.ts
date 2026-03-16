@@ -11,7 +11,7 @@ export async function load({ params, parent }): Promise<ProjectCollection> {
 	let sort: SortTerm = 'stars';
 	const lastSegment = segments[segments.length - 1];
 	if (lastSegment && SORT_SLUGS.has(lastSegment)) {
-		sort = sortSlugToTerm(lastSegment)!;
+		sort = sortSlugToTerm(lastSegment) ?? 'stars';
 		segments.pop();
 	}
 

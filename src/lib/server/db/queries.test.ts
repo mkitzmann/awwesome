@@ -46,6 +46,8 @@ function createTables() {
 			pushed_at TEXT,
 			created_at TEXT,
 			first_added TEXT,
+			release_version TEXT,
+			release_date TEXT,
 			archived INTEGER DEFAULT 0,
 			updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 		);
@@ -330,7 +332,7 @@ describe('getProjectsPaginated', () => {
 		const result = getProjectsPaginated({ search: 'Roundcube' });
 		const topics = result.projects[0].topics;
 		expect(topics).toHaveLength(2);
-		const names = topics!.map((t) => t.name);
+		const names = topics?.map((t) => t.name);
 		expect(names).toContain('Communication');
 		expect(names).toContain('Email');
 	});

@@ -1,6 +1,12 @@
 import { eq, sql } from 'drizzle-orm';
 import { db, sqlite } from './index';
-import { categories, projectCategories, commitHistory, platforms as platformsTable, projectPlatforms } from './schema';
+import {
+	categories,
+	projectCategories,
+	commitHistory,
+	platforms as platformsTable,
+	projectPlatforms
+} from './schema';
 import type {
 	AllCategories,
 	Category,
@@ -161,9 +167,10 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 	}
 	const sortDir = order === 'asc' ? 'ASC' : 'DESC';
 	// Push NULLs to end regardless of sort direction (commitsYear/trending/trendingAbsolute never null due to COALESCE)
-	const orderClause = sort === 'commitsYear' || sort === 'trending' || sort === 'trendingAbsolute'
-		? `ORDER BY ${sortExpression} ${sortDir}`
-		: `ORDER BY ${sortExpression} IS NULL, ${sortExpression} ${sortDir}`;
+	const orderClause =
+		sort === 'commitsYear' || sort === 'trending' || sort === 'trendingAbsolute'
+			? `ORDER BY ${sortExpression} ${sortDir}`
+			: `ORDER BY ${sortExpression} IS NULL, ${sortExpression} ${sortDir}`;
 
 	// Count total
 	const countRow = sqlite
@@ -347,14 +354,16 @@ export function getCategoryTree(): AllCategories {
 
 	// Count projects per category (including subcategories via full_path prefix match)
 	const countRows = sqlite
-		.prepare(`
+		.prepare(
+			`
 			SELECT c.id, COUNT(DISTINCT pc.project_id) as count
 			FROM categories c
 			JOIN project_categories pc ON pc.category_id IN (
 				SELECT c2.id FROM categories c2 WHERE c2.full_path LIKE c.full_path || '%'
 			)
 			GROUP BY c.id
-		`)
+		`
+		)
 		.all() as { id: number; count: number }[];
 	const countMap = new Map(countRows.map((r) => [r.id, r.count]));
 
@@ -404,7 +413,9 @@ let licenseListCache: string[] | null = null;
 export function getLicenseList(): string[] {
 	if (licenseListCache) return licenseListCache;
 	const rows = sqlite
-		.prepare(`SELECT DISTINCT COALESCE(license_nickname, license_name) as label FROM projects WHERE license_name IS NOT NULL ORDER BY label`)
+		.prepare(
+			`SELECT DISTINCT COALESCE(license_nickname, license_name) as label FROM projects WHERE license_name IS NOT NULL ORDER BY label`
+		)
 		.all() as { label: string }[];
 	licenseListCache = rows.map((r) => r.label);
 	return licenseListCache;

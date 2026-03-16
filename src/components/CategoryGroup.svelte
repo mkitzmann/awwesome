@@ -36,16 +36,21 @@
 <div class="w-full" style="padding-left: {indent * 12}px">
 	{#if hasChildren}
 		<Collapsible.Root bind:open={isOpen} class="w-full">
-			<div class="flex items-center w-full rounded-full transition-colors {isActive
-				? 'bg-gray-100 dark:bg-gray-700'
-				: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}">
+			<div
+				class="flex items-center w-full rounded-full transition-colors {isActive
+					? 'bg-gray-100 dark:bg-gray-700'
+					: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}"
+			>
 				<a
 					{href}
 					class="truncate flex-1 text-left text-sm px-3 py-1.5 {isActive ? 'font-medium' : ''}"
 				>
-					{category.name} {#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
+					{category.name}
+					{#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 				</a>
-				<Collapsible.Trigger class="p-1.5 cursor-pointer transition-transform duration-150 {isOpen ? 'rotate-90' : ''}">
+				<Collapsible.Trigger
+					class="p-1.5 cursor-pointer transition-transform duration-150 {isOpen ? 'rotate-90' : ''}"
+				>
 					<ChevronRight />
 				</Collapsible.Trigger>
 			</div>
@@ -68,7 +73,8 @@
 				? 'bg-gray-100 dark:bg-gray-700 font-medium'
 				: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}"
 		>
-			{category.name} {#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
+			{category.name}
+			{#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 		</a>
 	{/if}
 </div>

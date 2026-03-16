@@ -60,7 +60,16 @@
 	let filterLicense = $state('');
 	let filterReleasedAfter = $state('');
 
-	let isDefaultView = $derived(!category && !searchTerm && selectedSortTerm === 'stars' && !filterMinStars && !filterMinCommitsYear && !filterPlatform && !filterLicense && !filterReleasedAfter);
+	let isDefaultView = $derived(
+		!category &&
+			!searchTerm &&
+			selectedSortTerm === 'stars' &&
+			!filterMinStars &&
+			!filterMinCommitsYear &&
+			!filterPlatform &&
+			!filterLicense &&
+			!filterReleasedAfter
+	);
 
 	// ── Hydrate state from URL on mount ──
 	let initialized = false;
@@ -84,8 +93,14 @@
 		initialized = true;
 
 		// If any filters are active from URL, re-fetch with them applied
-		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform || filterLicense || filterReleasedAfter
-			|| selectedSortOrder !== 'desc';
+		const hasFilters =
+			searchTerm ||
+			filterMinStars ||
+			filterMinCommitsYear ||
+			filterPlatform ||
+			filterLicense ||
+			filterReleasedAfter ||
+			selectedSortOrder !== 'desc';
 		if (hasFilters) {
 			fetchProjects();
 		}
@@ -219,7 +234,7 @@
 		const el = sentinel;
 		if (el && observer) {
 			observer.observe(el);
-			return () => observer!.unobserve(el);
+			return () => observer?.unobserve(el);
 		}
 	});
 
@@ -299,9 +314,7 @@
 	let pageUrl = $derived.by(() => {
 		const slug = sortTermToSlug(selectedSortTerm);
 		const parts = [category, slug].filter(Boolean);
-		return parts.length
-			? `https://www.awweso.me/${parts.join('/')}`
-			: 'https://www.awweso.me';
+		return parts.length ? `https://www.awweso.me/${parts.join('/')}` : 'https://www.awweso.me';
 	});
 
 	let jsonLd = $derived.by(() => {
@@ -416,18 +429,35 @@
 			<div class="flex justify-between items-center flex-wrap gap-4 mb-10 mt-2 xl:mt-0">
 				<h2 class="font-bold text-xl">
 					{selectedCategory
-						? selectedCategory.split('/').map((category) => categoryNames[category]).join(' - ')
+						? selectedCategory
+								.split('/')
+								.map((category) => categoryNames[category])
+								.join(' - ')
 						: 'All Projects'}
 					<span class="font-normal text-gray-400">({total})</span>
 				</h2>
 				<div class="flex items-center gap-4 flex-wrap">
 					<div class="md:hidden">
-						<Select.Root type="single" value={selectedSortTerm} onValueChange={(v) => { selectedSortTerm = v as SortTerm; }} items={sortItems}>
+						<Select.Root
+							type="single"
+							value={selectedSortTerm}
+							onValueChange={(v) => {
+								selectedSortTerm = v as SortTerm;
+							}}
+							items={sortItems}
+						>
 							<Select.Trigger
 								class="rounded-full px-4 h-10 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 text-sm flex items-center justify-between gap-2"
 							>
 								{sortItems.find((i) => i.value === selectedSortTerm)?.label ?? 'Sort'}
-								<svg class="w-4 h-4 shrink-0 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<svg
+									class="w-4 h-4 shrink-0 opacity-50"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+								>
 									<path d="M6 9l6 6 6-6" />
 								</svg>
 							</Select.Trigger>
@@ -451,25 +481,17 @@
 							</Select.Portal>
 						</Select.Root>
 					</div>
-					<ToggleGroup.Root type="single" bind:value={selectedSortTerm} class="text-sm hidden md:flex rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden">
-						<SortButton value="stars" rounded="left">
-							Most Stars
-						</SortButton>
-						<SortButton value="trendingAbsolute" rounded="none">
-							Trending
-						</SortButton>
-						<SortButton value="trending" rounded="none">
-							Trending %
-						</SortButton>
-						<SortButton value="commitsYear" rounded="none">
-							Most Active
-						</SortButton>
-						<SortButton value="firstAdded" rounded="none">
-							Recently Added
-						</SortButton>
-						<SortButton value="releaseDate" rounded="right">
-							Latest Release
-						</SortButton>
+					<ToggleGroup.Root
+						type="single"
+						bind:value={selectedSortTerm}
+						class="text-sm hidden md:flex rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden"
+					>
+						<SortButton value="stars" rounded="left">Most Stars</SortButton>
+						<SortButton value="trendingAbsolute" rounded="none">Trending</SortButton>
+						<SortButton value="trending" rounded="none">Trending %</SortButton>
+						<SortButton value="commitsYear" rounded="none">Most Active</SortButton>
+						<SortButton value="firstAdded" rounded="none">Recently Added</SortButton>
+						<SortButton value="releaseDate" rounded="right">Latest Release</SortButton>
 					</ToggleGroup.Root>
 					<FilterPanel
 						platforms={data.platforms}
@@ -495,11 +517,13 @@
 							goto('/');
 						}}
 						class="h-10 px-4 flex items-center rounded-full text-sm bg-gray-200 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
-							{isDefaultView ? 'opacity-40 cursor-default' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
+							{isDefaultView
+							? 'opacity-40 cursor-default'
+							: 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
 					>
 						<X class="w-4 h-4 mr-1" /> Clear
 					</button>
-					</div>
+				</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-6">
 				{#each projects as project}
@@ -515,11 +539,18 @@
 			{/if}
 		</div>
 	</div>
-	<footer class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 flex flex-wrap gap-x-6 gap-y-2">
+	<footer
+		class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 flex flex-wrap gap-x-6 gap-y-2"
+	>
 		<span>
-			Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data" class="hover:underline">awesome-selfhosted</a>
+			Original data by the <a
+				href="https://github.com/awesome-selfhosted/awesome-selfhosted-data"
+				class="hover:underline">awesome-selfhosted</a
+			>
 			community, licensed under
-			<a href="https://creativecommons.org/licenses/by-sa/3.0/" class="hover:underline">CC-BY-SA 3.0</a>
+			<a href="https://creativecommons.org/licenses/by-sa/3.0/" class="hover:underline"
+				>CC-BY-SA 3.0</a
+			>
 		</span>
 		<a href="/privacy" class="hover:underline">Privacy Policy</a>
 	</footer>

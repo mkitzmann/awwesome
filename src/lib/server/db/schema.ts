@@ -7,6 +7,7 @@ export const categories = sqliteTable(
 		id: integer('id').primaryKey({ autoIncrement: true }),
 		slug: text('slug').notNull(),
 		name: text('name').notNull(),
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		parentId: integer('parent_id').references((): any => categories.id),
 		fullPath: text('full_path').notNull().unique()
 	},
@@ -84,13 +85,10 @@ export const commitHistory = sqliteTable(
 	})
 );
 
-export const platforms = sqliteTable(
-	'platforms',
-	{
-		id: integer('id').primaryKey({ autoIncrement: true }),
-		name: text('name').notNull().unique()
-	}
-);
+export const platforms = sqliteTable('platforms', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	name: text('name').notNull().unique()
+});
 
 export const projectPlatforms = sqliteTable(
 	'project_platforms',

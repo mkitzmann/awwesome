@@ -43,28 +43,46 @@ describe('buildCategoryTree', () => {
 
 	it('nests children under their parent', () => {
 		const rows = [
-			{ id: 1, slug: 'communication', name: 'Communication', parentId: null, fullPath: '/communication' },
+			{
+				id: 1,
+				slug: 'communication',
+				name: 'Communication',
+				parentId: null,
+				fullPath: '/communication'
+			},
 			{ id: 2, slug: 'email', name: 'Email', parentId: 1, fullPath: '/communication/email' },
 			{ id: 3, slug: 'chat', name: 'Chat', parentId: 1, fullPath: '/communication/chat' }
 		];
 		const tree = buildCategoryTree(rows);
 		expect(tree).toHaveLength(1);
 		expect(tree[0].children).toHaveLength(2);
-		expect(tree[0].children![0].slug).toBe('chat');
-		expect(tree[0].children![1].slug).toBe('email');
+		expect(tree[0].children?.[0].slug).toBe('chat');
+		expect(tree[0].children?.[1].slug).toBe('email');
 	});
 
 	it('handles deeply nested categories', () => {
 		const rows = [
-			{ id: 1, slug: 'communication', name: 'Communication', parentId: null, fullPath: '/communication' },
+			{
+				id: 1,
+				slug: 'communication',
+				name: 'Communication',
+				parentId: null,
+				fullPath: '/communication'
+			},
 			{ id: 2, slug: 'email', name: 'Email', parentId: 1, fullPath: '/communication/email' },
-			{ id: 3, slug: 'complete-solutions', name: 'Complete Solutions', parentId: 2, fullPath: '/communication/email/complete-solutions' }
+			{
+				id: 3,
+				slug: 'complete-solutions',
+				name: 'Complete Solutions',
+				parentId: 2,
+				fullPath: '/communication/email/complete-solutions'
+			}
 		];
 		const tree = buildCategoryTree(rows);
 		expect(tree).toHaveLength(1);
 		expect(tree[0].children).toHaveLength(1);
-		expect(tree[0].children![0].children).toHaveLength(1);
-		expect(tree[0].children![0].children![0].slug).toBe('complete-solutions');
+		expect(tree[0].children?.[0].children).toHaveLength(1);
+		expect(tree[0].children?.[0].children?.[0].slug).toBe('complete-solutions');
 	});
 
 	it('sorts siblings alphabetically by slug', () => {

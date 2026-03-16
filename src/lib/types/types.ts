@@ -29,7 +29,13 @@ export type CommitCount = {
 	[key: string]: number;
 };
 
-export type SortTerm = 'stars' | 'firstAdded' | 'commitsYear' | 'trending' | 'trendingAbsolute' | 'releaseDate';
+export type SortTerm =
+	| 'stars'
+	| 'firstAdded'
+	| 'commitsYear'
+	| 'trending'
+	| 'trendingAbsolute'
+	| 'releaseDate';
 export type SortOrder = 'asc' | 'desc';
 
 export interface AllCategories {
