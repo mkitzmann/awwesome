@@ -345,7 +345,7 @@
 				}
 			}))
 		};
-		return JSON.stringify(ld);
+		return JSON.stringify(ld).replace(/</g, '\\u003c');
 	});
 </script>
 
