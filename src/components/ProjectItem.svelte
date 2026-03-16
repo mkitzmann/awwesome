@@ -8,6 +8,7 @@
 	import { appConfig } from '../lib/createConfig';
 	import { sanitize } from '$lib/sanitize';
 	import { onDestroy } from 'svelte';
+	import { Tooltip } from 'bits-ui';
 
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
@@ -118,8 +119,27 @@
 			{#if project.stars}
 				<div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 -mb-2">
 					<Star />{numeral(project.stars).format('0,0a')}
-					{#if project.trendingDelta != null}
-						<span class="text-sm {project.trendingDelta > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}">{project.trendingDelta > 0 ? '+' : ''}{numeral(project.trendingDelta).format('0,0')}</span>
+					{#if project.trendingAbsolute != null}
+						<Tooltip.Provider delayDuration={0}>
+							<Tooltip.Root>
+								<Tooltip.Trigger class="text-sm {project.trendingAbsolute > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}">
+									{project.trendingAbsolute > 0 ? '+' : ''}{numeral(project.trendingAbsolute).format('0,0')}
+								</Tooltip.Trigger>
+								<Tooltip.Content class="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50">
+									Star increase in the last 30 days
+								</Tooltip.Content>
+							</Tooltip.Root>
+							{#if project.trendingDelta != null}
+								<Tooltip.Root>
+									<Tooltip.Trigger class="text-xs rounded-full px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+										{project.trendingDelta > 0 ? '+' : ''}{numeral(project.trendingDelta / 100).format('0.0%')}
+									</Tooltip.Trigger>
+									<Tooltip.Content class="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50">
+										Relative star growth in the last 30 days
+									</Tooltip.Content>
+								</Tooltip.Root>
+							{/if}
+						</Tooltip.Provider>
 					{/if}
 				</div>
 			{/if}
