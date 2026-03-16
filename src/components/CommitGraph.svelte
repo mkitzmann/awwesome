@@ -6,7 +6,7 @@
 	let vals = $derived(Object.values(commits));
 	let max = $derived(vals.length > 0 ? Math.max(...vals) : 0);
 	let points = $derived(vals.reduce((prev, current, index) => {
-		return `${prev} ${index * 10},${(current / max) * 10}`;
+		return `${prev} ${index * 10},${max > 0 ? (current / max) * 10 : 0}`;
 	}, ''));
 
 	let totalCommits = $derived(vals.length > 0 ? vals.reduce((prev, current) => prev + current, 0) : 0);
