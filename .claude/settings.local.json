@@ -17,7 +17,11 @@
       "Bash(npx drizzle-kit:*)",
       "Bash(yarn test:*)",
       "Bash(git add:*)",
-      "Bash(yarn lint:*)"
+      "Bash(yarn lint:*)",
+      "Bash(git commit:*)",
+      "Bash(yarn run:*)",
+      "Bash(npx svelte-check:*)",
+      "Bash(git status:*)"
     ]
   }
 }
