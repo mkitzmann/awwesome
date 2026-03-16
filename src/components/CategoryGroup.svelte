@@ -43,7 +43,7 @@
 						? 'bg-gray-200 dark:bg-gray-950'
 						: ''}"
 				>
-					{category.name}
+					{category.name} {#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 				</a>
 				<Collapsible.Trigger class="hover:text-blue-500 cursor-pointer transition-transform duration-150 {isOpen ? 'rotate-90' : ''}">
 					<ChevronRight />
@@ -68,7 +68,7 @@
 				? 'bg-gray-200 dark:bg-gray-950'
 				: ''}"
 		>
-			{category.name}
+			{category.name} {#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 		</a>
 	{/if}
 </div>

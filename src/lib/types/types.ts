@@ -41,6 +41,7 @@ export interface AllCategories {
 export type Category = {
 	slug: string;
 	name: string;
+	count?: number;
 	children?: Category[];
 };
 

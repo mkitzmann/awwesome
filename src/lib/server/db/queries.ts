@@ -345,14 +345,28 @@ export function getCategoryTree(): AllCategories {
 		names[row.slug] = row.name;
 	}
 
-	const tree = buildCategoryTree(rows);
+	// Count projects per category (including subcategories via full_path prefix match)
+	const countRows = sqlite
+		.prepare(`
+			SELECT c.id, COUNT(DISTINCT pc.project_id) as count
+			FROM categories c
+			JOIN project_categories pc ON pc.category_id IN (
+				SELECT c2.id FROM categories c2 WHERE c2.full_path LIKE c.full_path || '%'
+			)
+			GROUP BY c.id
+		`)
+		.all() as { id: number; count: number }[];
+	const countMap = new Map(countRows.map((r) => [r.id, r.count]));
+
+	const tree = buildCategoryTree(rows, countMap);
 
 	categoryTreeCache = { tree, urls, names };
 	return categoryTreeCache;
 }
 
 export function buildCategoryTree(
-	rows: { id: number; slug: string; name: string; parentId: number | null; fullPath: string }[]
+	rows: { id: number; slug: string; name: string; parentId: number | null; fullPath: string }[],
+	countMap?: Map<number, number>
 ): Category[] {
 	const rootRows = rows.filter((r) => r.parentId === null);
 	const childMap = new Map<number, typeof rows>();
@@ -370,6 +384,7 @@ export function buildCategoryTree(
 		const node: Category = {
 			slug: row.slug,
 			name: row.name,
+			count: countMap?.get(row.id) ?? 0,
 			children: children.map(buildNode).sort((a, b) => a.slug.localeCompare(b.slug))
 		};
 		return node;

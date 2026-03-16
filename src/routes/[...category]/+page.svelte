@@ -368,7 +368,7 @@
 	}}
 />
 
-<div class="flex flex-col gap-4 mx-auto my-4 p-4">
+<div class="flex flex-col gap-6 mx-auto p-4 md:p-6">
 	<div class="flex justify-between flex-wrap gap-2">
 		<div>
 			<a href="/" class="block">
@@ -395,7 +395,7 @@
 		</div>
 		<aside class="w-80 shrink-0 hidden xl:block">
 			<SearchInput bind:searchTerm onsearch={handleSearch} />
-			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-4">
+			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-10">
 				<a
 					href={sortSuffix ? sortSuffix : '/'}
 					class="truncate max-w-full xl:max-w-full text-left text-sm px-3 py-1 rounded-full {selectedCategory ===
@@ -413,7 +413,7 @@
 			</nav>
 		</aside>
 		<div class="w-full">
-			<div class="flex justify-between items-center flex-wrap gap-4 mb-8 mt-2 xl:mt-0">
+			<div class="flex justify-between items-center flex-wrap gap-4 mb-10 mt-2 xl:mt-0">
 				<h2 class="font-bold text-xl">
 					{selectedCategory
 						? selectedCategory.split('/').map((category) => categoryNames[category]).join(' - ')
@@ -501,7 +501,7 @@
 					</button>
 					</div>
 			</div>
-			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
+			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-6">
 				{#each projects as project}
 					<ProjectItem {project} />
 				{/each}
@@ -515,7 +515,7 @@
 			{/if}
 		</div>
 	</div>
-	<footer class="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 flex flex-wrap gap-x-6 gap-y-2">
+	<footer class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 flex flex-wrap gap-x-6 gap-y-2">
 		<span>
 			Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data" class="hover:underline">awesome-selfhosted</a>
 			community, licensed under
