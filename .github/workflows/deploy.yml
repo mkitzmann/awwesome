@@ -99,8 +99,8 @@ jobs:
             docker compose config | grep -v '^name:' | docker stack deploy --with-registry-auth --resolve-image always -c - ${APP_NAME} && \
             docker service update --force ${APP_NAME}_${APP_NAME}"
 
-      - name: Purge Cloudflare cache
-        uses: jakejarvis/cloudflare-purge-action@master
-        env:
-          CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # - name: Purge Cloudflare cache
+      #   uses: jakejarvis/cloudflare-purge-action@master
+      #   env:
+      #     CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+      #     CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
