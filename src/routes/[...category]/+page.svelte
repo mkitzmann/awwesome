@@ -210,6 +210,21 @@
 	const baseDescription =
 		'Find the most awesome open-source, self-hostable projects on the web. Original data by the awesome-selfhosted community, licensed under CC-BY-SA 3.0.';
 
+	const sortLabels: Record<SortTerm, string> = {
+		stars: '',
+		trending: 'Trending %',
+		trendingAbsolute: 'Trending',
+		commitsYear: 'Most Active',
+		firstAdded: 'Recently Added'
+	};
+	const sortDescriptions: Record<SortTerm, string> = {
+		stars: '',
+		trending: 'trending by relative growth',
+		trendingAbsolute: 'trending',
+		commitsYear: 'most active',
+		firstAdded: 'recently added'
+	};
+
 	let categoryLabel = $derived(
 		category
 			? category
@@ -219,12 +234,24 @@
 					.join(' - ')
 			: ''
 	);
-	let pageTitle = $derived(categoryLabel ? `${categoryLabel} - ${baseTitle}` : baseTitle);
-	let pageDescription = $derived(
-		categoryLabel
-			? `Discover the best self-hosted ${categoryLabel} projects. ${baseDescription}`
-			: baseDescription
-	);
+	let sortLabel = $derived(sortLabels[selectedSortTerm]);
+	let pageTitle = $derived.by(() => {
+		const parts = [sortLabel, categoryLabel].filter(Boolean);
+		return parts.length ? `${parts.join(' ')} - ${baseTitle}` : baseTitle;
+	});
+	let pageDescription = $derived.by(() => {
+		const sortDesc = sortDescriptions[selectedSortTerm];
+		if (categoryLabel && sortDesc) {
+			return `Discover the ${sortDesc} self-hosted ${categoryLabel} projects. ${baseDescription}`;
+		}
+		if (categoryLabel) {
+			return `Discover the best self-hosted ${categoryLabel} projects. ${baseDescription}`;
+		}
+		if (sortDesc) {
+			return `Discover the ${sortDesc} self-hosted projects. ${baseDescription}`;
+		}
+		return baseDescription;
+	});
 	let pageUrl = $derived(
 		category ? `https://www.awweso.me/${category}` : 'https://www.awweso.me'
 	);
@@ -321,8 +348,11 @@
 						<SortButton value="stars" rounded="left">
 							Most Stars
 						</SortButton>
-						<SortButton value="trending" rounded="none">
+						<SortButton value="trendingAbsolute" rounded="none">
 							Trending
+						</SortButton>
+						<SortButton value="trending" rounded="none">
+							Trending %
 						</SortButton>
 						<SortButton value="commitsYear" rounded="none">
 							Most Active

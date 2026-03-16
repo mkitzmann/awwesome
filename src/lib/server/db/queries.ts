@@ -118,6 +118,27 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 	if (sort === 'commitsYear') {
 		sortExpression = `(SELECT COALESCE(SUM(ch.commit_count), 0) FROM commit_history ch WHERE ch.project_id = p.id)`;
 	} else if (sort === 'trending') {
+		sortExpression = `COALESCE(
+			CASE WHEN (
+				SELECT sh.stars FROM star_history sh
+				WHERE sh.project_id = p.id
+					AND sh.recorded_at <= date('now', '-30 days')
+				ORDER BY sh.recorded_at DESC LIMIT 1
+			) > 0 THEN
+				(p.stars - (
+					SELECT sh.stars FROM star_history sh
+					WHERE sh.project_id = p.id
+						AND sh.recorded_at <= date('now', '-30 days')
+					ORDER BY sh.recorded_at DESC LIMIT 1
+				)) * 100.0 / (
+					SELECT sh.stars FROM star_history sh
+					WHERE sh.project_id = p.id
+						AND sh.recorded_at <= date('now', '-30 days')
+					ORDER BY sh.recorded_at DESC LIMIT 1
+				)
+			ELSE 0 END
+		, 0)`;
+	} else if (sort === 'trendingAbsolute') {
 		sortExpression = `COALESCE(p.stars - (
 			SELECT sh.stars FROM star_history sh
 			WHERE sh.project_id = p.id
@@ -130,8 +151,8 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		sortExpression = 'p.stars';
 	}
 	const sortDir = order === 'asc' ? 'ASC' : 'DESC';
-	// Push NULLs to end regardless of sort direction (commitsYear/trending never null due to COALESCE)
-	const orderClause = sort === 'commitsYear' || sort === 'trending'
+	// Push NULLs to end regardless of sort direction (commitsYear/trending/trendingAbsolute never null due to COALESCE)
+	const orderClause = sort === 'commitsYear' || sort === 'trending' || sort === 'trendingAbsolute'
 		? `ORDER BY ${sortExpression} ${sortDir}`
 		: `ORDER BY ${sortExpression} IS NULL, ${sortExpression} ${sortDir}`;
 
@@ -144,12 +165,32 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 	if (total === 0) return { projects: [], total: 0 };
 
 	// Fetch paginated rows
-	const trendingCol = `, COALESCE(p.stars - (
+	const trendingCol = `, COALESCE(
+			CASE WHEN (
+				SELECT sh.stars FROM star_history sh
+				WHERE sh.project_id = p.id
+					AND sh.recorded_at <= date('now', '-30 days')
+				ORDER BY sh.recorded_at DESC LIMIT 1
+			) > 0 THEN
+				(p.stars - (
+					SELECT sh.stars FROM star_history sh
+					WHERE sh.project_id = p.id
+						AND sh.recorded_at <= date('now', '-30 days')
+					ORDER BY sh.recorded_at DESC LIMIT 1
+				)) * 100.0 / (
+					SELECT sh.stars FROM star_history sh
+					WHERE sh.project_id = p.id
+						AND sh.recorded_at <= date('now', '-30 days')
+					ORDER BY sh.recorded_at DESC LIMIT 1
+				)
+			ELSE 0 END
+		, 0) as trending_delta,
+		COALESCE(p.stars - (
 			SELECT sh.stars FROM star_history sh
 			WHERE sh.project_id = p.id
 				AND sh.recorded_at <= date('now', '-30 days')
 			ORDER BY sh.recorded_at DESC LIMIT 1
-		), 0) as trending_delta`;
+		), 0) as trending_absolute`;
 	const rows = sqlite
 		.prepare(
 			`SELECT p.id, p.name, p.primary_url, p.source_url, p.demo_url,
@@ -179,6 +220,7 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		archived: number | null;
 		category_full_path: string;
 		trending_delta?: number | null;
+		trending_absolute?: number | null;
 	}[];
 
 	if (rows.length === 0) return { projects: [], total };
@@ -266,6 +308,7 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 			topics: tagsByProject.get(row.id) || [],
 			commit_history: historyByProject.get(row.id) || {},
 			trendingDelta: row.trending_delta ?? undefined,
+			trendingAbsolute: row.trending_absolute ?? undefined,
 			pushedAt: row.pushed_at ? new Date(row.pushed_at) : undefined,
 			firstAdded: row.first_added ? new Date(row.first_added) : undefined,
 			archived: !!row.archived

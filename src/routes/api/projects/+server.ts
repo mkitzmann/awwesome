@@ -12,7 +12,7 @@ function intParam(url: URL, name: string): number | undefined {
 export function GET({ url }) {
 	const category = url.searchParams.get('category') || '/';
 	const search = url.searchParams.get('search') || '';
-	const VALID_SORTS: SortTerm[] = ['stars', 'commitsYear', 'firstAdded', 'trending'];
+	const VALID_SORTS: SortTerm[] = ['stars', 'commitsYear', 'firstAdded', 'trending', 'trendingAbsolute'];
 	const VALID_ORDERS: SortOrder[] = ['asc', 'desc'];
 	const sort: SortTerm = VALID_SORTS.includes(url.searchParams.get('sort') as SortTerm)
 		? (url.searchParams.get('sort') as SortTerm)
