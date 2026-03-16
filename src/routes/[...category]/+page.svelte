@@ -17,6 +17,7 @@
 	import { ToggleGroup, Select } from 'bits-ui';
 	import SvelteSeo from 'svelte-seo';
 	import { SORT_SLUGS, sortTermToSlug } from '$lib/sort';
+	import type { WithContext, ItemList } from 'schema-dts';
 
 	let { data }: { data: ProjectCollection } = $props();
 
@@ -296,33 +297,34 @@
 	});
 
 	let jsonLd = $derived.by(() => {
-		return JSON.stringify({
+		const ld: WithContext<ItemList> = {
 			'@context': 'https://schema.org',
 			'@type': 'ItemList',
 			name: pageTitle,
 			description: pageDescription,
 			numberOfItems: total,
 			itemListElement: data.projects.slice(0, 20).map((project, index) => ({
-				'@type': 'ListItem',
+				'@type': 'ListItem' as const,
 				position: index + 1,
 				item: {
-					'@type': 'SoftwareApplication',
-					name: project.name,
+					'@type': 'SoftwareApplication' as const,
+					name: project.name ?? undefined,
 					...(project.description && { description: project.description.replace(/<[^>]*>/g, '') }),
 					...(project.source_url && { url: project.source_url }),
 					...(categoryLabel && { applicationCategory: categoryLabel }),
-					offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+					offers: { '@type': 'Offer' as const, price: '0', priceCurrency: 'USD' },
 					operatingSystem: 'Self-Hosted',
 					...(project.stars && {
 						interactionStatistic: {
-							'@type': 'InteractionCounter',
-							interactionType: { '@type': 'LikeAction' },
+							'@type': 'InteractionCounter' as const,
+							interactionType: { '@type': 'LikeAction' as const },
 							userInteractionCount: project.stars
 						}
 					})
 				}
 			}))
-		});
+		};
+		return JSON.stringify(ld);
 	});
 </script>
 
