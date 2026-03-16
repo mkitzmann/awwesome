@@ -327,7 +327,8 @@
 </script>
 
 <svelte:head>
-	{@html `<script type="application/ld+json">${jsonLd}</script>`}
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html '<scr' + 'ipt type="application/ld+json">' + jsonLd + '</scr' + 'ipt>'}
 </svelte:head>
 
 <SvelteSeo
