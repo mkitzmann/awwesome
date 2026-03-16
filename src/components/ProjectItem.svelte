@@ -132,7 +132,7 @@
 							{#if project.trendingDelta != null}
 								<Tooltip.Root>
 									<Tooltip.Trigger class="text-xs rounded-full px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-										{project.trendingDelta > 0 ? '+' : ''}{numeral(project.trendingDelta / 100).format('0%')}
+										{@const pct = project.trendingDelta > 0 && project.trendingDelta < 1 ? 1 : project.trendingDelta}{pct > 0 ? '+' : ''}{numeral(pct / 100).format('0%')}
 									</Tooltip.Trigger>
 									<Tooltip.Content class="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50">
 										Relative star growth in the last 30 days
