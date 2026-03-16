@@ -15,6 +15,8 @@
 	let { project }: { project: Project } = $props();
 
 	let categories = $derived(project.category?.split('/').slice(1) ?? []);
+	let categorySet = $derived(new Set(categories));
+	let filteredTopics = $derived((project.topics ?? []).filter((t) => !categorySet.has(t.path.split('/').pop() ?? '')));
 	let iconUrl = $derived(project.avatar_url ?? deriveOwnerIcon(project.source_url));
 
 	function deriveOwnerIcon(url: string | null | undefined): string | null {
@@ -104,7 +106,7 @@
 					{platform}
 				</a>
 			{/each}
-			{#each project.topics ?? [] as topic}
+			{#each filteredTopics as topic}
 				<a
 					href={topic.path}
 					class="text-xs rounded-full px-2 py-1 bg-gray-100 dark:bg-gray-900 max-w-full"
