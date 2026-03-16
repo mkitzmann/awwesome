@@ -303,13 +303,6 @@
 					<img src="/logo_complete_light.svg" alt="Logo" class="h-16 mb-4 dark:hidden" />
 				</div>
 			</a>
-			<div class="text-sm -mt-2">
-				Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data"
-					>awesome-selfhosted</a
-				>
-				community, licensed under
-				<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA 3.0</a>
-			</div>
 		</div>
 
 		<div class="flex gap-8">
@@ -438,4 +431,12 @@
 			</div>
 		</div>
 	</div>
+	<footer class="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 flex flex-wrap gap-x-6 gap-y-2">
+		<span>
+			Original data by the <a href="https://github.com/awesome-selfhosted/awesome-selfhosted-data" class="hover:underline">awesome-selfhosted</a>
+			community, licensed under
+			<a href="https://creativecommons.org/licenses/by-sa/3.0/" class="hover:underline">CC-BY-SA 3.0</a>
+		</span>
+		<a href="/privacy" class="hover:underline">Privacy Policy</a>
+	</footer>
 </div>
