@@ -467,14 +467,23 @@
 						bind:license={filterLicense}
 						onfilter={() => fetchProjects()}
 					/>
-					<a
-						href={isDefaultView ? undefined : '/'}
+					<button
+						disabled={isDefaultView}
+						onclick={() => {
+							searchTerm = '';
+							filterMinStars = '';
+							filterMinCommitsYear = '';
+							filterPlatform = '';
+							filterLicense = '';
+							selectedSortTerm = 'stars';
+							selectedSortOrder = 'desc';
+							goto('/');
+						}}
 						class="h-10 px-4 flex items-center rounded-full text-sm bg-gray-200 dark:bg-gray-800
 							{isDefaultView ? 'opacity-40 cursor-default' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
-						aria-disabled={isDefaultView}
 					>
 						Clear
-					</a>
+					</button>
 					</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
