@@ -395,13 +395,13 @@
 		</div>
 		<aside class="w-80 shrink-0 hidden xl:block">
 			<SearchInput bind:searchTerm onsearch={handleSearch} />
-			<nav class="flex gap-1 flex-row flex-wrap lg:flex-col mt-10">
+			<nav class="flex flex-col gap-0.5 mt-10">
 				<a
 					href={sortSuffix ? sortSuffix : '/'}
-					class="truncate max-w-full xl:max-w-full text-left text-sm px-3 py-1 rounded-full {selectedCategory ===
+					class="truncate text-sm px-3 py-1.5 rounded-full transition-colors {selectedCategory ===
 					''
-						? 'bg-gray-200 dark:bg-gray-950'
-						: ''}"
+						? 'bg-gray-100 dark:bg-gray-700 font-medium'
+						: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}"
 				>
 					{allCategory.name}
 				</a>

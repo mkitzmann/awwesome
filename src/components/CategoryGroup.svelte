@@ -33,19 +33,19 @@
 	let hasChildren = $derived((category.children ?? []).length > 0);
 </script>
 
-<div class="flex items-center justify-between w-full" style="padding-left: {indent}px">
+<div class="w-full" style="padding-left: {indent * 12}px">
 	{#if hasChildren}
 		<Collapsible.Root bind:open={isOpen} class="w-full">
-			<div class="flex justify-between w-full items-center">
+			<div class="flex items-center w-full rounded-full transition-colors {isActive
+				? 'bg-gray-100 dark:bg-gray-700'
+				: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}">
 				<a
 					{href}
-					class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-						? 'bg-gray-200 dark:bg-gray-950'
-						: ''}"
+					class="truncate flex-1 text-left text-sm px-3 py-1.5 {isActive ? 'font-medium' : ''}"
 				>
 					{category.name} {#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 				</a>
-				<Collapsible.Trigger class="hover:text-blue-500 cursor-pointer transition-transform duration-150 {isOpen ? 'rotate-90' : ''}">
+				<Collapsible.Trigger class="p-1.5 cursor-pointer transition-transform duration-150 {isOpen ? 'rotate-90' : ''}">
 					<ChevronRight />
 				</Collapsible.Trigger>
 			</div>
@@ -56,7 +56,7 @@
 						{selectedCategory}
 						{sortSuffix}
 						basePath="{basePath}/{category2.slug}"
-						indent={indent + 10}
+						indent={indent + 1}
 					/>
 				{/each}
 			</Collapsible.Content>
@@ -64,9 +64,9 @@
 	{:else}
 		<a
 			{href}
-			class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-				? 'bg-gray-200 dark:bg-gray-950'
-				: ''}"
+			class="block truncate w-full text-left text-sm px-3 py-1.5 rounded-full transition-colors {isActive
+				? 'bg-gray-100 dark:bg-gray-700 font-medium'
+				: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}"
 		>
 			{category.name} {#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 		</a>
