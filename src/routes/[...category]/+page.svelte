@@ -346,12 +346,12 @@
 			</nav>
 		</aside>
 		<div class="w-full">
-			<div class="flex justify-between items-center flex-wrap gap-4 mb-8 mt-2">
+			<div class="flex justify-between items-center flex-wrap gap-4 mb-8 mt-2 xl:mt-0">
 				<h2 class="font-bold text-xl">
 					{selectedCategory
-						.split('/')
-						.map((category) => categoryNames[category])
-						.join(' - ')}
+						? selectedCategory.split('/').map((category) => categoryNames[category]).join(' - ')
+						: 'All Projects'}
+					<span class="font-normal text-gray-400">({total})</span>
 				</h2>
 				<div class="flex items-center gap-4 flex-wrap">
 					<div class="md:hidden">
@@ -418,10 +418,7 @@
 					>
 						Clear
 					</a>
-					<div class="text-sm text-right">
-						{total} Projects
 					</div>
-				</div>
 			</div>
 			<div class="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
 				{#each projects as project}
