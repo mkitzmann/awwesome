@@ -3,7 +3,13 @@
 	import { appConfig } from '../lib/createConfig';
 
 	let { commits, id }: { commits: CommitCount; id: string } = $props();
-	let vals = $derived(Object.values(commits));
+	let currentMonth = new Date().toISOString().slice(0, 7);
+	let vals = $derived(
+		Object.entries(commits)
+			.filter(([key]) => key !== currentMonth)
+			.sort(([a], [b]) => a.localeCompare(b))
+			.map(([, v]) => v)
+	);
 	let max = $derived(vals.length > 0 ? Math.max(...vals) : 0);
 	let points = $derived(vals.reduce((prev, current, index) => {
 		return `${prev} ${index * 10},${max > 0 ? (current / max) * 10 : 0}`;

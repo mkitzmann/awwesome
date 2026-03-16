@@ -8,7 +8,7 @@
 	import { appConfig } from '../lib/createConfig';
 	import { sanitize } from '$lib/sanitize';
 	import { onDestroy } from 'svelte';
-	import { Tooltip } from 'bits-ui';
+
 
 	const getRelativeTime = (date: Date) => dayjs(date).fromNow();
 
@@ -33,8 +33,24 @@
 
 	let license = $derived(project.license?.nickname ?? project.license?.name);
 	let licenseWithSuffix = $derived(license === 'Other' ? `${license} License` : license);
-	let commitVals = $derived(project?.commit_history ? Object.values(project.commit_history) : []);
+	let currentMonth = new Date().toISOString().slice(0, 7);
+	let commitVals = $derived(
+		project?.commit_history
+			? Object.entries(project.commit_history).filter(([key]) => key !== currentMonth).map(([, v]) => v)
+			: []
+	);
 	let totalCommits = $derived(commitVals.length > 0 ? commitVals.reduce((prev, current) => prev + current, 0) : 0);
+
+	let absoluteTooltipOpen = $state(false);
+	let deltaTooltipOpen = $state(false);
+
+	$effect(() => {
+		if (!absoluteTooltipOpen && !deltaTooltipOpen) return;
+		const close = () => { absoluteTooltipOpen = false; deltaTooltipOpen = false; };
+		// Delay so the opening click doesn't immediately close
+		const id = setTimeout(() => document.addEventListener('click', close, { once: true }), 0);
+		return () => { clearTimeout(id); document.removeEventListener('click', close); };
+	});
 </script>
 
 <article
@@ -122,26 +138,33 @@
 				<div class="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 -mb-2">
 					<Star />{numeral(project.stars).format('0,0a')}
 					{#if project.trendingAbsolute != null}
-						<Tooltip.Provider delayDuration={0}>
-							<Tooltip.Root>
-								<Tooltip.Trigger class="text-sm {project.trendingAbsolute > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}">
-									{project.trendingAbsolute > 0 ? '+' : ''}{numeral(project.trendingAbsolute).format('0,0')}
-								</Tooltip.Trigger>
-								<Tooltip.Content class="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50">
-									Star increase in the last 30 days
-								</Tooltip.Content>
-							</Tooltip.Root>
-							{#if project.trendingDelta != null}
-								<Tooltip.Root>
-									<Tooltip.Trigger class="text-xs rounded-full px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-										{@const pct = project.trendingDelta > 0 && project.trendingDelta < 1 ? 1 : project.trendingDelta}{pct > 0 ? '+' : ''}{numeral(pct / 100).format('0%')}
-									</Tooltip.Trigger>
-									<Tooltip.Content class="text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50">
-										Relative star growth in the last 30 days
-									</Tooltip.Content>
-								</Tooltip.Root>
-							{/if}
-						</Tooltip.Provider>
+						<button
+							onclick={() => { absoluteTooltipOpen = !absoluteTooltipOpen; }}
+							class="relative group text-sm {project.trendingAbsolute > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}"
+						>
+							{project.trendingAbsolute > 0 ? '+' : ''}{numeral(project.trendingAbsolute).format('0,0')}
+							<span
+								class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50 whitespace-nowrap pointer-events-none
+								{absoluteTooltipOpen ? 'block' : 'hidden group-hover:block'}"
+							>
+								Star increase in the last 30 days
+							</span>
+						</button>
+						{#if project.trendingDelta != null}
+							{@const pct = project.trendingDelta > 0 && project.trendingDelta < 1 ? 1 : project.trendingDelta}
+							<button
+								onclick={() => { deltaTooltipOpen = !deltaTooltipOpen; }}
+								class="relative group text-xs rounded-full px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+							>
+								{pct > 0 ? '+' : ''}{numeral(pct / 100).format('0%')}
+								<span
+									class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded px-2 py-1 shadow-lg z-50 whitespace-nowrap pointer-events-none
+									{deltaTooltipOpen ? 'block' : 'hidden group-hover:block'}"
+								>
+									Relative star growth in the last 30 days
+								</span>
+							</button>
+						{/if}
 					{/if}
 				</div>
 			{/if}
