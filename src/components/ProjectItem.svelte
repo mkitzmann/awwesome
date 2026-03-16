@@ -146,7 +146,7 @@
 	</div>
 	{#if project.description}
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -- sanitized with DOMPurify -->
-		<div class="break-words">{@html sanitize(project.description)}</div>
+		<div class="[overflow-wrap:anywhere]">{@html sanitize(project.description)}</div>
 	{/if}
 
 	<div class="mb-auto">
