@@ -1,1 +1,1 @@
-export const trailingSlash = 'always';
+export const trailingSlash = 'never';
