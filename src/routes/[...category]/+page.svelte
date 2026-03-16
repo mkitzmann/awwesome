@@ -18,6 +18,7 @@
 	import SvelteSeo from 'svelte-seo';
 	import { SORT_SLUGS, sortTermToSlug } from '$lib/sort';
 	import type { WithContext, ItemList } from 'schema-dts';
+	import { X } from 'lucide-svelte';
 
 	let { data }: { data: ProjectCollection } = $props();
 
@@ -496,7 +497,7 @@
 						class="h-10 px-4 flex items-center rounded-full text-sm bg-gray-200 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
 							{isDefaultView ? 'opacity-40 cursor-default' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
 					>
-						Clear
+						<X class="w-4 h-4" />
 					</button>
 					</div>
 			</div>

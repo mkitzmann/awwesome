@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Popover } from 'bits-ui';
+	import { Funnel } from 'lucide-svelte';
 
 	let {
 		platforms = [],
@@ -47,7 +48,7 @@
 			: 'bg-gray-200 dark:bg-gray-800'}
 			hover:bg-gray-100 dark:hover:bg-gray-700"
 	>
-		Filters{hasActiveFilters ? ' *' : ''}
+		<Funnel class="w-4 h-4" />{hasActiveFilters ? ' Filters *' : ' Filters'}
 	</Popover.Trigger>
 
 	<Popover.Portal>
