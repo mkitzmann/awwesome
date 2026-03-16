@@ -287,10 +287,48 @@
 		}
 		return baseDescription;
 	});
-	let pageUrl = $derived(
-		category ? `https://www.awweso.me/${category}` : 'https://www.awweso.me'
-	);
+	let pageUrl = $derived.by(() => {
+		const slug = sortTermToSlug(selectedSortTerm);
+		const parts = [category, slug].filter(Boolean);
+		return parts.length
+			? `https://www.awweso.me/${parts.join('/')}`
+			: 'https://www.awweso.me';
+	});
+
+	let jsonLd = $derived.by(() => {
+		return JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'ItemList',
+			name: pageTitle,
+			description: pageDescription,
+			numberOfItems: total,
+			itemListElement: data.projects.slice(0, 20).map((project, index) => ({
+				'@type': 'ListItem',
+				position: index + 1,
+				item: {
+					'@type': 'SoftwareApplication',
+					name: project.name,
+					...(project.description && { description: project.description.replace(/<[^>]*>/g, '') }),
+					...(project.source_url && { url: project.source_url }),
+					...(categoryLabel && { applicationCategory: categoryLabel }),
+					offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+					operatingSystem: 'Self-Hosted',
+					...(project.stars && {
+						interactionStatistic: {
+							'@type': 'InteractionCounter',
+							interactionType: { '@type': 'LikeAction' },
+							userInteractionCount: project.stars
+						}
+					})
+				}
+			}))
+		});
+	});
 </script>
+
+<svelte:head>
+	{@html `<script type="application/ld+json">${jsonLd}</script>`}
+</svelte:head>
 
 <SvelteSeo
 	title={pageTitle}

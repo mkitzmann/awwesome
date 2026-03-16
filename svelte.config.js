@@ -8,7 +8,8 @@ const config = {
 	kit: {
 		adapter: adapter({
 			out: 'build'
-		})
+		}),
+		trailingSlash: 'never'
 	}
 };
 
