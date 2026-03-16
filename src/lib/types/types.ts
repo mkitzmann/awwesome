@@ -18,6 +18,8 @@ export type Project = {
 	commit_history?: CommitCount;
 	trendingDelta?: number | null;
 	trendingAbsolute?: number | null;
+	releaseVersion?: string;
+	releaseDate?: string;
 	pushedAt?: Date;
 	firstAdded?: Date;
 	archived?: boolean;
@@ -27,7 +29,7 @@ export type CommitCount = {
 	[key: string]: number;
 };
 
-export type SortTerm = 'stars' | 'firstAdded' | 'commitsYear' | 'trending' | 'trendingAbsolute';
+export type SortTerm = 'stars' | 'firstAdded' | 'commitsYear' | 'trending' | 'trendingAbsolute' | 'releaseDate';
 export type SortOrder = 'asc' | 'desc';
 
 export interface AllCategories {

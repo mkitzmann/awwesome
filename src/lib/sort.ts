@@ -4,14 +4,16 @@ const slugToTerm: Record<string, SortTerm> = {
 	trending: 'trendingAbsolute',
 	'trending-relative': 'trending',
 	active: 'commitsYear',
-	recent: 'firstAdded'
+	recent: 'firstAdded',
+	'latest-release': 'releaseDate'
 };
 
 const termToSlug: Record<string, string> = {
 	trendingAbsolute: 'trending',
 	trending: 'trending-relative',
 	commitsYear: 'active',
-	firstAdded: 'recent'
+	firstAdded: 'recent',
+	releaseDate: 'latest-release'
 };
 
 export const SORT_SLUGS = new Set(Object.keys(slugToTerm));

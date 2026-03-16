@@ -26,6 +26,7 @@ export interface ProjectQuery {
 	license?: string;
 	addedAfter?: string;
 	addedBefore?: string;
+	releasedAfter?: string;
 }
 
 export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
@@ -42,7 +43,8 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		platform,
 		license,
 		addedAfter,
-		addedBefore
+		addedBefore,
+		releasedAfter
 	} = query;
 
 	const isRoot = !category || category === '/';
@@ -111,6 +113,11 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		params.push(addedBefore);
 	}
 
+	if (releasedAfter) {
+		conditions.push(`p.release_date >= ?`);
+		params.push(releasedAfter);
+	}
+
 	const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : '';
 
 	// Sort column — commitsYear uses a subquery to sum commit history
@@ -147,6 +154,8 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		), 0)`;
 	} else if (sort === 'firstAdded') {
 		sortExpression = 'p.first_added';
+	} else if (sort === 'releaseDate') {
+		sortExpression = 'p.release_date';
 	} else {
 		sortExpression = 'p.stars';
 	}
@@ -196,6 +205,7 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 			`SELECT p.id, p.name, p.primary_url, p.source_url, p.demo_url,
 				p.description, p.license_name, p.license_url, p.license_nickname,
 				p.stars, p.avatar_url, p.pushed_at, p.first_added,
+				p.release_version, p.release_date,
 				p.archived, cat.full_path as category_full_path${trendingCol}
 			FROM projects p
 			JOIN categories cat ON p.category_id = cat.id
@@ -217,6 +227,8 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 		avatar_url: string | null;
 		pushed_at: string | null;
 		first_added: string | null;
+		release_version: string | null;
+		release_date: string | null;
 		archived: number | null;
 		category_full_path: string;
 		trending_delta?: number | null;
@@ -309,6 +321,8 @@ export function getProjectsPaginated(query: ProjectQuery): PaginatedResult {
 			commit_history: historyByProject.get(row.id) || {},
 			trendingDelta: row.trending_delta ?? undefined,
 			trendingAbsolute: row.trending_absolute ?? undefined,
+			releaseVersion: row.release_version ?? undefined,
+			releaseDate: row.release_date ?? undefined,
 			pushedAt: row.pushed_at ? new Date(row.pushed_at) : undefined,
 			firstAdded: row.first_added ? new Date(row.first_added) : undefined,
 			archived: !!row.archived

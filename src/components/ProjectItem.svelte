@@ -33,6 +33,11 @@
 
 	let license = $derived(project.license?.nickname ?? project.license?.name);
 	let licenseWithSuffix = $derived(license === 'Other' ? `${license} License` : license);
+	let releaseUrl = $derived(
+		project.releaseVersion && project.source_url?.includes('github.com')
+			? `${project.source_url}/releases/tag/${project.releaseVersion}`
+			: undefined
+	);
 	let currentMonth = new Date().toISOString().slice(0, 7);
 	let commitVals = $derived(
 		project?.commit_history
@@ -95,9 +100,19 @@
 			last commit {getRelativeTime(project.pushedAt)},
 		{/if}
 		{#if project.license}
-			<a href={project.license.url} class=" inline">
+			<a href={project.license.url} class="inline">
 				{licenseWithSuffix}
 			</a>
+		{/if}
+		{#if project.releaseVersion}
+			<span class="mx-1">·</span>
+			{#if releaseUrl}
+				<a href={releaseUrl} target="_blank" class="hover:underline inline">
+					{project.releaseVersion}{#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}
+				</a>
+			{:else}
+				<span>{project.releaseVersion}{#if project.releaseDate} ({dayjs(project.releaseDate).fromNow()}){/if}</span>
+			{/if}
 		{/if}
 		{#if project.demo_url}
 			<span class="mx-1">·</span>

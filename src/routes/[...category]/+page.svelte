@@ -57,8 +57,9 @@
 	let filterMinCommitsYear = $state('');
 	let filterPlatform = $state('');
 	let filterLicense = $state('');
+	let filterReleasedAfter = $state('');
 
-	let isDefaultView = $derived(!category && !searchTerm && selectedSortTerm === 'stars' && !filterMinStars && !filterMinCommitsYear && !filterPlatform && !filterLicense);
+	let isDefaultView = $derived(!category && !searchTerm && selectedSortTerm === 'stars' && !filterMinStars && !filterMinCommitsYear && !filterPlatform && !filterLicense && !filterReleasedAfter);
 
 	// ── Hydrate state from URL on mount ──
 	let initialized = false;
@@ -77,11 +78,12 @@
 		filterMinCommitsYear = params.get('minCommitsYear') ?? '';
 		filterPlatform = params.get('platform') ?? '';
 		filterLicense = params.get('license') ?? '';
+		filterReleasedAfter = params.get('releasedAfter') ?? '';
 
 		initialized = true;
 
 		// If any filters are active from URL, re-fetch with them applied
-		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform || filterLicense
+		const hasFilters = searchTerm || filterMinStars || filterMinCommitsYear || filterPlatform || filterLicense || filterReleasedAfter
 			|| selectedSortOrder !== 'desc';
 		if (hasFilters) {
 			fetchProjects();
@@ -125,7 +127,8 @@
 			minStars: filterMinStars,
 			minCommitsYear: filterMinCommitsYear,
 			platform: filterPlatform,
-			license: filterLicense
+			license: filterLicense,
+			releasedAfter: filterReleasedAfter
 		};
 		for (const [key, value] of Object.entries(state)) {
 			if (value && value !== (defaults[key] ?? '')) {
@@ -151,6 +154,7 @@
 		if (filterMinCommitsYear) params.set('minCommitsYear', filterMinCommitsYear);
 		if (filterPlatform) params.set('platform', filterPlatform);
 		if (filterLicense) params.set('license', filterLicense);
+		if (filterReleasedAfter) params.set('releasedAfter', filterReleasedAfter);
 
 		loading = true;
 		try {
@@ -243,7 +247,8 @@
 		{ value: 'trendingAbsolute', label: 'Trending' },
 		{ value: 'trending', label: 'Trending %' },
 		{ value: 'commitsYear', label: 'Most Active' },
-		{ value: 'firstAdded', label: 'Recently Added' }
+		{ value: 'firstAdded', label: 'Recently Added' },
+		{ value: 'releaseDate', label: 'Latest Release' }
 	];
 
 	const sortLabels: Record<SortTerm, string> = {
@@ -251,14 +256,16 @@
 		trending: 'Trending %',
 		trendingAbsolute: 'Trending',
 		commitsYear: 'Most Active',
-		firstAdded: 'Recently Added'
+		firstAdded: 'Recently Added',
+		releaseDate: 'Latest Release'
 	};
 	const sortDescriptions: Record<SortTerm, string> = {
 		stars: '',
 		trending: 'trending by relative growth',
 		trendingAbsolute: 'trending',
 		commitsYear: 'most active',
-		firstAdded: 'recently added'
+		firstAdded: 'recently added',
+		releaseDate: 'latest release'
 	};
 
 	let categoryLabel = $derived(
@@ -456,8 +463,11 @@
 						<SortButton value="commitsYear" rounded="none">
 							Most Active
 						</SortButton>
-						<SortButton value="firstAdded" rounded="right">
+						<SortButton value="firstAdded" rounded="none">
 							Recently Added
+						</SortButton>
+						<SortButton value="releaseDate" rounded="right">
+							Latest Release
 						</SortButton>
 					</ToggleGroup.Root>
 					<FilterPanel
@@ -467,6 +477,7 @@
 						bind:minCommitsYear={filterMinCommitsYear}
 						bind:platform={filterPlatform}
 						bind:license={filterLicense}
+						bind:releasedAfter={filterReleasedAfter}
 						onfilter={() => fetchProjects()}
 					/>
 					<button
@@ -477,6 +488,7 @@
 							filterMinCommitsYear = '';
 							filterPlatform = '';
 							filterLicense = '';
+							filterReleasedAfter = '';
 							selectedSortTerm = 'stars';
 							selectedSortOrder = 'desc';
 							goto('/');

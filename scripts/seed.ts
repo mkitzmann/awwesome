@@ -190,6 +190,8 @@ function createTables() {
 			pushed_at TEXT,
 			created_at TEXT,
 			first_added TEXT,
+			release_version TEXT,
+			release_date TEXT,
 			archived INTEGER DEFAULT 0,
 			updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 		);
@@ -312,6 +314,8 @@ function upsertProject(
 		avatarUrl: null as string | null,
 		pushedAt: null as string | null,
 		createdAt: null as string | null,
+		releaseVersion: data.current_release?.tag ?? null,
+		releaseDate: data.current_release?.published_at ?? null,
 		archived,
 		updatedAt: data.updated_at ?? new Date().toISOString()
 	};

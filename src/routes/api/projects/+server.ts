@@ -12,7 +12,7 @@ function intParam(url: URL, name: string): number | undefined {
 export function GET({ url }) {
 	const category = url.searchParams.get('category') || '/';
 	const search = url.searchParams.get('search') || '';
-	const VALID_SORTS: SortTerm[] = ['stars', 'commitsYear', 'firstAdded', 'trending', 'trendingAbsolute'];
+	const VALID_SORTS: SortTerm[] = ['stars', 'commitsYear', 'firstAdded', 'trending', 'trendingAbsolute', 'releaseDate'];
 	const VALID_ORDERS: SortOrder[] = ['asc', 'desc'];
 	const sort: SortTerm = VALID_SORTS.includes(url.searchParams.get('sort') as SortTerm)
 		? (url.searchParams.get('sort') as SortTerm)
@@ -30,10 +30,11 @@ export function GET({ url }) {
 	const license = url.searchParams.get('license') || undefined;
 	const addedAfter = url.searchParams.get('addedAfter') || undefined;
 	const addedBefore = url.searchParams.get('addedBefore') || undefined;
+	const releasedAfter = url.searchParams.get('releasedAfter') || undefined;
 
 	const result = getProjectsPaginated({
 		category, search, sort, order, limit, offset,
-		minStars, maxStars, minCommitsYear, platform, license, addedAfter, addedBefore
+		minStars, maxStars, minCommitsYear, platform, license, addedAfter, addedBefore, releasedAfter
 	});
 
 	return json(result);
