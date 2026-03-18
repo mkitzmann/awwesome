@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   awwesome:
-    image: mkitzmann/awwesome:latest
+    image: mkitzmann/awwesome:main
     environment:
       - PUBLIC_ANALYTICS_URL=${PUBLIC_ANALYTICS_URL}
       - PUBLIC_ANALYTICS_WEBSITE_ID=${PUBLIC_ANALYTICS_WEBSITE_ID}
