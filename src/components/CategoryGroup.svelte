@@ -2,53 +2,79 @@
 	import ChevronRight from './ChevronRight.svelte';
 	import { navigating } from '$app/stores';
 	import type { Category } from '../lib/types/types';
-	export let category: Category;
-	export let selectedCategory;
-	export let indent = 0;
+	import { Collapsible } from 'bits-ui';
+	import CategoryGroup from './CategoryGroup.svelte';
 
-	export let href = '/' + category.slug;
+	let {
+		category,
+		selectedCategory = '',
+		indent = 0,
+		sortSuffix = '',
+		basePath = '/' + category.slug
+	}: {
+		category: Category;
+		selectedCategory?: string;
+		indent?: number;
+		sortSuffix?: string;
+		basePath?: string;
+	} = $props();
 
-	let isOpen = false;
-	$: if ($navigating) selectedCategory.includes(category.slug) ? (isOpen = true) : (isOpen = false);
-	$: isActive = selectedCategory === href.slice(1);
+	let href = $derived(basePath + sortSuffix);
+
+	let isOpen = $state(false);
+
+	$effect(() => {
+		if ($navigating) {
+			isOpen = selectedCategory.includes(category.slug);
+		}
+	});
+
+	let isActive = $derived(selectedCategory === basePath.slice(1));
+	let hasChildren = $derived((category.children ?? []).length > 0);
 </script>
 
-<div class="flex items-center justify-between w-full" style="padding-left: {indent}px">
-	{#if category.children.length > 0}
-		<details bind:open={isOpen} class="w-full group">
-			<summary class="flex justify-between w-full items-center">
+<div class="w-full" style="padding-left: {indent * 12}px">
+	{#if hasChildren}
+		<Collapsible.Root bind:open={isOpen} class="w-full">
+			<div
+				class="flex items-center w-full rounded-full transition-colors {isActive
+					? 'bg-gray-100 dark:bg-gray-700'
+					: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}"
+			>
 				<a
 					{href}
-					class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-						? 'bg-gray-200 dark:bg-gray-950'
-						: ''}"
+					class="truncate flex-1 text-left text-sm px-3 py-1.5 {isActive ? 'font-medium' : ''}"
 				>
 					{category.name}
+					{#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 				</a>
-				<div class="hover:text-blue-500 cursor-pointer group-open:rotate-90">
+				<Collapsible.Trigger
+					class="p-1.5 cursor-pointer transition-transform duration-150 {isOpen ? 'rotate-90' : ''}"
+				>
 					<ChevronRight />
-				</div>
-			</summary>
-			{#each category.children as category2}
-				<svelte:self
-					category={category2}
-					{selectedCategory}
-					href="{href}/{category2.slug}"
-					indent={indent + 10}
-				/>
-			{/each}
-		</details>
-		<!--		<button on:click={toggle} class="hover:text-blue-500 {isOpen ? 'rotate-90' : ''}">-->
-		<!--			<ChevronRight />-->
-		<!--		</button>-->
+				</Collapsible.Trigger>
+			</div>
+			<Collapsible.Content>
+				{#each category.children ?? [] as category2}
+					<CategoryGroup
+						category={category2}
+						{selectedCategory}
+						{sortSuffix}
+						basePath="{basePath}/{category2.slug}"
+						indent={indent + 1}
+					/>
+				{/each}
+			</Collapsible.Content>
+		</Collapsible.Root>
 	{:else}
 		<a
 			{href}
-			class="hover:text-blue-500 truncate w-full text-left text-sm px-3 py-1 rounded-full {isActive
-				? 'bg-gray-200 dark:bg-gray-950'
-				: ''}"
+			class="block truncate w-full text-left text-sm px-3 py-1.5 rounded-full transition-colors {isActive
+				? 'bg-gray-100 dark:bg-gray-700 font-medium'
+				: 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}"
 		>
 			{category.name}
+			{#if category.count}<span class="text-gray-400">({category.count})</span>{/if}
 		</a>
 	{/if}
 </div>

@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__acp__Edit",
+      "Bash(yarn rebuild:*)",
+      "Bash(npm rebuild:*)",
+      "WebSearch",
+      "Bash(yarn build:*)",
+      "Bash(gh issue:*)",
+      "WebFetch(domain:oxc.rs)",
+      "Bash(gh pr:*)",
+      "Bash(yarn add:*)",
+      "WebFetch(domain:www.reddit.com)",
+      "WebFetch(domain:svelte.dev)",
+      "Bash(git add package.json yarn.lock docker-entrypoint.sh src/hooks.server.ts)",
+      "WebFetch(domain:bits-ui.com)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(yarn test:*)",
+      "Bash(git add:*)",
+      "Bash(yarn lint:*)",
+      "Bash(git commit:*)",
+      "Bash(yarn run:*)",
+      "Bash(npx svelte-check:*)",
+      "Bash(git status:*)",
+      "Skill(commit-commands:commit)",
+      "Skill(commit-commands:commit:*)",
+      "Bash(ls -la /Users/mkitzmann/Developer/awwesome/*.cjs /Users/mkitzmann/Developer/awwesome/.prettierrc)",
+      "Bash(git -C /Users/mkitzmann/Developer/awwesome log --oneline -10)",
+      "Bash(yarn prettier:*)"
+    ]
+  }
+}

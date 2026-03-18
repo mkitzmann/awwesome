@@ -1,7 +1,25 @@
 /* Write your global styles here, in PostCSS syntax */
 @tailwind base;
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwind components;
-@tailwind utilities;
+
+.subtle-scrollbar {
+	scrollbar-width: thin;
+	scrollbar-color: theme('colors.gray.300') transparent;
+}
+:is(.dark .subtle-scrollbar) {
+	scrollbar-color: theme('colors.gray.600') transparent;
+}
+.subtle-scrollbar::-webkit-scrollbar {
+	width: 6px;
+}
+.subtle-scrollbar::-webkit-scrollbar-track {
+	background: transparent;
+}
+.subtle-scrollbar::-webkit-scrollbar-thumb {
+	background-color: theme('colors.gray.300');
+	border-radius: 3px;
+}
+:is(.dark .subtle-scrollbar)::-webkit-scrollbar-thumb {
+	background-color: theme('colors.gray.600');
+}

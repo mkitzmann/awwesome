@@ -10,22 +10,32 @@ export type Project = {
 		url?: string;
 		nickname?: string;
 	};
-	stack?: string | null;
+	platforms?: string[];
 	category?: string;
 	stars?: number | null;
 	avatar_url?: string | null;
-	topics?: string[];
+	topics?: { name: string; path: string }[];
 	commit_history?: CommitCount;
+	trendingDelta?: number | null;
+	trendingAbsolute?: number | null;
+	releaseVersion?: string;
+	releaseDate?: string;
 	pushedAt?: Date;
 	firstAdded?: Date;
-	createdAt?: Date;
+	archived?: boolean;
 };
 
 export type CommitCount = {
 	[key: string]: number;
 };
 
-export type SortTerm = 'stars' | 'firstAdded';
+export type SortTerm =
+	| 'stars'
+	| 'firstAdded'
+	| 'commitsYear'
+	| 'trending'
+	| 'trendingAbsolute'
+	| 'releaseDate';
 export type SortOrder = 'asc' | 'desc';
 
 export interface AllCategories {
@@ -37,12 +47,22 @@ export interface AllCategories {
 export type Category = {
 	slug: string;
 	name: string;
+	count?: number;
 	children?: Category[];
 };
 
+export interface PaginatedResult {
+	projects: Project[];
+	total: number;
+}
+
 export interface ProjectCollection {
 	projects: Project[];
+	total: number;
 	categories: AllCategories;
+	platforms: string[];
+	licenses: string[];
+	sort: SortTerm;
 }
 
 export interface GithubQueryResult {

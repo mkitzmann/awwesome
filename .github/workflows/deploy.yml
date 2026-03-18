@@ -1,0 +1,106 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: mkitzmann/awwesome
+          tags: |
+            type=raw,value=main,enable={{is_default_branch}}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{version}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: ${{ github.event.repository.name }}
+      SERVER_HOST: kserver
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Create app directory
+        run: ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "mkdir -p /opt/${APP_NAME}"
+
+      - name: Write .env file
+        env:
+          PUBLIC_ANALYTICS_URL: ${{ secrets.PUBLIC_ANALYTICS_URL }}
+          PUBLIC_ANALYTICS_WEBSITE_ID: ${{ secrets.PUBLIC_ANALYTICS_WEBSITE_ID }}
+          TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
+        run: printf 'PUBLIC_ANALYTICS_URL=%s\nPUBLIC_ANALYTICS_WEBSITE_ID=%s\nTOKEN_GITHUB=%s\n' "$PUBLIC_ANALYTICS_URL" "$PUBLIC_ANALYTICS_WEBSITE_ID" "$TOKEN_GITHUB" | ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "cat > /opt/${APP_NAME}/.env"
+
+      - name: Copy compose file
+        run: scp -o StrictHostKeyChecking=no "docker-compose.yml" "admin@${SERVER_HOST}:/opt/${APP_NAME}/docker-compose.yml"
+
+      - name: Deploy stack
+        run: |
+          ssh -o StrictHostKeyChecking=no "admin@${SERVER_HOST}" "\
+            cd /opt/${APP_NAME} && \
+            docker compose config | grep -v '^name:' | docker stack deploy --with-registry-auth --resolve-image always -c - ${APP_NAME} && \
+            docker service update --force ${APP_NAME}_${APP_NAME}"
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true

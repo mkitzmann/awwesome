@@ -1,5 +1,20 @@
-FROM node:20-slim
+FROM node:22-slim AS build
+RUN apt-get update && apt-get install -y python3 make g++ git && rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm ci
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 COPY . .
+RUN yarn build
+
+FROM node:22-slim
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/build ./build
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY package.json ./
+COPY scripts ./scripts
+COPY src/lib/server/db/schema.ts ./src/lib/server/db/schema.ts
+COPY docker-entrypoint.sh ./
+EXPOSE 3000
+ENV NODE_ENV=production
+ENTRYPOINT ["./docker-entrypoint.sh"]

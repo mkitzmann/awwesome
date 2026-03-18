@@ -13,5 +13,15 @@ vite.config.ts.timestamp-*
 /log
 /dist
 
+# Database
+/data/*.db
+/data/*.db-wal
+/data/*.db-shm
+/data/awesome-selfhosted-data
+/drizzle
+
 # Local Netlify folder
 .netlify
+
+# Claude Code
+.claude

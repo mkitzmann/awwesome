@@ -1,37 +1,25 @@
 <script lang="ts">
 	import SearchIcon from './icons/SearchIcon.svelte';
 	import XMarkIcon from './icons/XMarkIcon.svelte';
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 
-	export let searchTerm;
+	let {
+		searchTerm = $bindable(''),
+		onsearch
+	}: {
+		searchTerm?: string;
+		onsearch?: (term: string) => void;
+	} = $props();
 
-	onMount(() => {
-		searchTerm = $page.url.searchParams.get(searchKey) ?? '';
-	});
-
-	const searchKey = 'search';
-	const setQueryParams = () => {
-		const url = new URL(window.location);
-		if (searchTerm !== '') {
-			url.searchParams.set(searchKey, searchTerm);
-		} else {
-			url.searchParams.delete(searchKey);
-		}
-		history.pushState(null, '', url);
-	};
-
-	let timer;
-	const debounceSetQueryParams = () => {
+	let timer: ReturnType<typeof setTimeout>;
+	const debounceSearch = () => {
 		clearTimeout(timer);
-		timer = setTimeout(() => {
-			setQueryParams();
-		}, 750);
+		timer = setTimeout(() => onsearch?.(searchTerm), 400);
 	};
 
 	const clearSearchTerm = () => {
 		searchTerm = '';
-		setQueryParams();
+		clearTimeout(timer);
+		onsearch?.('');
 	};
 </script>
 
@@ -41,7 +29,7 @@
 	</div>
 	{#if searchTerm.length > 0}
 		<button
-			on:click={clearSearchTerm}
+			onclick={clearSearchTerm}
 			class="absolute flex items-center h-full right-3 text-gray-200 hover:text-blue-400"
 		>
 			<XMarkIcon />
@@ -50,8 +38,8 @@
 	<input
 		name="search"
 		bind:value={searchTerm}
-		on:input={debounceSetQueryParams}
-		class="rounded-full pr-8 pl-12 py-2 w-full font-light placeholder-gray-400 dark:bg-gray-800"
+		oninput={debounceSearch}
+		class="rounded-full pr-8 pl-12 py-2 w-full font-light placeholder-gray-400 dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
 		placeholder="Search in Category"
 	/>
 </div>
