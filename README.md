@@ -10,7 +10,7 @@ Visit [awweso.me](https://awweso.me) for the live version.
 
 Original data by the [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted-data) community, licensed under [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
 
-<img width="1586" alt="awwesome_screenshot" src="https://github.com/mkitzmann/awwesome/assets/awwesome-screenshot.jpeg">
+<img width="1586" alt="awwesome_screenshot" src="https://github.com/mkitzmann/awwesome/blob/main/assets/awwesome-screenshot.jpeg">
 
 ## Tech Stack
 
