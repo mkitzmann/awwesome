@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   awwesome:
-    image: ghcr.io/mkitzmann/awwesome:latest
+    image: mkitzmann/awwesome:latest
     environment:
       - PUBLIC_ANALYTICS_URL=${PUBLIC_ANALYTICS_URL}
       - PUBLIC_ANALYTICS_WEBSITE_ID=${PUBLIC_ANALYTICS_WEBSITE_ID}
@@ -20,7 +20,7 @@ services:
         condition: on-failure
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.awwesome.rule=Host(`beta.awweso.me`)"
+        - "traefik.http.routers.awwesome.rule=Host(`awweso.me`)"
         - "traefik.http.routers.awwesome.entrypoints=websecure"
         - "traefik.http.routers.awwesome.tls=true"
         - "traefik.http.services.awwesome.loadbalancer.server.port=3000"
