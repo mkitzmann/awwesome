@@ -10,7 +10,7 @@ Visit [awweso.me](https://awweso.me) for the live version.
 
 Original data by the [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted-data) community, licensed under [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
 
-<img width="1586" alt="awwesome_screenshot" src="https://github.com/mkitzmann/awwesome/assets/35574021/a7ce063c-681e-49b3-9abe-3a5086151271">
+<img width="1586" alt="awwesome_screenshot" src="https://github.com/mkitzmann/awwesome/assets/awwesome-screenshot.jpeg">
 
 ## Tech Stack
 
@@ -19,6 +19,33 @@ Original data by the [awesome-selfhosted](https://github.com/awesome-selfhosted/
 - [Tailwind CSS](https://tailwindcss.com/)
 - [SQLite](https://www.sqlite.org/) via [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) + [Drizzle ORM](https://orm.drizzle.team/)
 - [GitHub GraphQL API](https://docs.github.com/en/graphql) for project metadata
+
+## Docker
+
+Awwesome is available on [Docker Hub](https://hub.docker.com/r/mkitzmann/awwesome).
+
+```bash
+docker run -p 3000:3000 -v awwesome_data:/usr/src/app/data mkitzmann/awwesome
+```
+
+Or using docker compose:
+
+```yaml
+services:
+  awwesome:
+    image: mkitzmann/awwesome:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - TOKEN_GITHUB=${TOKEN_GITHUB} # optional, for star history
+    volumes:
+      - data:/usr/src/app/data
+
+volumes:
+  data:
+```
+
+The container runs a Node.js server on port 3000. The data volume persists the SQLite database across restarts.
 
 ## Development
 
@@ -48,33 +75,6 @@ Start the development server:
 ```bash
 yarn dev
 ```
-
-## Docker
-
-Awwesome is available on [Docker Hub](https://hub.docker.com/r/mkitzmann/awwesome).
-
-```bash
-docker run -p 3000:3000 -v awwesome_data:/usr/src/app/data mkitzmann/awwesome
-```
-
-Or using docker compose:
-
-```yaml
-services:
-  awwesome:
-    image: mkitzmann/awwesome:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - TOKEN_GITHUB=${TOKEN_GITHUB} # optional, for star history
-    volumes:
-      - data:/usr/src/app/data
-
-volumes:
-  data:
-```
-
-The container runs a Node.js server on port 3000. The data volume persists the SQLite database across restarts.
 
 ## Contributing
 
