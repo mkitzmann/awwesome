@@ -19,13 +19,19 @@ services:
       restart_policy:
         condition: on-failure
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.awwesome.rule=Host(`awweso.me`)"
-        - "traefik.http.routers.awwesome.entrypoints=websecure"
-        - "traefik.http.routers.awwesome.tls=true"
-        - "traefik.http.services.awwesome.loadbalancer.server.port=3000"
+        - 'traefik.enable=true'
+        - 'traefik.http.routers.awwesome.rule=Host(`awweso.me`)'
+        - 'traefik.http.routers.awwesome.entrypoints=websecure'
+        - 'traefik.http.routers.awwesome.tls=true'
+        - 'traefik.http.services.awwesome.loadbalancer.server.port=3000'
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/').then(r => process.exit(r.ok ? 0 : 1))"]
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000/').then(r => process.exit(r.ok ? 0 : 1))"
+        ]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -86,7 +86,12 @@ function buildFirstAddedMap(): Map<string, string> {
 	try {
 		const output = execSync(
 			'git log --reverse --diff-filter=A --format=%aI --name-only -- software/',
-			{ cwd: DATA_REPO_DIR, encoding: 'utf-8', maxBuffer: 50 * 1024 * 1024, stdio: ['pipe', 'pipe', 'pipe'] }
+			{
+				cwd: DATA_REPO_DIR,
+				encoding: 'utf-8',
+				maxBuffer: 50 * 1024 * 1024,
+				stdio: ['pipe', 'pipe', 'pipe']
+			}
 		);
 		return parseFirstAddedOutput(output);
 	} catch (err) {
@@ -378,9 +383,9 @@ function getOrCreatePlatformId(name: string): number {
 	const cached = platformIdCache.get(name);
 	if (cached) return cached;
 
-	const existing = sqlite
-		.prepare(`SELECT id FROM platforms WHERE name = ?`)
-		.get(name) as { id: number } | undefined;
+	const existing = sqlite.prepare(`SELECT id FROM platforms WHERE name = ?`).get(name) as
+		| { id: number }
+		| undefined;
 
 	if (existing) {
 		platformIdCache.set(name, existing.id);
@@ -568,7 +573,9 @@ async function seed() {
 			}
 		});
 		insertAll();
-		console.log(`   ${inserted} new, ${updated} updated, ${skipped} skipped, ${withHistory} with commit history.`);
+		console.log(
+			`   ${inserted} new, ${updated} updated, ${skipped} skipped, ${withHistory} with commit history.`
+		);
 
 		// 7. Update crawl log
 		db.update(schema.crawlLog)
@@ -588,7 +595,6 @@ async function seed() {
 		console.log(`   With commit history: ${withHistory}`);
 		console.log(`   Categories: ${categoryIdMap.size}`);
 		console.log(`   Skipped: ${skipped}`);
-
 	} catch (error) {
 		db.update(schema.crawlLog)
 			.set({

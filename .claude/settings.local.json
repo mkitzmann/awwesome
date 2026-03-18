@@ -25,7 +25,8 @@
       "Skill(commit-commands:commit)",
       "Skill(commit-commands:commit:*)",
       "Bash(ls -la /Users/mkitzmann/Developer/awwesome/*.cjs /Users/mkitzmann/Developer/awwesome/.prettierrc)",
-      "Bash(git -C /Users/mkitzmann/Developer/awwesome log --oneline -10)"
+      "Bash(git -C /Users/mkitzmann/Developer/awwesome log --oneline -10)",
+      "Bash(yarn prettier:*)"
     ]
   }
 }

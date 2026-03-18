@@ -72,7 +72,10 @@ function sleep(ms: number): Promise<void> {
 let apiPointsUsed = 0;
 let apiLimit = 5000;
 
-async function graphqlFetch(query: string, variables: Record<string, string | null>): Promise<GraphQLResponse> {
+async function graphqlFetch(
+	query: string,
+	variables: Record<string, string | null>
+): Promise<GraphQLResponse> {
 	const res = await fetch('https://api.github.com/graphql', {
 		method: 'POST',
 		headers: {
@@ -208,13 +211,11 @@ async function main() {
 	let failed = 0;
 	let skipped = 0;
 
-	const insertBatch = sqlite.transaction(
-		(projectId: number, dailyCounts: Map<string, number>) => {
-			for (const [date, stars] of dailyCounts) {
-				insertStarHistory.run(projectId, date, stars);
-			}
+	const insertBatch = sqlite.transaction((projectId: number, dailyCounts: Map<string, number>) => {
+		for (const [date, stars] of dailyCounts) {
+			insertStarHistory.run(projectId, date, stars);
 		}
-	);
+	});
 
 	function updateStatus() {
 		const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
@@ -226,7 +227,12 @@ async function main() {
 	const startTime = Date.now();
 	const statusInterval = setInterval(updateStatus, 200);
 
-	async function processProject(project: { id: number; name: string; source_url: string; stars: number }) {
+	async function processProject(project: {
+		id: number;
+		name: string;
+		source_url: string;
+		stars: number;
+	}) {
 		const parsed = extractOwnerRepo(project.source_url);
 		if (!parsed) {
 			skipped++;

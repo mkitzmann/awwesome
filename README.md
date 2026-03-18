@@ -35,7 +35,7 @@ services:
   awwesome:
     image: mkitzmann/awwesome:latest
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - TOKEN_GITHUB=${TOKEN_GITHUB} # optional, for star history
     volumes:
