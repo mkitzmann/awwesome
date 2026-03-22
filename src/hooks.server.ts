@@ -15,12 +15,20 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 let running = false;
 
-function runScript(label: string, script: string): Promise<number | null> {
+const SCRIPT_PATHS = {
+	seed: path.resolve('scripts/seed.ts'),
+	backfillStars: path.resolve('scripts/backfill-stars.ts')
+} as const;
+
+type ScriptKey = keyof typeof SCRIPT_PATHS;
+
+function runScript(label: string, scriptKey: ScriptKey): Promise<number | null> {
 	return new Promise((resolve) => {
 		const tsxBin = path.resolve('node_modules/.bin/tsx');
+		const scriptPath = SCRIPT_PATHS[scriptKey];
 		console.log(`[${label}] Starting at ${new Date().toISOString()}`);
 
-		const child = spawn(tsxBin, [path.resolve(script)], {
+		const child = spawn(tsxBin, [scriptPath], {
 			cwd: path.resolve('.'),
 			stdio: 'inherit'
 		});
@@ -44,10 +52,10 @@ async function runDaily() {
 	running = true;
 
 	try {
-		const seedCode = await runScript('seed', 'scripts/seed.ts');
+		const seedCode = await runScript('seed', 'seed');
 		if (seedCode === 0) {
 			invalidateCaches();
-			await runScript('backfill-stars', 'scripts/backfill-stars.ts');
+			await runScript('backfill-stars', 'backfillStars');
 		}
 	} finally {
 		running = false;
