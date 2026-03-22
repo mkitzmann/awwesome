@@ -15,6 +15,8 @@ COPY package.json ./
 COPY scripts ./scripts
 COPY src/lib/server/db/schema.ts ./src/lib/server/db/schema.ts
 COPY docker-entrypoint.sh ./
+RUN mkdir -p /usr/src/app/data && chown -R node:node /usr/src/app
 EXPOSE 3000
 ENV NODE_ENV=production
+USER node
 ENTRYPOINT ["./docker-entrypoint.sh"]

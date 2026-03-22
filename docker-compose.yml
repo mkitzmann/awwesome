@@ -7,8 +7,13 @@ services:
       - PUBLIC_ANALYTICS_URL=${PUBLIC_ANALYTICS_URL}
       - PUBLIC_ANALYTICS_WEBSITE_ID=${PUBLIC_ANALYTICS_WEBSITE_ID}
       - TOKEN_GITHUB=${TOKEN_GITHUB}
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
     volumes:
       - data:/usr/src/app/data
+    tmpfs:
+      - /tmp
     deploy:
       replicas: 1
       update_config:
